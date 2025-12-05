@@ -2,6 +2,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import ProtectedRoute from './ProtectedRoutes'; 
 import ServiceNavbar from './components/ServiceNavbar';
 import ProviderRegistration from './pages/ProviderRegistration';
 import UserRegistration from './pages/UserRegistration';
@@ -27,10 +28,10 @@ function App() {
     },
 
     // dashboards without navbar
-    { path: "/userDashboard", element: <Userdashboard />},
+    { path: "/userDashboard", element: <ProtectedRoute><Userdashboard /></ProtectedRoute>},
     { path: "/adminDashboard", element: <AdminDashboard /> },
     { path: "/providerDashboard", element: <ProviderDashboard /> },
-    { path: "/createbooking", element: <CreateBooking/> }
+    { path: "/createbooking", element: <ProtectedRoute><CreateBooking/> </ProtectedRoute>}
   ]);
 
   return <RouterProvider router={router} />;

@@ -24,7 +24,9 @@ const CreateBooking = () => {
   // =============================
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log("token from createbokking",token)
     if (token) {
+
       try {
         const decoded = JSON.parse(atob(token.split(".")[1]));
         setFormData((prev) => ({ ...prev, user_id: decoded.id }));
