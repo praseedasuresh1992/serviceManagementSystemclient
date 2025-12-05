@@ -59,9 +59,11 @@ const CreateBooking = () => {
 
     try {
       const res = await api.post("/filterProviderforbooking", {
-        category_id: formData.category_id,
-        dateSlots: dateSlotsArray,
-      });
+  category_id: formData.category_id,
+  needs: dateSlotsArray,  // ✔ correct name
+  location: formData.location, // ✔ add location also (backend supports)
+});
+
       setProviders(res.data.data);
     } catch (err) {
       console.log("Provider fetch error", err);
