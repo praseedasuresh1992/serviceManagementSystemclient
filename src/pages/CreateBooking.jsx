@@ -58,7 +58,7 @@ const CreateBooking = () => {
     if (!formData.category_id || dateSlotsArray.length === 0) return;
 
     try {
-      const res = await api.post("/filterProvidersByAvailability", {
+      const res = await api.post("/getproviderByAvailability", {
         category_id: formData.category_id,
         dateSlots: dateSlotsArray,
       });
