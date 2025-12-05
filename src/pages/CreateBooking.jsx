@@ -124,10 +124,11 @@ const CreateBooking = () => {
       return;
     }
 
-    const payload = {
-      ...formData,
-      dateSlots: selectedDateSlots,
-    };
+   const payload = {
+  ...formData,
+  needs: selectedDateSlots,
+};
+
 
     try {
       await api.post("createbooking", payload);
