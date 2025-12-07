@@ -12,6 +12,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ProviderDashboard from './pages/ProviderDashboard';
 import Home from './pages/Home';
 import CreateBooking from './pages/CreateBooking';
+import ViewProviderProfile from './pages/ProviderPages/ViewProviderProfile';
 
 function App() {
 
@@ -30,7 +31,12 @@ function App() {
     // dashboards without navbar
     { path: "/userDashboard", element: <ProtectedRoute><Userdashboard /></ProtectedRoute>},
     { path: "/adminDashboard", element: <AdminDashboard /> },
-    { path: "/providerDashboard", element: <ProviderDashboard /> },
+    { path: "/providerDashboard", element: <ProviderDashboard />,
+      children:[
+            { path: "viewprovider", element: <ViewProviderProfile /> },
+
+      ] 
+    },
     { path: "/createbooking", element: <ProtectedRoute><CreateBooking/> </ProtectedRoute>}
   ]);
 
