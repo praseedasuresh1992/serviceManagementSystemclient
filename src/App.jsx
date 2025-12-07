@@ -31,9 +31,9 @@ function App() {
     // dashboards without navbar
     { path: "/userDashboard", element: <ProtectedRoute><Userdashboard /></ProtectedRoute>},
     { path: "/adminDashboard", element: <AdminDashboard /> },
-    { path: "/providerDashboard", element: <ProviderDashboard />,
+    { path: "/providerDashboard", element:<ProtectedRoute><ProviderDashboard /></ProtectedRoute> ,
       children:[
-            { path: "viewprovider", element: <ViewProviderProfile /> },
+            { path: "viewprovider", element: <ProtectedRoute><ViewProviderProfile /> </ProtectedRoute>},
 
       ] 
     },
