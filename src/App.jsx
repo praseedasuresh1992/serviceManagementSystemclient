@@ -13,6 +13,8 @@ import ProviderDashboard from './pages/ProviderDashboard';
 import Home from './pages/Home';
 import CreateBooking from './pages/CreateBooking';
 import ViewProviderProfile from './pages/ProviderPages/ViewProviderProfile';
+import UpdateProviderProfile from './pages/ProviderPages/UpdateProviderProfile';
+import CreateAvailability from './pages/ProviderPages/CreateAvailability';
 
 function App() {
 
@@ -34,6 +36,9 @@ function App() {
     { path: "/providerDashboard", element:<ProtectedRoute><ProviderDashboard /></ProtectedRoute> ,
       children:[
             { path: "viewprovider", element: <ProtectedRoute><ViewProviderProfile /> </ProtectedRoute>},
+            { path: "updateprovider", element: <ProtectedRoute><UpdateProviderProfile /> </ProtectedRoute>},
+            { path: "create_availability", element: <ProtectedRoute><CreateAvailability/> </ProtectedRoute>},
+
 
       ] 
     },

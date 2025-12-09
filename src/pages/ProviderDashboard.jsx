@@ -35,7 +35,7 @@ function ProviderDashboard() {
       title: "Create Availability",
       icon: <FaCalendarCheck size={40} />,
       color: "#f6c23e",
-      link: "/provider/create-availability",
+      link: "/providerDashboard/create_availability",
     },
   ];
 

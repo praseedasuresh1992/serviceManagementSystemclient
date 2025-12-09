@@ -1,0 +1,72 @@
+import React, { useState } from "react";
+import api from "../../config/axiosinstance";
+import { Form, Button, Container, Card } from "react-bootstrap";
+
+function ChangePassword() {
+  const [emailSent, setEmailSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+
+  const sendOtp = async () => {
+    try {
+      await api.post("provider/sendPasswordOtp");
+      alert("OTP sent to your email");
+      setEmailSent(true);
+    } catch (err) {
+      console.log("Error sending OTP:", err);
+    }
+  };
+
+  const updatePassword = async () => {
+    try {
+      await api.post("provider/verifyPasswordOtp", {
+        otp,
+        newPassword
+      });
+      alert("Password updated successfully!");
+      window.location.href = "/provider/profile";
+    } catch (err) {
+      console.log("Error verifying OTP:", err);
+    }
+  };
+
+  return (
+    <Container className="mt-5">
+      <Card className="p-4 shadow">
+        <h3 className="mb-3">Change Password</h3>
+
+        {!emailSent ? (
+          <>
+            <p>Click below to send OTP to your registered email.</p>
+            <Button onClick={sendOtp}>Send OTP</Button>
+          </>
+        ) : (
+          <>
+            <Form.Group>
+              <Form.Label>Enter OTP</Form.Label>
+              <Form.Control
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group className="mt-2">
+              <Form.Label>New Password</Form.Label>
+              <Form.Control
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </Form.Group>
+
+            <Button className="mt-3" onClick={updatePassword}>
+              Update Password
+            </Button>
+          </>
+        )}
+      </Card>
+    </Container>
+  );
+}
+
+export default ChangePassword;
