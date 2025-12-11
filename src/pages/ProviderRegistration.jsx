@@ -68,6 +68,8 @@ const ProviderRegistration = () => {
     }
 
     try {
+      console.log("DATA SENDING:", formData);
+
       const res = await api.post("/registerprovider", data);
       setMessage("Provider created successfully!");
     } catch (error) {
