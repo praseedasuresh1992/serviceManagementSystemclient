@@ -20,7 +20,7 @@ function ProviderDashboard() {
       link: "/providerDashboard/viewprovider",
     },
     {
-      title: "Booking Notifications",
+      title: "Booking Details",
       icon: <FaBell size={40} />,
       color: "#1cc88a",
       link: "/provider/booking-notifications",
@@ -37,6 +37,7 @@ function ProviderDashboard() {
       color: "#f6c23e",
       link: "/providerDashboard/create_availability",
     },
+    
   ];
 
   return (

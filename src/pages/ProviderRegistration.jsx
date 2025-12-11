@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import api from "../config/axiosinstance";
 import { Form, Button } from "react-bootstrap";
 
 const ProviderRegistration = () => {
@@ -13,18 +13,39 @@ const ProviderRegistration = () => {
     available_location: "",
     username: "",
     password: "",
+    service_category: "",  // ✅ Added
   });
 
   const [profileImage, setProfileImage] = useState(null);
+  const [documents, setDocuments] = useState([]);
+
+  const [categories, setCategories] = useState([]); // ✅ store category list
   const [message, setMessage] = useState("");
+
+  // Fetch categories when page loads
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get("/viewAllcategory"); // <--- Your backend route
+        setCategories(res.data);
+      } catch (error) {
+        console.error("Failed to load categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     });
+  };
+
+  const handleDocumentChange = (e) => {
+    setDocuments(e.target.files);
   };
 
   const handleSubmit = async (e) => {
@@ -32,25 +53,22 @@ const ProviderRegistration = () => {
 
     const data = new FormData();
 
-    // Append text data
     for (let key in formData) {
       data.append(key, formData[key]);
     }
 
-    // Append file
     if (profileImage) {
       data.append("profile_image", profileImage);
     }
 
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/providers/create", 
-        data,
-        {
-          headers: { "Content-Type": "multipart/form-data" }
-        }
-      );
+    if (documents.length > 0) {
+      for (let i = 0; i < documents.length; i++) {
+        data.append("verification_document", documents[i]);
+      }
+    }
 
+    try {
+      const res = await api.post("/registerprovider", data);
       setMessage("Provider created successfully!");
     } catch (error) {
       console.error(error);
@@ -60,10 +78,14 @@ const ProviderRegistration = () => {
 
   return (
     <div className="container mx-auto max-w-xl mt-10 p-6 bg-white shadow-lg rounded-xl">
-      <h2 className="text-2xl font-semibold mb-4 text-center">Create Provider</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-center">
+        Create Provider
+      </h2>
 
       {message && (
-        <p className="mb-3 text-center text-green-600 font-semibold">{message}</p>
+        <p className="mb-3 text-center text-green-600 font-semibold">
+          {message}
+        </p>
       )}
 
       <Form onSubmit={handleSubmit}>
@@ -73,38 +95,42 @@ const ProviderRegistration = () => {
           <Form.Label>Profile Image</Form.Label>
           <Form.Control
             type="file"
+            accept="image/*"
             onChange={(e) => setProfileImage(e.target.files[0])}
             required
           />
         </Form.Group>
 
+       
+
+
         {/* Name */}
         <Form.Group className="mb-3">
           <Form.Label>Name</Form.Label>
-          <Form.Control 
-            type="text" 
+          <Form.Control
+            type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            required 
+            required
           />
         </Form.Group>
 
         {/* Email */}
         <Form.Group className="mb-3">
           <Form.Label>Email</Form.Label>
-          <Form.Control 
-            type="email" 
+          <Form.Control
+            type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            required 
+            required
           />
         </Form.Group>
 
         {/* Is Group */}
         <Form.Group className="mb-3 flex items-center gap-2">
-          <Form.Check 
+          <Form.Check
             type="checkbox"
             label="Is Group?"
             name="is_group"
@@ -113,12 +139,12 @@ const ProviderRegistration = () => {
           />
         </Form.Group>
 
-        {/* Members count */}
+        {/* Members */}
         {formData.is_group && (
           <Form.Group className="mb-3">
             <Form.Label>Members</Form.Label>
-            <Form.Control 
-              type="number" 
+            <Form.Control
+              type="number"
               name="members"
               value={formData.members}
               onChange={handleChange}
@@ -130,7 +156,7 @@ const ProviderRegistration = () => {
         {/* Address */}
         <Form.Group className="mb-3">
           <Form.Label>Address</Form.Label>
-          <Form.Control 
+          <Form.Control
             as="textarea"
             name="address"
             value={formData.address}
@@ -142,48 +168,76 @@ const ProviderRegistration = () => {
         {/* Contact Number */}
         <Form.Group className="mb-3">
           <Form.Label>Contact Number</Form.Label>
-          <Form.Control 
-            type="text" 
+          <Form.Control
+            type="text"
             name="contactno"
             value={formData.contactno}
             onChange={handleChange}
-            required 
+            required
           />
         </Form.Group>
 
         {/* Available Location */}
         <Form.Group className="mb-3">
           <Form.Label>Available Location</Form.Label>
-          <Form.Control 
-            type="text" 
+          <Form.Control
+            type="text"
             name="available_location"
             value={formData.available_location}
             onChange={handleChange}
-            required 
+            required
           />
         </Form.Group>
+        
+        {/* Category Dropdown */}
+        <Form.Group className="mb-3">
+          <Form.Label>Service Category</Form.Label>
+          <Form.Select
+            name="service_category"
+            value={formData.service_category}
+            onChange={handleChange}
+            required
+          >
+            <option value="">-- Select a Category --</option>
 
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.category_name}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+ {/* Documents */}
+        <Form.Group className="mb-3">
+          <Form.Label>Upload Documents (Multiple)</Form.Label>
+          <Form.Control
+            type="file"
+            multiple
+            accept=".pdf,.jpg,.jpeg,.png"
+            onChange={handleDocumentChange}
+          />
+        </Form.Group>
         {/* Username */}
         <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>
-          <Form.Control 
-            type="text" 
+          <Form.Control
+            type="text"
             name="username"
             value={formData.username}
             onChange={handleChange}
-            required 
+            required
           />
         </Form.Group>
 
         {/* Password */}
         <Form.Group className="mb-3">
           <Form.Label>Password</Form.Label>
-          <Form.Control 
-            type="password" 
+          <Form.Control
+            type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            required 
+            required
           />
         </Form.Group>
 
