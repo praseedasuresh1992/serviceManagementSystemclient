@@ -54,8 +54,12 @@ const ProviderRegistration = () => {
     const data = new FormData();
 
     for (let key in formData) {
+    if (key === "available_location") {
+      data.append("available_location", JSON.stringify([formData.available_location]));
+    } else {
       data.append(key, formData[key]);
     }
+  }
 
     if (profileImage) {
       data.append("profile_image", profileImage);
