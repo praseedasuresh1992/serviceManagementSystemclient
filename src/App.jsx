@@ -15,6 +15,7 @@ import CreateBooking from './pages/CreateBooking';
 import ViewProviderProfile from './pages/ProviderPages/ViewProviderProfile';
 import UpdateProviderProfile from './pages/ProviderPages/UpdateProviderProfile';
 import CreateAvailability from './pages/ProviderPages/CreateAvailability';
+import Logout from './components/Logout';
 
 function App() {
 
@@ -42,7 +43,9 @@ function App() {
 
       ] 
     },
-    { path: "/createbooking", element: <ProtectedRoute><CreateBooking/> </ProtectedRoute>}
+    { path: "/createbooking", element: <ProtectedRoute><CreateBooking/> </ProtectedRoute>},
+    { path: "/logout", element: <Logout/> }
+
   ]);
 
   return <RouterProvider router={router} />;
