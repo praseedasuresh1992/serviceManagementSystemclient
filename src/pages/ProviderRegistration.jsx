@@ -27,7 +27,7 @@ const ProviderRegistration = () => {
     const fetchCategories = async () => {
       try {
         const res = await api.get("/viewAllcategory"); // <--- Your backend route
-        setCategories(res.data);
+        setCategories(res.data.data|| []);
       } catch (error) {
         console.error("Failed to load categories:", error);
       }
