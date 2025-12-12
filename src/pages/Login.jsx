@@ -37,7 +37,7 @@ const Login = () => {
     setMessage("Login successful!");
     // Redirection to Dashboard
        if(res.data.user.role==="admin"){
-                nav("/admin")
+                nav("/adminDashboard")
             }
             else if(res.data.user.role==="user"){
                 nav("/userDashboard")

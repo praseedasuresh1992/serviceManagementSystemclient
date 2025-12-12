@@ -13,6 +13,8 @@ function Logout() {
 
         // Clear localStorage token
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
         sessionStorage.clear(); // optional
       } catch (err) {
         console.log("Logout error:", err);
