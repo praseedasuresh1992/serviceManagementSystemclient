@@ -18,16 +18,17 @@ const ViewAllComplaints = () => {
   }, [statusFilter, complaints]);
 
   const fetchComplaints = async () => {
-    try {
-      const res = await api.get("/viewAllcomplaints");
-      setComplaints(res.data);
-      setFilteredComplaints(res.data);
-    } catch (err) {
-      setError("Failed to load complaints");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const res = await api.get("/viewAllcomplaints");
+    // Use res.data.data instead of res.data
+    setComplaints(res.data.data || []);
+    setFilteredComplaints(res.data.data || []);
+  } catch (err) {
+    setError("Failed to load complaints");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const applyFilter = () => {
     if (statusFilter === "all") {
