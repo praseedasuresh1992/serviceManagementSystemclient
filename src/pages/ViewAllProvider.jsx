@@ -12,7 +12,7 @@ export default function ViewAllProvider() {
   const fetchProviders = async () => {
     try {
       const res = await api.get("/viewallproviders");
-      setProviders(res.data.providers || []);
+      setProviders(res.data|| []);
     } catch (err) {
       console.error("Fetch providers error:", err);
     }
