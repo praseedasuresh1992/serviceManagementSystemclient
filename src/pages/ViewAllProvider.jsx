@@ -21,7 +21,7 @@ export default function ViewAllProvider() {
   // ✅ Verify / Unverify
   const toggleVerifyProvider = async (provider) => {
     try {
-      await api.put(`/admin/verifyprovider/${provider._id}`, {
+      await api.put(`/verifyprovider/${provider._id}`, {
         verified: !provider.verified,
       });
       fetchProviders();
@@ -33,7 +33,7 @@ export default function ViewAllProvider() {
   // ✅ Block / Activate
   const toggleProviderStatus = async (provider) => {
     try {
-      await api.put(`/admin/verifyprovider/${provider._id}`, {
+      await api.put(`/verifyprovider/${provider._id}`, {
         status: provider.status === "active" ? "blocked" : "active",
       });
       fetchProviders();
