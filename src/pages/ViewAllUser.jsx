@@ -8,7 +8,7 @@ export default function ViewAllUsers() {
   // Fetch users from backend
  useEffect(() => {
   api
-    .get("//viewAllUsers")
+    .get("/viewAllUsers")
     .then((res) => {
       setUsers(res.data);
     })

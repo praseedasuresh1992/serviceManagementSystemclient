@@ -17,6 +17,9 @@ import UpdateProviderProfile from './pages/ProviderPages/UpdateProviderProfile';
 import CreateAvailability from './pages/ProviderPages/CreateAvailability';
 import Logout from './components/Logout';
 import ViewAllUsers from './pages/ViewAllUser';
+import ViewAllProvider from './pages/ViewAllProvider';
+import ViewAllComplaints from './pages/viewAllComplaints';
+import ViewComplaintsById from './pages/ViewComplaintsById';
 
 function App() {
 
@@ -35,7 +38,12 @@ function App() {
     // dashboards without navbar
     { path: "/userDashboard", element: <ProtectedRoute><Userdashboard /></ProtectedRoute>},
     { path: "/adminDashboard", element: <AdminDashboard /> ,children:[
-      {path:"ViewAllUsers" ,element:<ProtectedRoute><ViewAllUsers/></ProtectedRoute>}
+      {path:"ViewAllUsers" ,element:<ProtectedRoute><ViewAllUsers/></ProtectedRoute>},
+      {path:"ViewAllProviders" ,element:<ProtectedRoute><ViewAllProvider/></ProtectedRoute>},
+      {path:"ViewAllComplaints" ,element:<ProtectedRoute><ViewAllComplaints/></ProtectedRoute>},
+      {path:"ViewComplaintsById" ,element:<ProtectedRoute><ViewComplaintsById/></ProtectedRoute>}
+
+
     ]},
     { path: "/providerDashboard", element:<ProtectedRoute><ProviderDashboard /></ProtectedRoute> ,
       children:[
