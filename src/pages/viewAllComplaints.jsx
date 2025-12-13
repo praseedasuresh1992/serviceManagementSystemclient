@@ -44,8 +44,7 @@ const fetchComplaints = async () => {
   const updateStatus = async (id, status) => {
     try {
       setUpdatingId(id);
-
-      await api.patch(`/api/complaints/${id}/status`, { status });
+      await api.put(`/complaints/${id}/status`, { status });
 
       setComplaints((prev) =>
         prev.map((c) =>
