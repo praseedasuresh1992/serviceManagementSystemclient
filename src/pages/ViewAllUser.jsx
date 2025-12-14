@@ -25,6 +25,7 @@ export default function ViewAllUsers() {
         <Table striped bordered hover responsive className="rounded-xl overflow-hidden">
           <thead className="bg-dark text-white">
             <tr>
+              <th>Id</th>
               <th>Name</th>
               <th>Email</th>
               <th>Address</th>
@@ -36,6 +37,7 @@ export default function ViewAllUsers() {
             {users.length > 0 ? (
               users.map((user) => (
                 <tr key={user._id}>
+                  <td>{user._id}</td>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
                   <td>{user.address}</td>

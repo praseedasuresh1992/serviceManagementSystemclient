@@ -12,7 +12,7 @@ export default function ViewAllProvider() {
   const fetchProviders = async () => {
     try {
       const res = await api.get("/viewallproviders");
-      setProviders(res.data|| []);
+      setProviders(res.data || []);
     } catch (err) {
       console.error("Fetch providers error:", err);
     }
@@ -60,8 +60,12 @@ export default function ViewAllProvider() {
                 />
                 <div>
                   <h5 className="fw-bold mb-0">{p.name}</h5>
-                  <small className="text-muted">{p.email}</small>
+                  <small className="text-muted d-block">{p.email}</small>
+                  <small className="text-secondary">
+                    <strong>ID:</strong> {p._id}
+                  </small>
                 </div>
+
               </div>
 
               <p><strong>Contact:</strong> {p.contactno}</p>
@@ -86,13 +90,12 @@ export default function ViewAllProvider() {
               <p>
                 <strong>Status:</strong>{" "}
                 <span
-                  className={`fw-bold ${
-                    p.status === "active"
+                  className={`fw-bold ${p.status === "active"
                       ? "text-success"
                       : p.status === "blocked"
-                      ? "text-danger"
-                      : "text-warning"
-                  }`}
+                        ? "text-danger"
+                        : "text-warning"
+                    }`}
                 >
                   {p.status}
                 </span>
@@ -142,9 +145,8 @@ export default function ViewAllProvider() {
 
                 <button
                   onClick={() => toggleProviderStatus(p)}
-                  className={`btn rounded-pill ${
-                    p.status === "active" ? "btn-warning" : "btn-success"
-                  }`}
+                  className={`btn rounded-pill ${p.status === "active" ? "btn-warning" : "btn-success"
+                    }`}
                 >
                   {p.status === "active" ? "Block" : "Activate"}
                 </button>
