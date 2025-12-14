@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axiosInstance from "../../api/axiosInstance";
+import api from "../config/axiosinstance";
 
 const ViewComplaintsById = () => {
   const { id } = useParams(); 
@@ -11,7 +11,7 @@ const ViewComplaintsById = () => {
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const response = await axiosInstance.get(
+        const response = await api.get(
           `/viewcomplaintsById/${id}`
         );
 
