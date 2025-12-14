@@ -41,7 +41,7 @@ function App() {
       {path:"ViewAllUsers" ,element:<ProtectedRoute><ViewAllUsers/></ProtectedRoute>},
       {path:"ViewAllProviders" ,element:<ProtectedRoute><ViewAllProvider/></ProtectedRoute>},
       {path:"ViewAllComplaints" ,element:<ProtectedRoute><ViewAllComplaints/></ProtectedRoute>},
-      {path:`ViewComplaintsById/${providerId} `,element:<ProtectedRoute><ViewComplaintsById/></ProtectedRoute>}
+      {path:`ViewComplaintsById/:id `,element:<ProtectedRoute><ViewComplaintsById/></ProtectedRoute>}
 
 
     ]},
