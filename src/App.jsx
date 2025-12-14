@@ -37,7 +37,7 @@ function App() {
 
     // dashboards without navbar
     { path: "/userDashboard", element: <ProtectedRoute><Userdashboard /></ProtectedRoute>},
-    { path: "/adminDashboard", element: <AdminDashboard /> ,children:[
+    { path: "/adminDashboard", element:<ProtectedRoute> <AdminDashboard /> </ProtectedRoute>,children:[
       {path:"ViewAllUsers" ,element:<ProtectedRoute><ViewAllUsers/></ProtectedRoute>},
       {path:"ViewAllProviders" ,element:<ProtectedRoute><ViewAllProvider/></ProtectedRoute>},
       {path:"ViewAllComplaints" ,element:<ProtectedRoute><ViewAllComplaints/></ProtectedRoute>},
