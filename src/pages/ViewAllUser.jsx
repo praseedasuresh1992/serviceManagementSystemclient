@@ -10,7 +10,7 @@ export default function ViewAllUsers() {
   api
     .get("/viewAllUsers")
     .then((res) => {
-      setUsers(res.data);
+      setUsers(res.data.data);
     })
     .catch((err) => {
       console.error("Error fetching users:", err);
