@@ -23,7 +23,7 @@ export default function AdminDashboard() {
             <input
               value={providerId}
               onChange={(e) => setProviderId(e.target.value)}
-              placeholder="Enter Provider ID ..."
+              placeholder="Enter complaint ID ..."
               className="flex-1 p-3 border rounded-xl"
             />
             <Button
