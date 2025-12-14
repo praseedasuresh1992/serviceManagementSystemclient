@@ -101,6 +101,7 @@ const fetchComplaints = async () => {
           <thead className="table-dark">
             <tr>
               <th>#</th>
+              <th>Id</th>
               <th>User</th>
               <th>Provider</th>
               <th>Complaint</th>
@@ -122,7 +123,7 @@ const fetchComplaints = async () => {
               filteredComplaints.map((complaint, index) => (
                 <tr key={complaint._id}>
                   <td>{index + 1}</td>
-
+                  <td>{complaint._id}</td>
                   <td>
                     {complaint.user_id?.name || "N/A"}
                     <br />
