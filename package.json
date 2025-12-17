@@ -9,6 +9,8 @@
     "start": "vite preview --port 10000 --host"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^5.4.1",
+    "@stripe/stripe-js": "^8.6.0",
     "@tailwindcss/vite": "^4.1.17",
     "axios": "^1.13.2",
     "bootstrap": "^5.3.8",

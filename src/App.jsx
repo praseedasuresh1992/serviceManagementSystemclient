@@ -20,7 +20,12 @@ import ViewAllUsers from './pages/ViewAllUser';
 import ViewAllProvider from './pages/ViewAllProvider';
 import ViewAllComplaints from './pages/viewAllComplaints';
 import ViewComplaintsById from './pages/ViewComplaintsById';
-
+import UpdateUserProfile from './pages/UserPages/UpdateUserProfile';
+import ViewMyBookings from './pages/UserPages/ViewMyBookings';
+import CreateServiceCategory from './pages/adminpages/CreateServiceCategory';
+import ViewAllServiceCategory from './pages/adminpages/ViewAllServiceCategory';
+import PaymentPage from './pages/PaymentPage';
+import BookingSuccess from './pages/BookingSuccess';
 function App() {
 
   const router = createBrowserRouter([
@@ -36,12 +41,22 @@ function App() {
     },
 
     // dashboards without navbar
-    { path: "/userDashboard", element: <ProtectedRoute><Userdashboard /></ProtectedRoute>},
+    { path: "/userDashboard", element: <ProtectedRoute><Userdashboard /></ProtectedRoute>,
+      children:[
+      {path:"UpdateMyUserProfile" ,element:<ProtectedRoute><UpdateUserProfile/></ProtectedRoute>},
+      {path:"ViewMyBookings" ,element:<ProtectedRoute><ViewMyBookings/></ProtectedRoute>},
+      { path:"payment", element:<PaymentPage />},
+      { path:"booking-success", element:<BookingSuccess /> }
+      ]
+    },
     { path: "/adminDashboard", element:<ProtectedRoute> <AdminDashboard /> </ProtectedRoute>,children:[
       {path:"ViewAllUsers" ,element:<ProtectedRoute><ViewAllUsers/></ProtectedRoute>},
       {path:"ViewAllProviders" ,element:<ProtectedRoute><ViewAllProvider/></ProtectedRoute>},
       {path:"ViewAllComplaints" ,element:<ProtectedRoute><ViewAllComplaints/></ProtectedRoute>},
-      {path:"ViewComplaintsById/:id",element:<ProtectedRoute><ViewComplaintsById/></ProtectedRoute>}
+      {path:"ViewComplaintsById/:id",element:<ProtectedRoute><ViewComplaintsById/></ProtectedRoute>},
+      {path:"CreateServiceCategory" ,element:<ProtectedRoute><CreateServiceCategory/></ProtectedRoute>},
+      {path:"ViewAllServiceCategory" ,element:<ProtectedRoute><ViewAllServiceCategory/></ProtectedRoute>},
+
 
     ]},
     { path: "/providerDashboard", element:<ProtectedRoute><ProviderDashboard /></ProtectedRoute> ,

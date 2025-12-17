@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { FaSignOutAlt } from "react-icons/fa";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -17,13 +17,20 @@ export default function AdminDashboard() {
       <div className="min-h-screen p-6 bg-gray-100">
         <div className="max-w-3xl mx-auto p-6 shadow-xl rounded-2xl bg-white">
           <h1 className="text-3xl font-bold mb-6 text-center">Admin Dashboard</h1>
-
+          <Button
+                      variant="danger"
+                      onClick={() => navigate("/logout")}
+                      style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                    >
+                      <FaSignOutAlt /> Logout
+                    </Button>
           {/* Search Section */}
           <div className="flex items-center gap-3 mb-6">
+
             <input
               value={providerId}
               onChange={(e) => setProviderId(e.target.value)}
-              placeholder="Enter complaint ID ..."
+              placeholder="Enter provider ID ..."
               className="flex-1 p-3 border rounded-xl"
             />
             <Button
@@ -31,7 +38,7 @@ export default function AdminDashboard() {
               className="p-3 rounded-xl"
               onClick={handleSearch}
             >
-              Search
+              Find Complaints
             </Button>
           </div>
 
@@ -57,6 +64,19 @@ export default function AdminDashboard() {
             >
               View All Complaints
             </Button>
+            <Button
+              onClick={() => navigate("/adminDashboard/CreateServiceCategory")}
+              className="p-4 rounded-2xl text-lg bg-gray-200"
+            >
+              create Service Category
+            </Button>
+            <Button
+              onClick={() => navigate("/adminDashboard/ViewAllServiceCategory")}
+              className="p-4 rounded-2xl text-lg bg-gray-200"
+            >
+              View All Service Categories
+            </Button>
+         
           </div>
         </div>
       </div>
