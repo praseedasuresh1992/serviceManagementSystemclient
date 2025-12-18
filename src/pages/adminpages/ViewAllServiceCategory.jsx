@@ -11,31 +11,38 @@ const ViewAllServiceCategory = () => {
   }, []);
 
   const fetchCategories = async () => {
-    try {
-      const res = await api.get("/service-category");
-      setCategories(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  try {
+    const res = await api.get("/service-category");
+    setCategories(res.data.data || []);
+  } catch (err) {
+    console.error(err);
+    setCategories([]);
+  }
+};
+const handleChange = (id, field, value) => {
+  setCategories((prev) =>
+    prev.map((cat) => {
+      if (cat._id !== id) return cat;
 
-  const handleChange = (id, field, value) => {
-    setCategories((prev) =>
-      prev.map((cat) =>
-        cat._id === id
-          ? {
-              ...cat,
-              basic_amount:
-                field === "full_day" || field === "half_day"
-                  ? { ...cat.basic_amount, [field]: value }
-                  : cat.basic_amount,
-              [field !== "full_day" && field !== "half_day" ? field : null]:
-                field !== "full_day" && field !== "half_day" ? value : undefined,
-            }
-          : cat
-      )
-    );
-  };
+      // Nested fields for basic_amount
+      if (field === "full_day" || field === "half_day") {
+        return {
+          ...cat,
+          basic_amount: {
+            ...cat.basic_amount,
+            [field]: value,
+          },
+        };
+      }
+
+      // Normal fields
+      return {
+        ...cat,
+        [field]: value,
+      };
+    })
+  );
+};
 
   const handleUpdate = async (category) => {
     try {
