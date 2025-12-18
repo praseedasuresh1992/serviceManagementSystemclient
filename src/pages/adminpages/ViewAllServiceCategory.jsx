@@ -25,15 +25,16 @@ const handleChange = (id, field, value) => {
       if (cat._id !== id) return cat;
 
       // Nested fields for basic_amount
-      if (field === "full_day" || field === "half_day") {
-        return {
-          ...cat,
-          basic_amount: {
-            ...cat.basic_amount,
-            [field]: value,
-          },
-        };
-      }
+    if (field === "full_day" || field === "half_day") {
+  return {
+    ...cat,
+    basic_amount: {
+      ...(cat.basic_amount || {}),
+      [field]: value,
+    },
+  };
+}
+
 
       // Normal fields
       return {
@@ -123,29 +124,30 @@ const handleChange = (id, field, value) => {
                   />
                 </td>
 
-                <td>
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={cat.basic_amount.full_day}
-                    disabled={editId !== cat._id}
-                    onChange={(e) =>
-                      handleChange(cat._id, "full_day", e.target.value)
-                    }
-                  />
-                </td>
+               <td>
+  <input
+    type="number"
+    className="form-control"
+    value={cat.basic_amount?.full_day || ""}
+    disabled={editId !== cat._id}
+    onChange={(e) =>
+      handleChange(cat._id, "full_day", e.target.value)
+    }
+  />
+</td>
 
-                <td>
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={cat.basic_amount.half_day}
-                    disabled={editId !== cat._id}
-                    onChange={(e) =>
-                      handleChange(cat._id, "half_day", e.target.value)
-                    }
-                  />
-                </td>
+<td>
+  <input
+    type="number"
+    className="form-control"
+    value={cat.basic_amount?.half_day || ""}
+    disabled={editId !== cat._id}
+    onChange={(e) =>
+      handleChange(cat._id, "half_day", e.target.value)
+    }
+  />
+</td>
+
 
                 <td className="space-y-2">
                   {editId === cat._id ? (
