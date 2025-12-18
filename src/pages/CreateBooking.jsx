@@ -21,7 +21,7 @@ const CreateBooking = () => {
 
   // Load categories
   useEffect(() => {
-    api.get("/viewAllcategory").then(res => {
+    api.get("/service-category").then(res => {
       setCategories(res.data.data);
     });
   }, []);
