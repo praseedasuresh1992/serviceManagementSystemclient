@@ -43,6 +43,7 @@ function App() {
     // dashboards without navbar
     { path: "/userDashboard", element: <ProtectedRoute><Userdashboard /></ProtectedRoute>,
       children:[
+      { path:"createbooking", element: <ProtectedRoute><CreateBooking/> </ProtectedRoute>},
       {path:"UpdateMyUserProfile" ,element:<ProtectedRoute><UpdateUserProfile/></ProtectedRoute>},
       {path:"ViewMyBookings" ,element:<ProtectedRoute><ViewMyBookings/></ProtectedRoute>},
       { path:"payment", element:<PaymentPage />},
@@ -68,7 +69,6 @@ function App() {
 
       ] 
     },
-    { path: "/createbooking", element: <ProtectedRoute><CreateBooking/> </ProtectedRoute>},
     { path: "/logout", element: <Logout/> }
 
   ]);
