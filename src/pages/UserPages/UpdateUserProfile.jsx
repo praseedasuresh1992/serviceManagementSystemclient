@@ -36,19 +36,31 @@ const UpdateUserProfile = () => {
   };
 
   // ================= UPDATE PROFILE =================
+ 
   const handleUpdate = async () => {
-    try {
-      setLoading(true);
-      await api.put("/updateMyUserProfile", profile);
-      alert("Profile updated successfully");
-      setIsEditing(false);
-      fetchProfile();
-    } catch (error) {
-      alert(error.response?.data?.message || "Update failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+
+    const updateData = {
+      name: profile.name,
+      email: profile.email,
+      address: profile.address,
+      contactno: profile.contactno,
+      username: profile.username
+    };
+
+    await api.put("/updateMyUserProfile", updateData);
+
+    alert("Profile updated successfully");
+    setIsEditing(false);
+    fetchProfile();
+  } catch (error) {
+    alert(error.response?.data?.message || "Update failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // ================= CANCEL EDIT =================
   const handleCancel = () => {

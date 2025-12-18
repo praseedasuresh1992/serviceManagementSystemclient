@@ -19,14 +19,14 @@ const ProviderRegistration = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [documents, setDocuments] = useState([]);
 
-  const [categories, setCategories] = useState([]); // ✅ store category list
+  const [categories, setCategories] = useState([]); //  store category list
   const [message, setMessage] = useState("");
 
   // Fetch categories when page loads
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await api.get("/viewAllcategory"); // <--- Your backend route
+        const res = await api.get("/service-category");
         setCategories(res.data.data|| []);
       } catch (error) {
         console.error("Failed to load categories:", error);

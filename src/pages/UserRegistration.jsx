@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import api from "../config/axiosinstance";
 
 const UserRegistration = () => {
+  const navigate=useNavigate()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,7 +35,8 @@ const UserRegistration = () => {
         formData
       );
 
-      setMessage("User created successfully!");
+      setMessage("your account created  successfully!");
+       navigate("/login")
       setFormData({
         name: "",
         email: "",
@@ -44,10 +47,10 @@ const UserRegistration = () => {
       });
     } catch (err) {
       console.error(err);
-      setMessage("Error creating user");
+      setMessage("Error creating user account");
     }
   };
-
+  
   return (
     <div className="flex justify-center mt-10">
       <div className="w-full max-w-lg p-6 bg-white shadow-xl rounded-2xl border">
