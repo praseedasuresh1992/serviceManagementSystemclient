@@ -7,7 +7,13 @@ function Userdashboard() {
     <>
     <Container className="mt-5">
       <h2 className="text-center mb-4">User Dashboard</h2>
-
+         <Button
+                            variant="danger"
+                            onClick={() => navigate("/logout")}
+                            style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                          >
+                            <FaSignOutAlt /> Logout
+                          </Button>
       <Row className="g-4">
         <Col md={4}>
           <Card className="p-3 shadow-sm text-center">
