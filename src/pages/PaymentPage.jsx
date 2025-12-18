@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { stripePromise } from "../stripe";
+import {stripePromise} from "../Stripe"
 import api from "../config/axiosinstance";
 import { useLocation, useNavigate } from "react-router-dom";
 
