@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import api from "../../config/axiosinstance";
-import { Form, Button, Container, Card } from "react-bootstrap";
+import { Form, Button, Container, Card, Alert, Spinner } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 function UpdateProviderProfile() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -11,17 +14,14 @@ function UpdateProviderProfile() {
     address: "",
     available_location: "",
     is_group: false,
-    members: "",
-    service_category: ""
+    members: 1
   });
 
-  const [profileImage, setProfileImage] = useState("");
-  const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  // =========================
-  // FETCH PROVIDER PROFILE
-  // =========================
+  // ================= FETCH EXISTING PROFILE =================
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -36,14 +36,10 @@ function UpdateProviderProfile() {
           address: p.address || "",
           available_location: p.available_location?.join(", ") || "",
           is_group: p.is_group || false,
-          members: p.members || "",
-          service_category: p.service_category || ""
+          members: p.members || 1
         });
-
-        setProfileImage(p.profile_image?.url || "");
-        setDocuments(p.verification_document || []);
       } catch (err) {
-        console.error("Error fetching profile", err);
+        setError("Failed to load profile");
       } finally {
         setLoading(false);
       }
@@ -52,91 +48,60 @@ function UpdateProviderProfile() {
     fetchProfile();
   }, []);
 
-  // =========================
-  // HANDLE INPUT CHANGE
-  // =========================
+  // ================= HANDLE INPUT =================
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
     setForm({
       ...form,
       [name]: type === "checkbox" ? checked : value
     });
   };
 
-  // =========================
-  // UPDATE PROFILE
-  // =========================
+  // ================= SUBMIT UPDATE =================
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const payload = {
-      ...form,
-      available_location: form.available_location
-        .split(",")
-        .map((l) => l.trim())
-    };
+    setSaving(true);
+    setError("");
 
     try {
+      const payload = {
+        ...form,
+        available_location: form.available_location
+          .split(",")
+          .map((loc) => loc.trim())
+      };
+
       await api.post("/updateprovider", payload);
-      alert("Profile updated successfully");
+
+      // ✅ Redirect back with refresh flag
+      navigate("/providerDashboard/viewprovider", {
+        state: { refresh: true }
+      });
+
     } catch (err) {
-      console.error("Update error:", err);
-      alert("Failed to update profile");
+      setError("Update failed. Please check your details.");
+    } finally {
+      setSaving(false);
     }
   };
 
-  if (loading) {
+  if (loading)
     return (
-      <Container className="mt-5 text-center">
-        <h5>Loading profile...</h5>
-      </Container>
+      <div className="text-center mt-5">
+        <Spinner animation="border" />
+      </div>
     );
-  }
 
   return (
     <Container className="mt-5">
-      <Card className="p-4 shadow">
+      <Card className="p-4 shadow" style={{ maxWidth: "650px", margin: "0 auto" }}>
+        <h3 className="mb-4 text-center fw-bold">Update Profile</h3>
 
-        {/* ================= PROFILE IMAGE ================= */}
-        <div className="text-center mb-4">
-          {profileImage ? (
-            <img
-              src={profileImage}
-              alt="Profile"
-              style={{
-                width: "130px",
-                height: "130px",
-                borderRadius: "50%",
-                objectFit: "cover",
-                border: "2px solid #ccc"
-              }}
-            />
-          ) : (
-            <p>No profile image</p>
-          )}
-        </div>
+        {error && <Alert variant="danger">{error}</Alert>}
 
-        {/* ================= DOCUMENTS ================= */}
-        <div className="mb-4">
-          <h5>Verification Documents</h5>
-          {documents.length === 0 && <p>No documents uploaded</p>}
-
-          {documents.map((doc, index) => (
-            <div key={index}>
-              <a
-                href={doc.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Document {index + 1}
-              </a>
-            </div>
-          ))}
-        </div>
-
-        {/* ================= FORM ================= */}
         <Form onSubmit={handleSubmit}>
-          <Form.Group>
+          <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
             <Form.Control
               name="name"
@@ -146,17 +111,18 @@ function UpdateProviderProfile() {
             />
           </Form.Group>
 
-          <Form.Group className="mt-2">
+          <Form.Group className="mb-3">
             <Form.Label>Email</Form.Label>
             <Form.Control
               name="email"
+              type="email"
               value={form.email}
               onChange={handleChange}
               required
             />
           </Form.Group>
 
-          <Form.Group className="mt-2">
+          <Form.Group className="mb-3">
             <Form.Label>Username</Form.Label>
             <Form.Control
               name="username"
@@ -166,45 +132,46 @@ function UpdateProviderProfile() {
             />
           </Form.Group>
 
-          <Form.Group className="mt-2">
+          <Form.Group className="mb-3">
             <Form.Label>Contact Number</Form.Label>
             <Form.Control
               name="contactno"
               value={form.contactno}
               onChange={handleChange}
-              maxLength={10}
               pattern="[0-9]{10}"
               required
             />
+            <Form.Text className="text-muted">
+              Enter 10-digit mobile number
+            </Form.Text>
           </Form.Group>
 
-          <Form.Group className="mt-2">
+          <Form.Group className="mb-3">
             <Form.Label>Address</Form.Label>
             <Form.Control
               name="address"
+              as="textarea"
               value={form.address}
               onChange={handleChange}
               required
             />
           </Form.Group>
 
-          <Form.Group className="mt-2">
+          <Form.Group className="mb-3">
             <Form.Label>Available Locations</Form.Label>
             <Form.Control
               name="available_location"
               value={form.available_location}
               onChange={handleChange}
-              placeholder="e.g. Kochi, Aluva, Kakkanad"
+              placeholder="Kochi, Trivandrum, Thrissur"
+              required
             />
-            <small className="text-muted">
-              Separate multiple locations with commas
-            </small>
           </Form.Group>
 
-          <Form.Group className="mt-2">
+          <Form.Group className="mb-3">
             <Form.Check
               type="checkbox"
-              label="Is Group"
+              label="Is Group?"
               name="is_group"
               checked={form.is_group}
               onChange={handleChange}
@@ -212,29 +179,34 @@ function UpdateProviderProfile() {
           </Form.Group>
 
           {form.is_group && (
-            <Form.Group className="mt-2">
+            <Form.Group className="mb-3">
               <Form.Label>Members</Form.Label>
               <Form.Control
                 type="number"
+                min="1"
                 name="members"
                 value={form.members}
                 onChange={handleChange}
-                min={1}
               />
             </Form.Group>
           )}
 
-          <Button className="mt-4" type="submit">
-            Update Profile
-          </Button>
+          <div className="d-flex justify-content-between mt-4">
+            <Button
+              variant="secondary"
+              onClick={() => navigate(-1)}
+            >
+              Cancel
+            </Button>
 
-          <Button
-            className="mt-4 ms-3"
-            variant="warning"
-            href="/provider/change-password"
-          >
-            Change Password
-          </Button>
+            <Button
+              type="submit"
+              disabled={saving}
+              variant="primary"
+            >
+              {saving ? "Saving..." : "Update Profile"}
+            </Button>
+          </div>
         </Form>
       </Card>
     </Container>
