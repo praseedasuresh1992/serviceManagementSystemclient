@@ -5,86 +5,90 @@ import { Button, Modal, Form } from "react-bootstrap";
 import api from "../../config/axiosinstance";
 
 export default function CreateAvailability() {
-  const [availability, setAvailability] = useState([]); 
+  const [availability, setAvailability] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentDate, setCurrentDate] = useState("");
-  const [selectedSlots, setSelectedSlots] = useState([]);
+  const [selectedSlot, setSelectedSlot] = useState("");
 
-  // when a date is clicked
+  // ===============================
+  // Date click
+  // ===============================
   const handleDateClick = (date) => {
     const formatted = date.toISOString().split("T")[0];
     setCurrentDate(formatted);
-
-    const existing = availability.find((a) => a.date === formatted);
-
-    if (existing) {
-      setSelectedSlots(existing.slots);
-    } else {
-      setSelectedSlots([]);
-    }
-
+    setSelectedSlot("");
     setShowModal(true);
   };
 
-  // toggle slots
-  const toggleSlot = (slot) => {
-    if (selectedSlots.includes(slot)) {
-      setSelectedSlots(selectedSlots.filter((s) => s !== slot));
-    } else {
-      setSelectedSlots([...selectedSlots, slot]);
-    }
-  };
-
-  // save slot selection for the date
-  const saveSlotSelection = () => {
-    let updated = [...availability];
-
-    updated = updated.filter((a) => a.date !== currentDate);
-
-    if (selectedSlots.length > 0) {
-      updated.push({
-        date: currentDate,
-        slots: selectedSlots,
-      });
+  // ===============================
+  // Save slot for date
+  // ===============================
+  const saveSlot = () => {
+    if (!selectedSlot) {
+      alert("Please select a slot");
+      return;
     }
 
-    setAvailability(updated);
+    const exists = availability.some(
+      (a) => a.date === currentDate && a.slot === selectedSlot
+    );
+
+    if (exists) {
+      alert("This slot already exists for selected date");
+      return;
+    }
+
+    setAvailability([
+      ...availability,
+      { date: currentDate, slot: selectedSlot }
+    ]);
+
     setShowModal(false);
   };
 
-  // highlight selected dates
+  // ===============================
+  // Remove availability
+  // ===============================
+  const removeAvailability = (index) => {
+    setAvailability(availability.filter((_, i) => i !== index));
+  };
+
+  // ===============================
+  // Highlight calendar dates
+  // ===============================
   const tileClassName = ({ date }) => {
     const formatted = date.toISOString().split("T")[0];
-    return availability.find((a) => a.date === formatted)
-      ? "bg-blue-500 text-white rounded-full"
+    return availability.some((a) => a.date === formatted)
+      ? "bg-success text-white rounded-circle"
       : "";
   };
 
+  // ===============================
+  // Submit to backend
+  // ===============================
   const submitHandler = async () => {
     if (availability.length === 0) {
-      alert("Please select atleast one date");
+      alert("Select at least one availability");
       return;
     }
 
     try {
       const res = await api.post("/addProviderAvailability", {
-        availability,
+        availability
       });
 
-      alert("Availability Saved!");
-      console.log(res.data);
+      alert(res.data.message || "Availability saved");
+      setAvailability([]);
     } catch (err) {
-      alert("Error submitting");
       console.error(err);
+      alert(err.response?.data?.message || "Error saving availability");
     }
   };
 
   return (
-    <div className="flex justify-center mt-10 px-4">
-      <div className="w-full max-w-xl bg-white shadow-lg rounded-2xl p-6">
-        <h2 className="text-2xl font-bold text-center mb-4">
-          Multi-Slot Availability
-        </h2>
+    <div className="container mt-4">
+      <div className="card shadow p-4">
+        <h3 className="text-center mb-3">Create Availability</h3>
 
         {/* Calendar */}
         <Calendar
@@ -93,73 +97,77 @@ export default function CreateAvailability() {
           minDate={new Date()}
         />
 
-        {/* Selected List */}
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold">Selected Availability</h3>
-          <div className="space-y-3 mt-3">
-            {availability.map((item, index) => (
-              <div
-                key={index}
-                className="flex justify-between p-3 bg-gray-100 rounded-xl"
-              >
-                <span>{item.date}</span>
-                <span className="font-semibold">{item.slots.join(", ")}</span>
+        {/* Selected availability */}
+        <div className="mt-4">
+          <h5>Selected Availability</h5>
 
-                <button
-                  className="bg-red-500 text-white px-3 py-1 rounded"
-                  onClick={() =>
-                    setAvailability(availability.filter((a) => a.date !== item.date))
-                  }
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
+          {availability.length === 0 && (
+            <p className="text-muted">No availability selected</p>
+          )}
+
+          {availability.map((item, index) => (
+            <div
+              key={index}
+              className="d-flex justify-content-between align-items-center border rounded p-2 mb-2"
+            >
+              <span>
+                <strong>{item.date}</strong> — {item.slot}
+              </span>
+
+              <Button
+                size="sm"
+                variant="danger"
+                onClick={() => removeAvailability(index)}
+              >
+                Remove
+              </Button>
+            </div>
+          ))}
         </div>
 
         <Button
-          className="w-full mt-5 py-2 text-lg rounded-xl"
+          className="w-100 mt-3"
           variant="success"
           onClick={submitHandler}
         >
-          Submit
+          Submit Availability
         </Button>
-
-        {/* SLOT SELECT MODAL */}
-        <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-          <Modal.Header closeButton>
-            <Modal.Title>Select Slot(s) for {currentDate}</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            <Form>
-              <Form.Check
-                type="checkbox"
-                label="Day"
-                checked={selectedSlots.includes("day")}
-                onChange={() => toggleSlot("day")}
-              />
-              <Form.Check
-                type="checkbox"
-                label="Evening"
-                checked={selectedSlots.includes("evening")}
-                onChange={() => toggleSlot("evening")}
-              />
-            </Form>
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowModal(false)}>
-              Cancel
-            </Button>
-
-            <Button variant="primary" onClick={saveSlotSelection}>
-              Save
-            </Button>
-          </Modal.Footer>
-        </Modal>
       </div>
+
+      {/* SLOT MODAL */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Select Slot for {currentDate}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <Form>
+            <Form.Check
+              type="radio"
+              name="slot"
+              label="Day"
+              checked={selectedSlot === "day"}
+              onChange={() => setSelectedSlot("day")}
+            />
+            <Form.Check
+              type="radio"
+              name="slot"
+              label="Evening"
+              checked={selectedSlot === "evening"}
+              onChange={() => setSelectedSlot("evening")}
+            />
+          </Form>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={saveSlot}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
