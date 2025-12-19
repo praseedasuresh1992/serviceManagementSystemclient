@@ -27,7 +27,7 @@ const ProviderRegistration = () => {
     const fetchCategories = async () => {
       try {
         const res = await api.get("/service-category");
-        setCategories(res.data.data|| []);
+        setCategories(res.data.data);
       } catch (error) {
         console.error("Failed to load categories:", error);
       }

@@ -2,9 +2,11 @@ import React from "react";
 import { Button, Card, Container, Row, Col } from "react-bootstrap";
 import { Outlet } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 
 function Userdashboard() {
+  const navigate=useNavigate();
   return (
     <>
     <Container className="mt-5">
