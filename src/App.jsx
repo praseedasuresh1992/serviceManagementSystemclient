@@ -62,8 +62,9 @@ function App() {
     ]},
     { path: "/providerDashboard", element:<ProtectedRoute><ProviderDashboard /></ProtectedRoute> ,
       children:[
-            { path: "viewprovider", element: <ProtectedRoute><ViewProviderProfile /> </ProtectedRoute>},
-            { path: "updateprovider", element: <ProtectedRoute><UpdateProviderProfile /> </ProtectedRoute>},
+            { path: "viewprovider", element: <ProtectedRoute><ViewProviderProfile /> </ProtectedRoute>,
+              children:[
+            { path: "updateprovider", element: <ProtectedRoute><UpdateProviderProfile /> </ProtectedRoute>}]},
             { path: "create_availability", element: <ProtectedRoute><CreateAvailability/> </ProtectedRoute>},
 
 

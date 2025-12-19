@@ -134,7 +134,7 @@ function ViewProviderProfile() {
                   borderRadius: "12px",
                   backgroundColor: "#4e73df",
                 }}
-                onClick={() => (window.location.href = "/updateprovider")}
+                onClick={() => (window.location.href = "viewprovider/updateprovider")}
               >
                 Update Profile
               </Button>
