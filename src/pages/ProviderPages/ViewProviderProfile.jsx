@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import api from "../../config/axiosinstance";
 import { Card, Button, Alert, Container, Row, Col } from "react-bootstrap";
+import { Outlet, useNavigate } from "react-router-dom";
 
 function ViewProviderProfile() {
+  const navigate=useNavigate();
+
+  
   const [provider, setProvider] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -25,6 +29,7 @@ function ViewProviderProfile() {
   if (!provider) return <p className="text-center mt-5">No profile found</p>;
 
   return (
+    <>
     <Container className="mt-5">
       <h2 className="fw-bold text-center mb-4">My Profile</h2>
 
@@ -134,7 +139,7 @@ function ViewProviderProfile() {
                   borderRadius: "12px",
                   backgroundColor: "#4e73df",
                 }}
-                onClick={() => (window.location.href = "/providerDashboard/viewprovider/updateprovider")}
+                onClick={() => navigate( "/providerDashboard/viewprovider/updateprovider")}
               >
                 Update Profile
               </Button>
@@ -143,6 +148,8 @@ function ViewProviderProfile() {
         </Row>
       </Card>
     </Container>
+    <Outlet/>
+    </>
   );
 }
 
