@@ -1,46 +1,52 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { Button, Modal, Form } from "react-bootstrap";
+import { Modal, Button, Form } from "react-bootstrap";
 import api from "../../config/axiosinstance";
 
 export default function CreateAvailability() {
   const [availability, setAvailability] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentDate, setCurrentDate] = useState("");
-  const [selectedSlot, setSelectedSlot] = useState("");
+  const [availabilityType, setAvailabilityType] = useState("");
 
   // ===============================
-  // Date click
+  // Handle date click
   // ===============================
   const handleDateClick = (date) => {
     const formatted = date.toISOString().split("T")[0];
     setCurrentDate(formatted);
-    setSelectedSlot("");
+    setAvailabilityType("");
     setShowModal(true);
   };
 
   // ===============================
-  // Save slot for date
+  // Save availability for date
   // ===============================
-  const saveSlot = () => {
-    if (!selectedSlot) {
-      alert("Please select a slot");
+  const saveAvailability = () => {
+    if (!availabilityType) {
+      alert("Please select availability type");
       return;
     }
 
     const exists = availability.some(
-      (a) => a.date === currentDate && a.slot === selectedSlot
+      (a) =>
+        a.date === currentDate &&
+        a.availability_type === availabilityType
     );
 
     if (exists) {
-      alert("This slot already exists for selected date");
+      alert("Availability already exists for this date");
       return;
     }
 
     setAvailability([
       ...availability,
-      { date: currentDate, slot: selectedSlot }
+      {
+        date: currentDate,
+        availability_type: availabilityType,
+        is_available: true
+      }
     ]);
 
     setShowModal(false);
@@ -54,7 +60,7 @@ export default function CreateAvailability() {
   };
 
   // ===============================
-  // Highlight calendar dates
+  // Highlight selected dates
   // ===============================
   const tileClassName = ({ date }) => {
     const formatted = date.toISOString().split("T")[0];
@@ -68,7 +74,7 @@ export default function CreateAvailability() {
   // ===============================
   const submitHandler = async () => {
     if (availability.length === 0) {
-      alert("Select at least one availability");
+      alert("Please select at least one availability");
       return;
     }
 
@@ -77,32 +83,33 @@ export default function CreateAvailability() {
         availability
       });
 
-      alert(res.data.message || "Availability saved");
+      alert(res.data.message || "Availability saved successfully");
       setAvailability([]);
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Error saving availability");
+    } catch (error) {
+      console.error(error);
+      alert(
+        error.response?.data?.message ||
+          "Error saving availability"
+      );
     }
   };
 
   return (
     <div className="container mt-4">
       <div className="card shadow p-4">
-        <h3 className="text-center mb-3">Create Availability</h3>
+        <h3 className="text-center mb-3">Provider Availability</h3>
 
-        {/* Calendar */}
         <Calendar
           onClickDay={handleDateClick}
           tileClassName={tileClassName}
           minDate={new Date()}
         />
 
-        {/* Selected availability */}
         <div className="mt-4">
           <h5>Selected Availability</h5>
 
           {availability.length === 0 && (
-            <p className="text-muted">No availability selected</p>
+            <p className="text-muted">No availability added</p>
           )}
 
           {availability.map((item, index) => (
@@ -111,7 +118,8 @@ export default function CreateAvailability() {
               className="d-flex justify-content-between align-items-center border rounded p-2 mb-2"
             >
               <span>
-                <strong>{item.date}</strong> — {item.slot}
+                <strong>{item.date}</strong> —{" "}
+                {item.availability_type.replace("_", " ")}
               </span>
 
               <Button
@@ -126,35 +134,38 @@ export default function CreateAvailability() {
         </div>
 
         <Button
-          className="w-100 mt-3"
           variant="success"
+          className="w-100 mt-3"
           onClick={submitHandler}
         >
           Submit Availability
         </Button>
       </div>
 
-      {/* SLOT MODAL */}
+      {/* Modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Select Slot for {currentDate}</Modal.Title>
+          <Modal.Title>
+            Select Availability for {currentDate}
+          </Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           <Form>
             <Form.Check
               type="radio"
-              name="slot"
-              label="Day"
-              checked={selectedSlot === "day"}
-              onChange={() => setSelectedSlot("day")}
+              label="Full Day"
+              name="availability"
+              checked={availabilityType === "full_day"}
+              onChange={() => setAvailabilityType("full_day")}
             />
+
             <Form.Check
               type="radio"
-              name="slot"
-              label="Evening"
-              checked={selectedSlot === "evening"}
-              onChange={() => setSelectedSlot("evening")}
+              label="Half Day"
+              name="availability"
+              checked={availabilityType === "half_day"}
+              onChange={() => setAvailabilityType("half_day")}
             />
           </Form>
         </Modal.Body>
@@ -163,7 +174,7 @@ export default function CreateAvailability() {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={saveSlot}>
+          <Button variant="primary" onClick={saveAvailability}>
             Save
           </Button>
         </Modal.Footer>
