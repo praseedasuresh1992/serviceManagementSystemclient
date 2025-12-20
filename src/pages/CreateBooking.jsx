@@ -40,7 +40,7 @@ const CreateBooking = () => {
   /* ================= FETCH PROVIDER BOOKINGS ================= */
   const fetchProviderBookings = async (providerId) => {
     try {
-      const res = await api.get(`/bookings/provider/${providerId}`);
+      const res = await api.get(`/provider/${providerId}`);
 
       const dates = res.data.data.flatMap(b =>
         b.booking_dates.map(d => ({
