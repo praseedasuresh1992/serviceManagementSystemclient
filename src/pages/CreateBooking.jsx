@@ -9,6 +9,7 @@ import { isSameDay } from "date-fns";
 const CreateBooking = () => {
   const navigate = useNavigate();
 
+  /* ================= STATE ================= */
   const [categories, setCategories] = useState([]);
   const [providers, setProviders] = useState([]);
   const [bookedDates, setBookedDates] = useState([]);
@@ -21,6 +22,8 @@ const CreateBooking = () => {
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [slot, setSlot] = useState("full_day");
+
+  // IMPORTANT: uses availability_type (matches backend)
   const [bookingDates, setBookingDates] = useState([]);
 
   const [totalAmount, setTotalAmount] = useState(0);
@@ -42,7 +45,7 @@ const CreateBooking = () => {
       const dates = res.data.data.flatMap(b =>
         b.booking_dates.map(d => ({
           date: new Date(d.date),
-          slot: d.slot
+          availability_type: d.availability_type
         }))
       );
 
@@ -53,18 +56,53 @@ const CreateBooking = () => {
   };
 
   /* ================= ADD DATE ================= */
+  const addBookingDate = () => {
+    if (!selectedDate) return;
+
+    const formattedDate = selectedDate.toISOString().split("T")[0];
+
+    const exists = bookingDates.some(
+      d =>
+        d.date === formattedDate &&
+        d.availability_type === slot
+    );
+
+    if (exists) return;
+
+    const updated = [
+      ...bookingDates,
+      {
+        date: formattedDate,
+        availability_type: slot
+      }
+    ];
+
+    setBookingDates(updated);
+    fetchProviders(updated);
+    setSelectedDate(null);
+  };
+
+  /* ================= REMOVE DATE ================= */
+  const removeDate = (index) => {
+    setBookingDates(bookingDates.filter((_, i) => i !== index));
+  };
+
+  /* ================= FETCH PROVIDERS ================= */
   const fetchProviders = async (dates) => {
-  if (!formData.category_id || !formData.location || !dates.length) return;
+    if (!formData.category_id || !formData.location || !dates.length) return;
 
-  const res = await api.post("/filterProviderforbooking", {
-    category_id: formData.category_id,
-    needs: dates,
-    location: formData.location
-  });
+    try {
+      const res = await api.post("/filterProviderforbooking", {
+        category_id: formData.category_id,
+        needs: dates,
+        location: formData.location
+      });
 
-  setProviders(res.data.data || []);
-};
-
+      setProviders(res.data.data || []);
+    } catch {
+      setProviders([]);
+    }
+  };
 
   /* ================= CALCULATE AMOUNT ================= */
   const previewAmount = async () => {
@@ -82,16 +120,17 @@ const CreateBooking = () => {
   };
 
   /* ================= DISABLE BOOKED DATES ================= */
- const isDateDisabled = (date) => {
-  return bookedDates.some(b =>
-    isSameDay(new Date(b.date), date) &&
-    (b.availability_type === "full_day" ||
-     b.availability_type === slot)
-  );
-};
+  const isDateDisabled = (date) => {
+    return bookedDates.some(b =>
+      isSameDay(new Date(b.date), date) &&
+      (b.availability_type === "full_day" ||
+       b.availability_type === slot)
+    );
+  };
 
+  /* ================= UI ================= */
   return (
-    <div className="max-w-xl mx-auto p-6 border rounded shadow">
+    <div className="max-w-xl mx-auto p-6 border rounded shadow bg-white">
       <h2 className="text-xl font-bold mb-4">Create Booking</h2>
 
       {/* CATEGORY */}
@@ -157,7 +196,9 @@ const CreateBooking = () => {
           key={i}
           className="flex justify-between border p-2 mb-2 rounded"
         >
-          <span>{d.date} — {d.slot.replace("_", " ")}</span>
+          <span>
+            {d.date} — {d.availability_type.replace("_", " ")}
+          </span>
           <button
             className="text-red-600"
             onClick={() => removeDate(i)}
@@ -187,7 +228,7 @@ const CreateBooking = () => {
       {/* PREVIEW */}
       <button
         className="w-full bg-blue-600 text-white p-2 rounded"
-        disabled={!formData.provider_id || bookingDates.length === 0}
+        disabled={!formData.provider_id || !bookingDates.length}
         onClick={previewAmount}
       >
         Preview Amount
