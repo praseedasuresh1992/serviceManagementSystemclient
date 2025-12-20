@@ -53,47 +53,18 @@ const CreateBooking = () => {
   };
 
   /* ================= ADD DATE ================= */
-  const addBookingDate = () => {
-    if (!selectedDate) return;
-
-    const formattedDate = selectedDate.toISOString().split("T")[0];
-
-    const exists = bookingDates.some(
-      d => d.date === formattedDate && d.slot === slot
-    );
-
-    if (exists) return;
-
-    const updated = [...bookingDates, { date: formattedDate, slot }];
-    setBookingDates(updated);
-    fetchProviders(updated);
-    setSelectedDate(null);
-  };
-
-  /* ================= REMOVE DATE ================= */
-  const removeDate = (index) => {
-    setBookingDates(bookingDates.filter((_, i) => i !== index));
-  };
-
-  /* ================= FETCH PROVIDERS ================= */
   const fetchProviders = async (dates) => {
-    if (!formData.category_id || !formData.location || dates.length === 0) return;
+  if (!formData.category_id || !formData.location || !dates.length) return;
 
-    try {
-      const res = await api.post("/filterProviderforbooking", {
-        category_id: formData.category_id,
-        needs: dates.map(d => ({
-          date: d.date,
-          availability_type: d.slot
-        })),
-        location: formData.location
-      });
+  const res = await api.post("/filterProviderforbooking", {
+    category_id: formData.category_id,
+    needs: dates,
+    location: formData.location
+  });
 
-      setProviders(res.data.data || []);
-    } catch {
-      setProviders([]);
-    }
-  };
+  setProviders(res.data.data || []);
+};
+
 
   /* ================= CALCULATE AMOUNT ================= */
   const previewAmount = async () => {
@@ -111,12 +82,13 @@ const CreateBooking = () => {
   };
 
   /* ================= DISABLE BOOKED DATES ================= */
-  const isDateDisabled = (date) => {
-    return bookedDates.some(b =>
-      isSameDay(new Date(b.date), date) &&
-      (b.slot === "full_day" || b.slot === slot)
-    );
-  };
+ const isDateDisabled = (date) => {
+  return bookedDates.some(b =>
+    isSameDay(new Date(b.date), date) &&
+    (b.availability_type === "full_day" ||
+     b.availability_type === slot)
+  );
+};
 
   return (
     <div className="max-w-xl mx-auto p-6 border rounded shadow">
