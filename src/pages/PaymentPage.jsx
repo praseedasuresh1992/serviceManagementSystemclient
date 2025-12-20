@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import {stripePromise} from "../Stripe"
+import { stripePromise } from "../Stripe";
 import api from "../config/axiosinstance";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -17,11 +17,10 @@ const CheckoutForm = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    api.post("/create-payment-intent", {
-      totalAmount
-    }).then(res => {
-      setClientSecret(res.data.clientSecret);
-    });
+    // Create PaymentIntent
+    api.post("/create-payment-intent", { totalAmount })
+      .then(res => setClientSecret(res.data.clientSecret))
+      .catch(err => setError("Failed to initialize payment"));
   }, [totalAmount]);
 
   const handleSubmit = async (e) => {
@@ -41,31 +40,47 @@ const CheckoutForm = () => {
       setLoading(false);
     } else {
       if (result.paymentIntent.status === "succeeded") {
-
-        // ✅ Create booking AFTER payment success
+        // Booking creation after successful payment
         await api.post("/create-booking-after-payment", {
           ...formData,
           booking_dates,
           payment_id: result.paymentIntent.id
         });
-
         navigate("/booking-success");
       }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 border rounded">
-      <h2 className="text-xl font-bold mb-4">Pay Advance (8%)</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-lg w-full mx-auto p-6 rounded-lg shadow-lg bg-gray-900 text-white"
+    >
+      <h2 className="text-2xl font-bold mb-6 text-center">Pay Advance (8%)</h2>
 
-      <CardElement className="p-3 border rounded" />
+      <div className="mb-4">
+        <CardElement
+          options={{
+            style: {
+              base: {
+                color: "#fff",
+                fontSize: "16px",
+                fontFamily: "sans-serif",
+                "::placeholder": { color: "#aaa" },
+                padding: "12px 14px",
+              },
+              invalid: { color: "#ff4d4f" },
+            },
+          }}
+        />
+      </div>
 
-      {error && <p className="text-red-600 mt-2">{error}</p>}
+      {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <button
         type="submit"
         disabled={!stripe || loading}
-        className="mt-4 w-full bg-blue-600 text-white p-2 rounded"
+        className="w-full bg-blue-600 hover:bg-blue-700 transition-colors p-3 rounded-lg text-white font-semibold"
       >
         {loading ? "Processing..." : "Pay Now"}
       </button>
