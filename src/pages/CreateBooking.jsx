@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import api from "../config/axiosinstance";
-import { useNavigate } from "react-router-dom";
 import InstructionModal from "./InstructionModal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { isSameDay } from "date-fns";
 
 const CreateBooking = () => {
-  const navigate = useNavigate();
-
   /* ================= STATE ================= */
   const [categories, setCategories] = useState([]);
   const [providers, setProviders] = useState([]);
@@ -17,13 +14,11 @@ const CreateBooking = () => {
   const [formData, setFormData] = useState({
     category_id: "",
     provider_id: "",
-    location: ""
+    location: "",
   });
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [slot, setSlot] = useState("full_day");
-
-  // IMPORTANT: uses availability_type (matches backend)
   const [bookingDates, setBookingDates] = useState([]);
 
   const [totalAmount, setTotalAmount] = useState(0);
@@ -62,19 +57,14 @@ const CreateBooking = () => {
     const formattedDate = selectedDate.toISOString().split("T")[0];
 
     const exists = bookingDates.some(
-      d =>
-        d.date === formattedDate &&
-        d.availability_type === slot
+      d => d.date === formattedDate && d.availability_type === slot
     );
 
     if (exists) return;
 
     const updated = [
       ...bookingDates,
-      {
-        date: formattedDate,
-        availability_type: slot
-      }
+      { date: formattedDate, availability_type: slot }
     ];
 
     setBookingDates(updated);
@@ -95,7 +85,7 @@ const CreateBooking = () => {
       const res = await api.post("/filterProviderforbooking", {
         category_id: formData.category_id,
         needs: dates,
-        location: formData.location
+        location: formData.location,
       });
 
       setProviders(res.data.data || []);
@@ -109,7 +99,7 @@ const CreateBooking = () => {
     try {
       const res = await api.post("/calculateBookingAmount", {
         category_id: formData.category_id,
-        booking_dates: bookingDates
+        booking_dates: bookingDates,
       });
 
       setTotalAmount(res.data.total_amount);
@@ -123,9 +113,26 @@ const CreateBooking = () => {
   const isDateDisabled = (date) => {
     return bookedDates.some(b =>
       isSameDay(new Date(b.date), date) &&
-      (b.availability_type === "full_day" ||
-       b.availability_type === slot)
+      (b.availability_type === "full_day" || b.availability_type === slot)
     );
+  };
+
+  /* ================= STRIPE CHECKOUT REDIRECT ================= */
+  const goToStripeCheckout = async () => {
+    try {
+      const res = await api.post("/create-checkout-session", {
+        provider_id: formData.provider_id,
+        category_id: formData.category_id,
+        booking_dates: bookingDates,
+        location: formData.location,
+        totalAmount,
+      });
+
+      // 🔥 Redirect to Stripe hosted checkout page
+      window.location.href = res.data.url;
+    } catch {
+      setError("Unable to redirect to payment");
+    }
   };
 
   /* ================= UI ================= */
@@ -192,17 +199,9 @@ const CreateBooking = () => {
 
       {/* SELECTED DATES */}
       {bookingDates.map((d, i) => (
-        <div
-          key={i}
-          className="flex justify-between border p-2 mb-2 rounded"
-        >
-          <span>
-            {d.date} — {d.availability_type.replace("_", " ")}
-          </span>
-          <button
-            className="text-red-600"
-            onClick={() => removeDate(i)}
-          >
+        <div key={i} className="flex justify-between border p-2 mb-2 rounded">
+          <span>{d.date} — {d.availability_type.replace("_", " ")}</span>
+          <button className="text-red-600" onClick={() => removeDate(i)}>
             Remove
           </button>
         </div>
@@ -243,16 +242,7 @@ const CreateBooking = () => {
         onClose={() => setShowModal(false)}
         onAgree={() => {
           setShowModal(false);
-          navigate("/userDashboard/payment", {
-            state: {
-              provider_id: formData.provider_id,
-              category_id: formData.category_id,
-              booking_dates: bookingDates,
-              location: formData.location,
-              totalAmount,
-              advanceAmount: totalAmount * 0.08
-            }
-          });
+          goToStripeCheckout();
         }}
       />
     </div>
