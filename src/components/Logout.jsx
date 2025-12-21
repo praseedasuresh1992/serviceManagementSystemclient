@@ -29,7 +29,7 @@ function Logout() {
   }, [navigate]);
 
   return (
-    <div style={{ textAlign: "center", marginTop: "100px" }}>
+    <div style={{ textAlign: "left", marginTop: "100px" }}>
       <h3>Logging out...</h3>
     </div>
   );
