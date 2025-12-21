@@ -121,6 +121,10 @@ const CreateBooking = () => {
       setError("Complete all booking details");
       return;
     }
+    console.log("...provider_id....",formData.provider_id)
+    console.log("....category_id...",formData.category_id)
+    console.log("....bookingDates...",bookingDates)
+    console.log("....location...",formData.location)
 
     // ✅ SAVE DATA
     localStorage.setItem("booking_provider_id", JSON.stringify(formData.provider_id));
