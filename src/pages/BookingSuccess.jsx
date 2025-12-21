@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import api from "../config/axiosinstance";
@@ -15,34 +14,38 @@ const BookingSuccess = () => {
       return;
     }
 
-    const createBooking = async () => {
-      try {
-        const bookingPayload = {
-          provider_id: JSON.parse(localStorage.getItem("booking_provider_id")),
-          category_id: JSON.parse(localStorage.getItem("booking_category_id")),
-          booking_dates: JSON.parse(localStorage.getItem("booking_dates")),
-          location: JSON.parse(localStorage.getItem("booking_location")),
-          session_id
-        };
-
-        await api.post(
-          "/createbooking",
-          bookingPayload,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-
-        navigate("/userDashboard/ViewMyBookings");
-      } catch (error) {
-        console.error(error);
-        alert("Booking creation failed");
-      }
+    const bookingPayload = {
+      provider_id: JSON.parse(localStorage.getItem("booking_provider_id")),
+      category_id: JSON.parse(localStorage.getItem("booking_category_id")),
+      booking_dates: JSON.parse(localStorage.getItem("booking_dates")),
+      location: JSON.parse(localStorage.getItem("booking_location")),
+      session_id,
     };
 
-    createBooking();
+    // Basic frontend validation
+    if (
+      !bookingPayload.provider_id ||
+      !bookingPayload.category_id ||
+      !bookingPayload.booking_dates?.length ||
+      !bookingPayload.location
+    ) {
+      alert("Booking details missing");
+      return;
+    }
+
+    api
+      .post("/createbooking", bookingPayload, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then(() => {
+        navigate("/userDashboard/ViewMyBookings");
+      })
+      .catch((error) => {
+        console.error(error.response?.data || error);
+        alert("Booking creation failed");
+      });
   }, []);
 
   return <h2>Processing your booking...</h2>;
