@@ -26,6 +26,7 @@ import CreateServiceCategory from './pages/adminpages/CreateServiceCategory';
 import ViewAllServiceCategory from './pages/adminpages/ViewAllServiceCategory';
 import PaymentPage from './pages/PaymentPage';
 import BookingSuccess from './pages/BookingSuccess';
+import BookingCancel from './pages/BookingCancel';
 function App() {
 
   const router = createBrowserRouter([
@@ -47,7 +48,9 @@ function App() {
       {path:"UpdateMyUserProfile" ,element:<ProtectedRoute><UpdateUserProfile/></ProtectedRoute>},
       {path:"ViewMyBookings" ,element:<ProtectedRoute><ViewMyBookings/></ProtectedRoute>},
       { path:"payment", element:<PaymentPage />},
-      { path:"booking-success", element:<BookingSuccess /> }
+      { path:"booking-success", element:<BookingSuccess /> },
+      { path:"booking-cancel", element:<BookingCancel/> }
+
       ]
     },
     { path: "/adminDashboard", element:<ProtectedRoute> <AdminDashboard /> </ProtectedRoute>,children:[
