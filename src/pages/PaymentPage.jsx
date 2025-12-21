@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { stripePromise } from "../Stripe";
+import { loadStripe } from "@stripe/stripe-js";
 import api from "../config/axiosinstance";
 import { useLocation, useNavigate } from "react-router-dom";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -10,22 +12,33 @@ const CheckoutForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { formData, booking_dates, totalAmount } = location.state;
+  const { formData, booking_dates, totalAmount } = location.state || {};
 
   const [clientSecret, setClientSecret] = useState("");
+  const [advanceAmount, setAdvanceAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Create PaymentIntent
   useEffect(() => {
-    // Create PaymentIntent
-    api.post("/create-payment-intent", { totalAmount })
-      .then(res => setClientSecret(res.data.clientSecret))
-      .catch(err => setError("Failed to initialize payment"));
+    if (!totalAmount) return;
+
+    api
+      .post("/create-payment-intent", { totalAmount })
+      .then((res) => {
+        setClientSecret(res.data.clientSecret);
+        setAdvanceAmount(res.data.advanceAmount);
+      })
+      .catch(() => setError("Failed to initialize payment"));
   }, [totalAmount]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!stripe || !elements) return;
+
+    if (!stripe || !elements || !clientSecret) {
+      setError("Payment not ready");
+      return;
+    }
 
     setLoading(true);
 
@@ -38,36 +51,42 @@ const CheckoutForm = () => {
     if (result.error) {
       setError(result.error.message);
       setLoading(false);
-    } else {
-      if (result.paymentIntent.status === "succeeded") {
-        // Booking creation after successful payment
-        await api.post("/create-booking-after-payment", {
-          ...formData,
-          booking_dates,
-          payment_id: result.paymentIntent.id
-        });
-        navigate("/booking-success");
-      }
+    } else if (result.paymentIntent.status === "succeeded") {
+      await api.post("/create-booking-after-payment", {
+        ...formData,
+        booking_dates,
+        total_amount: totalAmount,
+        advance_paid: advanceAmount,
+        remaining_amount: totalAmount - advanceAmount,
+        payment_id: result.paymentIntent.id,
+        payment_type: "advance",
+      });
+
+      navigate("/booking-success");
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-lg w-full mx-auto p-6 rounded-lg shadow-lg bg-gray-900 text-white"
+      className="max-w-md w-full mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg"
     >
-      <h2 className="text-2xl font-bold mb-6 text-center">Pay Advance (8%)</h2>
+      <h2 className="text-xl font-bold mb-4 text-center">
+        Pay Advance (8%)
+      </h2>
 
-      <div className="mb-4">
+      <p className="text-center mb-4 text-gray-300">
+        Advance Amount: <span className="font-semibold">₹{advanceAmount}</span>
+      </p>
+
+      <div className="p-3 border rounded mb-4">
         <CardElement
           options={{
             style: {
               base: {
-                color: "#fff",
+                color: "#ffffff",
                 fontSize: "16px",
-                fontFamily: "sans-serif",
-                "::placeholder": { color: "#aaa" },
-                padding: "12px 14px",
+                "::placeholder": { color: "#aaaaaa" },
               },
               invalid: { color: "#ff4d4f" },
             },
@@ -75,15 +94,19 @@ const CheckoutForm = () => {
         />
       </div>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && <p className="text-red-500 mb-3">{error}</p>}
 
       <button
         type="submit"
         disabled={!stripe || loading}
-        className="w-full bg-blue-600 hover:bg-blue-700 transition-colors p-3 rounded-lg text-white font-semibold"
+        className="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded font-semibold"
       >
-        {loading ? "Processing..." : "Pay Now"}
+        {loading ? "Processing..." : `Pay ₹${advanceAmount}`}
       </button>
+
+      <p className="text-xs text-gray-400 text-center mt-3">
+        Test Card: 4242 4242 4242 4242 | Any future date | Any CVV
+      </p>
     </form>
   );
 };
