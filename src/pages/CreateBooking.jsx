@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { isSameDay } from "date-fns";
 
 const CreateBooking = () => {
+  /* ================= STATE ================= */
   const [categories, setCategories] = useState([]);
   const [providers, setProviders] = useState([]);
   const [bookedDates, setBookedDates] = useState([]);
@@ -24,14 +25,14 @@ const CreateBooking = () => {
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState("");
 
-  /* LOAD CATEGORIES */
+  /* ================= LOAD CATEGORIES ================= */
   useEffect(() => {
     api.get("/service-category")
       .then(res => setCategories(res.data.data))
       .catch(() => setError("Failed to load categories"));
   }, []);
 
-  /* FETCH PROVIDER BOOKINGS */
+  /* ================= FETCH PROVIDER BOOKINGS ================= */
   const fetchProviderBookings = async (providerId) => {
     try {
       const res = await api.get(`/provider-bookings/${providerId}`);
@@ -49,7 +50,7 @@ const CreateBooking = () => {
     }
   };
 
-  /* ADD DATE */
+  /* ================= ADD DATE ================= */
   const addBookingDate = () => {
     if (!selectedDate) return;
 
@@ -61,16 +62,18 @@ const CreateBooking = () => {
 
     if (exists) return;
 
-    setBookingDates([...bookingDates, { date: formattedDate, slot }]);
+    const updated = [...bookingDates, { date: formattedDate, slot }];
+    setBookingDates(updated);
+    fetchProviders(updated);
     setSelectedDate(null);
   };
 
-  /* REMOVE DATE */
+  /* ================= REMOVE DATE ================= */
   const removeDate = (index) => {
     setBookingDates(bookingDates.filter((_, i) => i !== index));
   };
 
-  /* FETCH PROVIDERS */
+  /* ================= FETCH PROVIDERS ================= */
   const fetchProviders = async (dates) => {
     if (!formData.category_id || !formData.location || !dates.length) return;
 
@@ -87,7 +90,7 @@ const CreateBooking = () => {
     }
   };
 
-  /* PREVIEW AMOUNT */
+  /* ================= CALCULATE AMOUNT ================= */
   const previewAmount = async () => {
     try {
       const res = await api.post("/calculateBookingAmount", {
@@ -102,31 +105,39 @@ const CreateBooking = () => {
     }
   };
 
-  /* DISABLE BOOKED DATES */
+  /* ================= DISABLE BOOKED DATES ================= */
   const isDateDisabled = (date) => {
     return bookedDates.some(b =>
+      b?.date &&
+      b?.slot &&
       isSameDay(new Date(b.date), date) &&
       (b.slot === "full_day" || b.slot === slot)
     );
   };
 
-  /* STRIPE CHECKOUT */
+  /* ================= STRIPE CHECKOUT ================= */
   const goToStripeCheckout = async () => {
     if (
       !formData.provider_id ||
       !formData.category_id ||
       !formData.location ||
-      !bookingDates.length
+      !bookingDates.length ||
+      !totalAmount
     ) {
       setError("Complete all booking details");
       return;
     }
-    console.log("...provider_id....",formData.provider_id)
-    console.log("....category_id...",formData.category_id)
-    console.log("....bookingDates...",bookingDates)
-    console.log("....location...",formData.location)
 
-    // ✅ SAVE DATA
+    /* 🔥 CONSOLE LOG BEFORE SAVING */
+    console.log("Saving booking data to localStorage:", {
+      provider_id: formData.provider_id,
+      category_id: formData.category_id,
+      booking_dates: bookingDates,
+      location: formData.location,
+      totalAmount,
+    });
+
+    /* 🔐 SAVE TO LOCAL STORAGE */
     localStorage.setItem("booking_provider_id", JSON.stringify(formData.provider_id));
     localStorage.setItem("booking_category_id", JSON.stringify(formData.category_id));
     localStorage.setItem("booking_dates", JSON.stringify(bookingDates));
@@ -143,10 +154,12 @@ const CreateBooking = () => {
     }
   };
 
+  /* ================= UI ================= */
   return (
     <div className="max-w-xl mx-auto p-6 border rounded shadow bg-white">
       <h2 className="text-xl font-bold mb-4">Create Booking</h2>
 
+      {/* CATEGORY */}
       <select
         className="w-full p-2 border mb-3"
         value={formData.category_id}
@@ -158,6 +171,7 @@ const CreateBooking = () => {
         ))}
       </select>
 
+      {/* LOCATION */}
       <input
         className="w-full p-2 border mb-3"
         placeholder="Location"
@@ -165,6 +179,7 @@ const CreateBooking = () => {
         onChange={e => setFormData({ ...formData, location: e.target.value })}
       />
 
+      {/* CALENDAR */}
       <DatePicker
         selected={selectedDate}
         onChange={setSelectedDate}
@@ -173,28 +188,27 @@ const CreateBooking = () => {
         inline
       />
 
-      <select
-        className="w-full p-2 border my-3"
-        value={slot}
-        onChange={e => setSlot(e.target.value)}
-      >
-        <option value="full_day">Full Day</option>
-        <option value="half_day">Half Day</option>
-      </select>
+      <div className="flex gap-3 mt-3">
+        <select value={slot} onChange={e => setSlot(e.target.value)}>
+          <option value="full_day">Full Day</option>
+          <option value="half_day">Half Day</option>
+        </select>
 
-      <button className="w-full bg-green-600 text-white p-2" onClick={addBookingDate}>
-        Add Date
-      </button>
+        <button onClick={addBookingDate} className="bg-green-600 text-white px-4 py-2 rounded">
+          Add Date
+        </button>
+      </div>
 
       {bookingDates.map((d, i) => (
-        <div key={i} className="flex justify-between border p-2 mt-2">
-          <span>{d.date} — {d.slot}</span>
-          <button onClick={() => removeDate(i)}>❌</button>
+        <div key={i} className="flex justify-between mt-2">
+          <span>{d.date} — {d.slot.replace("_", " ")}</span>
+          <button onClick={() => removeDate(i)}>Remove</button>
         </div>
       ))}
 
+      {/* PROVIDERS */}
       <select
-        className="w-full p-2 border my-3"
+        className="w-full p-2 border mt-3"
         value={formData.provider_id}
         onChange={e => {
           setFormData({ ...formData, provider_id: e.target.value });
@@ -203,11 +217,16 @@ const CreateBooking = () => {
       >
         <option value="">Select Provider</option>
         {providers.map(p => (
-          <option key={p._id} value={p._id}>{p.name}</option>
+          <option key={p._id} value={p._id}>
+            {p.name} ({p.available_location})
+          </option>
         ))}
       </select>
 
-      <button className="w-full bg-blue-600 text-white p-2" onClick={previewAmount}>
+      <button
+        className="w-full bg-blue-600 text-white p-2 mt-3"
+        onClick={previewAmount}
+      >
         Preview Amount
       </button>
 
