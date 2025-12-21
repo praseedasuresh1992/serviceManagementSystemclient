@@ -35,7 +35,7 @@ const BookingSuccess = () => {
           }
         );
 
-        navigate("ViewMyBookings");
+        navigate("/userDashboard/ViewMyBookings");
       } catch (error) {
         console.error(error);
         alert("Booking creation failed");
