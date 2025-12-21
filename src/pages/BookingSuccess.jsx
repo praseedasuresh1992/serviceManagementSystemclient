@@ -8,7 +8,6 @@ const BookingSuccess = () => {
 
   useEffect(() => {
     const session_id = params.get("session_id");
-
     if (!session_id) {
       alert("Invalid payment session");
       return;
@@ -21,10 +20,7 @@ const BookingSuccess = () => {
       location: JSON.parse(localStorage.getItem("booking_location")),
       session_id,
     };
-    console.log("Booking payload:", bookingPayload);
 
-
-    // Basic frontend validation
     if (
       !bookingPayload.provider_id ||
       !bookingPayload.category_id ||
@@ -35,24 +31,23 @@ const BookingSuccess = () => {
       return;
     }
 
-    api
-      .post("/createbooking", bookingPayload, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+    api.post("/createbooking", bookingPayload, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
     .then(() => {
-  localStorage.removeItem("booking_provider_id");
-  localStorage.removeItem("booking_category_id");
-  localStorage.removeItem("booking_dates");
-  localStorage.removeItem("booking_location");
+      localStorage.removeItem("booking_provider_id");
+      localStorage.removeItem("booking_category_id");
+      localStorage.removeItem("booking_dates");
+      localStorage.removeItem("booking_location");
 
-  navigate("/userDashboard/ViewMyBookings");
-})
-      .catch((error) => {
-        console.error(error.response?.data || error);
-        alert("Booking creation failed");
-      });
+      navigate("/userDashboard/ViewMyBookings");
+    })
+    .catch((error) => {
+      console.error(error.response?.data || error);
+      alert("Booking creation failed");
+    });
   }, []);
 
   return <h2>Processing your booking...</h2>;
