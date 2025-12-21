@@ -119,7 +119,26 @@ const CreateBooking = () => {
 
   /* ================= STRIPE CHECKOUT REDIRECT ================= */
   const goToStripeCheckout = async () => {
-    try {
+    try {localStorage.setItem(
+  "booking_provider_id",
+  JSON.stringify(formData.provider_id)
+);
+
+localStorage.setItem(
+  "booking_category_id",
+  JSON.stringify(formData.category_id)
+);
+
+localStorage.setItem(
+  "booking_dates",
+  JSON.stringify(bookingDates)
+);
+
+localStorage.setItem(
+  "booking_location",
+  JSON.stringify(formData.location)
+);
+
       const res = await api.post("/create-checkout-session", {
         provider_id: formData.provider_id,
         category_id: formData.category_id,

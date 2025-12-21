@@ -21,6 +21,8 @@ const BookingSuccess = () => {
       location: JSON.parse(localStorage.getItem("booking_location")),
       session_id,
     };
+    console.log("Booking payload:", bookingPayload);
+
 
     // Basic frontend validation
     if (
@@ -39,9 +41,14 @@ const BookingSuccess = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
-      .then(() => {
-        navigate("/userDashboard/ViewMyBookings");
-      })
+    .then(() => {
+  localStorage.removeItem("booking_provider_id");
+  localStorage.removeItem("booking_category_id");
+  localStorage.removeItem("booking_dates");
+  localStorage.removeItem("booking_location");
+
+  navigate("/userDashboard/ViewMyBookings");
+})
       .catch((error) => {
         console.error(error.response?.data || error);
         alert("Booking creation failed");
