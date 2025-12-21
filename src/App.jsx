@@ -2,7 +2,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import ProtectedRoute from './ProtectedRoutes'; 
+import ProtectedRoute from './ProtectedRoutes';
 import ServiceNavbar from './components/ServiceNavbar';
 import ProviderRegistration from './pages/ProviderRegistration';
 import UserRegistration from './pages/UserRegistration';
@@ -42,38 +42,45 @@ function App() {
     },
 
     // dashboards without navbar
-    { path: "/userDashboard", element: <ProtectedRoute><Userdashboard /></ProtectedRoute>,
-      children:[
-      { path:"createbooking", element: <ProtectedRoute><CreateBooking/> </ProtectedRoute>},
-      {path:"UpdateMyUserProfile" ,element:<ProtectedRoute><UpdateUserProfile/></ProtectedRoute>},
-      {path:"ViewMyBookings" ,element:<ProtectedRoute><ViewMyBookings/></ProtectedRoute>},
-      { path:"payment", element:<PaymentPage />},
-      { path:"booking-success", element:<BookingSuccess /> },
-      { path:"booking-cancel", element:<BookingCancel/> }
+    {
+      path: "/userDashboard", element: <ProtectedRoute><Userdashboard /></ProtectedRoute>,
+      children: [
+        { path: "createbooking", element: <ProtectedRoute><CreateBooking /> </ProtectedRoute> },
+        { path: "UpdateMyUserProfile", element: <ProtectedRoute><UpdateUserProfile /></ProtectedRoute> },
+        { path: "ViewMyBookings", element: <ProtectedRoute><ViewMyBookings /></ProtectedRoute> },
+        { path: "payment", element: <PaymentPage /> },
+
 
       ]
     },
-    { path: "/adminDashboard", element:<ProtectedRoute> <AdminDashboard /> </ProtectedRoute>,children:[
-      {path:"ViewAllUsers" ,element:<ProtectedRoute><ViewAllUsers/></ProtectedRoute>},
-      {path:"ViewAllProviders" ,element:<ProtectedRoute><ViewAllProvider/></ProtectedRoute>},
-      {path:"ViewAllComplaints" ,element:<ProtectedRoute><ViewAllComplaints/></ProtectedRoute>},
-      {path:"ViewComplaintsById/:id",element:<ProtectedRoute><ViewComplaintsById/></ProtectedRoute>},
-      {path:"CreateServiceCategory" ,element:<ProtectedRoute><CreateServiceCategory/></ProtectedRoute>},
-      {path:"ViewAllServiceCategory" ,element:<ProtectedRoute><ViewAllServiceCategory/></ProtectedRoute>},
+    {
+      path: "/adminDashboard", element: <ProtectedRoute> <AdminDashboard /> </ProtectedRoute>, children: [
+        { path: "ViewAllUsers", element: <ProtectedRoute><ViewAllUsers /></ProtectedRoute> },
+        { path: "ViewAllProviders", element: <ProtectedRoute><ViewAllProvider /></ProtectedRoute> },
+        { path: "ViewAllComplaints", element: <ProtectedRoute><ViewAllComplaints /></ProtectedRoute> },
+        { path: "ViewComplaintsById/:id", element: <ProtectedRoute><ViewComplaintsById /></ProtectedRoute> },
+        { path: "CreateServiceCategory", element: <ProtectedRoute><CreateServiceCategory /></ProtectedRoute> },
+        { path: "ViewAllServiceCategory", element: <ProtectedRoute><ViewAllServiceCategory /></ProtectedRoute> }
 
 
-    ]},
-    { path: "/providerDashboard", element:<ProtectedRoute><ProviderDashboard /></ProtectedRoute> ,
-      children:[
-            { path: "viewprovider", element: <ProtectedRoute><ViewProviderProfile /> </ProtectedRoute>,
-              children:[
-            { path: "updateprovider", element: <ProtectedRoute><UpdateProviderProfile /> </ProtectedRoute>}]},
-            { path: "create_availability", element: <ProtectedRoute><CreateAvailability/> </ProtectedRoute>},
-
-
-      ] 
+      ]
     },
-    { path: "/logout", element: <Logout/> }
+    {
+      path: "/providerDashboard", element: <ProtectedRoute><ProviderDashboard /></ProtectedRoute>,
+      children: [
+        {
+          path: "viewprovider", element: <ProtectedRoute><ViewProviderProfile /> </ProtectedRoute>,
+          children: [
+            { path: "updateprovider", element: <ProtectedRoute><UpdateProviderProfile /> </ProtectedRoute> }]
+        },
+        { path: "create_availability", element: <ProtectedRoute><CreateAvailability /> </ProtectedRoute> },
+
+
+      ]
+    },
+    { path: "booking-success", element: <BookingSuccess /> },
+    { path: "booking-cancel", element: <BookingCancel /> },
+    { path: "/logout", element: <Logout /> }
 
   ]);
 
