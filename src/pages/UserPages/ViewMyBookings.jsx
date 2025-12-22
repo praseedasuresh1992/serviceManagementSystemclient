@@ -29,14 +29,11 @@ const ViewMyBookings = () => {
 
   const fetchBookings = async () => {
     try {
-      const res = await api.get(
-        "viewMyBookings",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await api.get("viewMyBookings", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       setBookings(res.data.data);
     } catch (err) {
       console.error(err);
@@ -68,7 +65,7 @@ const ViewMyBookings = () => {
         "/createrating",
         {
           booking_id: booking._id,
-          provider_id: booking.provider_id._id, // 🔗 linked to provider profile
+          provider_id: booking.provider_id._id,
           rating: data.rating,
           feedback: data.feedback,
         },
@@ -81,7 +78,7 @@ const ViewMyBookings = () => {
 
       alert("⭐ Feedback submitted successfully");
 
-      // Optional: disable feedback after submit
+      // Mark as submitted
       setFeedbackState((prev) => ({
         ...prev,
         [booking._id]: { submitted: true },
@@ -105,82 +102,86 @@ const ViewMyBookings = () => {
       ) : (
         <div className="grid md:grid-cols-2 gap-6">
           {bookings.map((booking) => (
-            <div key={booking._id} className="card shadow-lg">
-              <div className="card-body">
-                <h5 className="card-title font-semibold">
-                  {booking.category_id?.category_name}
-                </h5>
+            <div key={booking._id} className="card shadow-lg p-4 rounded">
+              <h5 className="text-lg font-semibold mb-2">
+                {booking.category_id?.category_name}
+              </h5>
 
-                <p>
-                  <strong>Provider:</strong> {booking.provider_id?.name}
-                </p>
+              <p>
+                <strong>Provider:</strong> {booking.provider_id?.name} (
+                {booking.provider_id?.available_location})
+              </p>
 
-                <p>
-                  <strong>Date:</strong>{" "}
-                  {new Date(booking.booking_date).toLocaleDateString()}
-                </p>
-
-                <p>
-                  <strong>Amount:</strong> ₹{booking.amount}
-                </p>
-
-                <span
-                  className={`badge ${
-                    booking.status === "completed"
-                      ? "bg-success"
-                      : "bg-warning"
-                  }`}
-                >
-                  {booking.status}
-                </span>
-
-                {/* ⭐ Rating & Feedback */}
-                {booking.status === "completed" &&
-                  !feedbackState[booking._id]?.submitted && (
-                    <div className="mt-4 border-t pt-3">
-                      <h6 className="font-semibold mb-2">
-                        Rate this service
-                      </h6>
-
-                      <StarRating
-                        rating={feedbackState[booking._id]?.rating || 0}
-                        onChange={(value) =>
-                          updateFeedback(
-                            booking._id,
-                            "rating",
-                            value
-                          )
-                        }
-                      />
-
-                      <textarea
-                        className="form-control mt-3"
-                        rows="3"
-                        placeholder="Write your feedback..."
-                        onChange={(e) =>
-                          updateFeedback(
-                            booking._id,
-                            "feedback",
-                            e.target.value
-                          )
-                        }
-                      />
-
-                      <button
-                        className="btn btn-primary w-full mt-3"
-                        onClick={() => submitFeedback(booking)}
-                      >
-                        Submit Feedback
-                      </button>
-                    </div>
-                  )}
-
-                {feedbackState[booking._id]?.submitted && (
-                  <p className="text-success mt-3 font-semibold">
-                    ✔ Feedback submitted
-                  </p>
-                )}
+              <div>
+                <strong>Date(s):</strong>
+                <ul className="list-disc list-inside ml-4">
+                  {booking.booking_dates.map((d, idx) => (
+                    <li key={idx}>
+                      {new Date(d.date).toLocaleDateString()} —{" "}
+                      {d.slot.replace("_", " ")}
+                    </li>
+                  ))}
+                </ul>
               </div>
+
+              <p>
+                <strong>Amount:</strong> ₹{booking.total_amount}
+              </p>
+
+              <span
+                className={`inline-block px-2 py-1 rounded text-white ${
+                  booking.status === "completed"
+                    ? "bg-green-600"
+                    : booking.status === "accepted"
+                    ? "bg-blue-600"
+                    : booking.status === "pending"
+                    ? "bg-yellow-500"
+                    : "bg-gray-500"
+                }`}
+              >
+                {booking.status}
+              </span>
+
+              {/* ⭐ Rating & Feedback */}
+              {booking.status === "completed" &&
+                !feedbackState[booking._id]?.submitted && (
+                  <div className="mt-4 border-t pt-3">
+                    <h6 className="font-semibold mb-2">Rate this service</h6>
+
+                    <StarRating
+                      rating={feedbackState[booking._id]?.rating || 0}
+                      onChange={(value) =>
+                        updateFeedback(booking._id, "rating", value)
+                      }
+                    />
+
+                    <textarea
+                      className="w-full border rounded mt-2 p-2"
+                      rows="3"
+                      placeholder="Write your feedback..."
+                      onChange={(e) =>
+                        updateFeedback(
+                          booking._id,
+                          "feedback",
+                          e.target.value
+                        )
+                      }
+                    />
+
+                    <button
+                      className="w-full bg-blue-600 text-white py-2 mt-2 rounded"
+                      onClick={() => submitFeedback(booking)}
+                    >
+                      Submit Feedback
+                    </button>
+                  </div>
+                )}
+
+              {feedbackState[booking._id]?.submitted && (
+                <p className="text-green-600 mt-2 font-semibold">
+                  ✔ Feedback submitted
+                </p>
+              )}
             </div>
           ))}
         </div>
