@@ -35,12 +35,12 @@ const CreateBooking = () => {
   /* ================= FETCH PROVIDER BOOKINGS ================= */
   const fetchProviderBookings = async (providerId) => {
     try {
-      const res = await api.get(`/provider-bookings/${providerId}`);
+      const res = await api.get(`/provider/${providerId}`);
 
       const dates = res.data.data.flatMap(b =>
         b.booking_dates.map(d => ({
           date: new Date(d.date),
-          slot: d.slot
+          availability_type: d.availability_type
         }))
       );
 
@@ -57,12 +57,16 @@ const CreateBooking = () => {
     const formattedDate = selectedDate.toISOString().split("T")[0];
 
     const exists = bookingDates.some(
-      d => d.date === formattedDate && d.slot === slot
+      d => d.date === formattedDate && d.availability_type === slot
     );
 
     if (exists) return;
 
-    const updated = [...bookingDates, { date: formattedDate, slot }];
+    const updated = [
+      ...bookingDates,
+      { date: formattedDate, availability_type: slot }
+    ];
+
     setBookingDates(updated);
     fetchProviders(updated);
     setSelectedDate(null);
@@ -108,46 +112,42 @@ const CreateBooking = () => {
   /* ================= DISABLE BOOKED DATES ================= */
   const isDateDisabled = (date) => {
     return bookedDates.some(b =>
-      b?.date &&
-      b?.slot &&
       isSameDay(new Date(b.date), date) &&
-      (b.slot === "full_day" || b.slot === slot)
+      (b.availability_type === "full_day" || b.availability_type === slot)
     );
   };
 
-  /* ================= STRIPE CHECKOUT ================= */
+  /* ================= STRIPE CHECKOUT REDIRECT ================= */
   const goToStripeCheckout = async () => {
-    if (
-      !formData.provider_id ||
-      !formData.category_id ||
-      !formData.location ||
-      !bookingDates.length ||
-      !totalAmount
-    ) {
-      setError("Complete all booking details");
-      return;
-    }
+    try {localStorage.setItem(
+  "booking_provider_id",
+  JSON.stringify(formData.provider_id)
+);
 
-    /* 🔥 CONSOLE LOG BEFORE SAVING */
-    console.log("Saving booking data to localStorage:", {
-      provider_id: formData.provider_id,
-      category_id: formData.category_id,
-      booking_dates: bookingDates,
-      location: formData.location,
-      totalAmount,
-    });
+localStorage.setItem(
+  "booking_category_id",
+  JSON.stringify(formData.category_id)
+);
 
-    /* 🔐 SAVE TO LOCAL STORAGE */
-    localStorage.setItem("booking_provider_id", JSON.stringify(formData.provider_id));
-    localStorage.setItem("booking_category_id", JSON.stringify(formData.category_id));
-    localStorage.setItem("booking_dates", JSON.stringify(bookingDates));
-    localStorage.setItem("booking_location", JSON.stringify(formData.location));
+localStorage.setItem(
+  "booking_dates",
+  JSON.stringify(bookingDates)
+);
 
-    try {
+localStorage.setItem(
+  "booking_location",
+  JSON.stringify(formData.location)
+);
+
       const res = await api.post("/create-checkout-session", {
+        provider_id: formData.provider_id,
+        category_id: formData.category_id,
+        booking_dates: bookingDates,
+        location: formData.location,
         totalAmount,
       });
 
+      // 🔥 Redirect to Stripe hosted checkout page
       window.location.href = res.data.url;
     } catch {
       setError("Unable to redirect to payment");
@@ -163,11 +163,15 @@ const CreateBooking = () => {
       <select
         className="w-full p-2 border mb-3"
         value={formData.category_id}
-        onChange={e => setFormData({ ...formData, category_id: e.target.value })}
+        onChange={e =>
+          setFormData({ ...formData, category_id: e.target.value })
+        }
       >
         <option value="">Select Category</option>
         {categories.map(c => (
-          <option key={c._id} value={c._id}>{c.category_name}</option>
+          <option key={c._id} value={c._id}>
+            {c.category_name}
+          </option>
         ))}
       </select>
 
@@ -176,39 +180,55 @@ const CreateBooking = () => {
         className="w-full p-2 border mb-3"
         placeholder="Location"
         value={formData.location}
-        onChange={e => setFormData({ ...formData, location: e.target.value })}
+        onChange={e =>
+          setFormData({ ...formData, location: e.target.value })
+        }
       />
 
       {/* CALENDAR */}
-      <DatePicker
-        selected={selectedDate}
-        onChange={setSelectedDate}
-        minDate={new Date()}
-        filterDate={date => !isDateDisabled(date)}
-        inline
-      />
+      <div className="border p-3 rounded mb-4">
+        <h3 className="font-semibold mb-2">Select Dates</h3>
 
-      <div className="flex gap-3 mt-3">
-        <select value={slot} onChange={e => setSlot(e.target.value)}>
-          <option value="full_day">Full Day</option>
-          <option value="half_day">Half Day</option>
-        </select>
+        <DatePicker
+          selected={selectedDate}
+          onChange={setSelectedDate}
+          minDate={new Date()}
+          filterDate={date => !isDateDisabled(date)}
+          inline
+        />
 
-        <button onClick={addBookingDate} className="bg-green-600 text-white px-4 py-2 rounded">
-          Add Date
-        </button>
+        <div className="flex gap-3 mt-3">
+          <select
+            className="p-2 border rounded"
+            value={slot}
+            onChange={e => setSlot(e.target.value)}
+          >
+            <option value="full_day">Full Day</option>
+            <option value="half_day">Half Day</option>
+          </select>
+
+          <button
+            onClick={addBookingDate}
+            className="bg-green-600 text-white px-4 py-2 rounded"
+          >
+            Add Date
+          </button>
+        </div>
       </div>
 
+      {/* SELECTED DATES */}
       {bookingDates.map((d, i) => (
-        <div key={i} className="flex justify-between mt-2">
-          <span>{d.date} — {d.slot.replace("_", " ")}</span>
-          <button onClick={() => removeDate(i)}>Remove</button>
+        <div key={i} className="flex justify-between border p-2 mb-2 rounded">
+          <span>{d.date} — {d.availability_type.replace("_", " ")}</span>
+          <button className="text-red-600" onClick={() => removeDate(i)}>
+            Remove
+          </button>
         </div>
       ))}
 
       {/* PROVIDERS */}
       <select
-        className="w-full p-2 border mt-3"
+        className="w-full p-2 border mb-3"
         value={formData.provider_id}
         onChange={e => {
           setFormData({ ...formData, provider_id: e.target.value });
@@ -223,8 +243,10 @@ const CreateBooking = () => {
         ))}
       </select>
 
+      {/* PREVIEW */}
       <button
-        className="w-full bg-blue-600 text-white p-2 mt-3"
+        className="w-full bg-blue-600 text-white p-2 rounded"
+        disabled={!formData.provider_id || !bookingDates.length}
         onClick={previewAmount}
       >
         Preview Amount
@@ -232,6 +254,7 @@ const CreateBooking = () => {
 
       {error && <p className="text-red-600 mt-2">{error}</p>}
 
+      {/* MODAL */}
       <InstructionModal
         isOpen={showModal}
         totalAmount={totalAmount}
