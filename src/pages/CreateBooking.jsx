@@ -104,7 +104,6 @@ const CreateBooking = () => {
 
   /* ================= PREVIEW AMOUNT ================= */
   const previewAmount = async () => {
-    console.log("entered into the preview amount")
     try {
       const res = await api.post("/calculateBookingAmount", {
         category_id: formData.category_id,

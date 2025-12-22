@@ -7,7 +7,7 @@ const InstructionModal = ({
   onAgree
 }) => {
   if (!isOpen) return null;
-
+console.log("instruction modal")
   const advance = (totalAmount * 0.08).toFixed(2);
 
   return (
