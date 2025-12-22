@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import api from "../config/axiosinstance";
 import InstructionModal from "./InstructionModal";
@@ -35,7 +36,7 @@ const CreateBooking = () => {
   /* ================= FETCH PROVIDER BOOKINGS ================= */
   const fetchProviderBookings = async (providerId) => {
     try {
-      const res = await api.get(`/provider/${providerId}`);
+      const res = await api.get(`/provider-bookings/${providerId}`);
 
       const dates = res.data.data.flatMap(b =>
         b.booking_dates.map(d => ({
