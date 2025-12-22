@@ -118,28 +118,33 @@ const CreateBooking = () => {
   };
 
   /* ================= STRIPE CHECKOUT ================= */
-  const goToStripeCheckout = async () => {
-    try {
-      localStorage.setItem("booking_payload", JSON.stringify({
-        provider_id: formData.provider_id,
-        category_id: formData.category_id,
-        booking_dates: bookingDates,
-        location: formData.location,
-      }));
+ const goToStripeCheckout = async () => {
+  try {
+    const payload = {
+      provider_id: formData.provider_id,
+      category_id: formData.category_id,
+      booking_dates: bookingDates.map(d => ({
+        date: d.date,
+        slot: d.availability_type || d.slot || slot,
+      })),
+      location: formData.location,
+      total_amount: totalAmount,
+    };
 
-      const res = await api.post("/create-checkout-session", {
-        provider_id: formData.provider_id,
-        category_id: formData.category_id,
-        booking_dates: bookingDates,
-        location: formData.location,
-        totalAmount,
-      });
+    // ✅ SAFE SAVE
+    localStorage.setItem("booking_payload", JSON.stringify(payload));
 
-      window.location.href = res.data.url;
-    } catch {
-      setError("Unable to redirect to payment");
-    }
-  };
+    const res = await api.post("/create-checkout-session", {
+      ...payload,
+      totalAmount,
+    });
+
+    window.location.href = res.data.url;
+  } catch {
+    setError("Unable to redirect to payment");
+  }
+};
+
 
   /* ================= UI ================= */
   return (
