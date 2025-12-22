@@ -71,7 +71,7 @@ const CreateBooking = () => {
   const addBookingDate = () => {
     if (!selectedDate) return;
 
-    const formattedDate = selectedDate.toISOString().split("T")[0];
+const formattedDate = selectedDate.toLocaleDateString("en-CA"); 
 
     const exists = bookingDates.some(
       d => d.date === formattedDate && d.availability_type === slot
