@@ -32,35 +32,6 @@ const CreateBooking = () => {
       .catch(() => setError("Failed to load categories"));
   }, []);
 
-  /* ================= AUTO FETCH PROVIDERS ================= */
-  useEffect(() => {
-    if (
-      formData.category_id &&
-      formData.location &&
-      bookingDates.length > 0
-    ) {
-      fetchProviders(bookingDates);
-    } else {
-      setProviders([]);
-      setFormData(prev => ({ ...prev, provider_id: "" }));
-    }
-  }, [formData.category_id, formData.location, bookingDates]);
-
-  /* ================= FETCH PROVIDERS ================= */
-  const fetchProviders = async (dates) => {
-    try {
-      const res = await api.post("/filterProviderforbooking", {
-        category_id: formData.category_id,
-        needs: dates,
-        location: formData.location,
-      });
-
-      setProviders(res.data.data || []);
-    } catch {
-      setProviders([]);
-    }
-  };
-
   /* ================= FETCH PROVIDER BOOKINGS ================= */
   const fetchProviderBookings = async (providerId) => {
     try {
@@ -69,7 +40,7 @@ const CreateBooking = () => {
       const dates = res.data.data.flatMap(b =>
         b.booking_dates.map(d => ({
           date: new Date(d.date),
-          slot: d.slot,
+          slot: d.slot
         }))
       );
 
@@ -88,15 +59,35 @@ const CreateBooking = () => {
     const exists = bookingDates.some(
       d => d.date === formattedDate && d.slot === slot
     );
+
     if (exists) return;
 
-    setBookingDates([...bookingDates, { date: formattedDate, slot }]);
+    const updated = [...bookingDates, { date: formattedDate, slot }];
+    setBookingDates(updated);
+    fetchProviders(updated);
     setSelectedDate(null);
   };
 
   /* ================= REMOVE DATE ================= */
   const removeDate = (index) => {
     setBookingDates(bookingDates.filter((_, i) => i !== index));
+  };
+
+  /* ================= FETCH PROVIDERS ================= */
+  const fetchProviders = async (dates) => {
+    if (!formData.category_id || !formData.location || !dates.length) return;
+
+    try {
+      const res = await api.post("/filterProviderforbooking", {
+        category_id: formData.category_id,
+        needs: dates,
+        location: formData.location,
+      });
+
+      setProviders(res.data.data || []);
+    } catch {
+      setProviders([]);
+    }
   };
 
   /* ================= CALCULATE AMOUNT ================= */
@@ -115,11 +106,14 @@ const CreateBooking = () => {
   };
 
   /* ================= DISABLE BOOKED DATES ================= */
-  const isDateDisabled = (date) =>
-    bookedDates.some(b =>
+  const isDateDisabled = (date) => {
+    return bookedDates.some(b =>
+      b?.date &&
+      b?.slot &&
       isSameDay(new Date(b.date), date) &&
       (b.slot === "full_day" || b.slot === slot)
     );
+  };
 
   /* ================= STRIPE CHECKOUT ================= */
   const goToStripeCheckout = async () => {
@@ -134,13 +128,26 @@ const CreateBooking = () => {
       return;
     }
 
-    localStorage.setItem("booking_provider_id", formData.provider_id);
-    localStorage.setItem("booking_category_id", formData.category_id);
+    /* 🔥 CONSOLE LOG BEFORE SAVING */
+    console.log("Saving booking data to localStorage:", {
+      provider_id: formData.provider_id,
+      category_id: formData.category_id,
+      booking_dates: bookingDates,
+      location: formData.location,
+      totalAmount,
+    });
+
+    /* 🔐 SAVE TO LOCAL STORAGE */
+    localStorage.setItem("booking_provider_id", JSON.stringify(formData.provider_id));
+    localStorage.setItem("booking_category_id", JSON.stringify(formData.category_id));
     localStorage.setItem("booking_dates", JSON.stringify(bookingDates));
-    localStorage.setItem("booking_location", formData.location);
+    localStorage.setItem("booking_location", JSON.stringify(formData.location));
 
     try {
-      const res = await api.post("/create-checkout-session", { totalAmount });
+      const res = await api.post("/create-checkout-session", {
+        totalAmount,
+      });
+
       window.location.href = res.data.url;
     } catch {
       setError("Unable to redirect to payment");
@@ -152,30 +159,27 @@ const CreateBooking = () => {
     <div className="max-w-xl mx-auto p-6 border rounded shadow bg-white">
       <h2 className="text-xl font-bold mb-4">Create Booking</h2>
 
+      {/* CATEGORY */}
       <select
         className="w-full p-2 border mb-3"
         value={formData.category_id}
-        onChange={e =>
-          setFormData({ ...formData, category_id: e.target.value })
-        }
+        onChange={e => setFormData({ ...formData, category_id: e.target.value })}
       >
         <option value="">Select Category</option>
         {categories.map(c => (
-          <option key={c._id} value={c._id}>
-            {c.category_name}
-          </option>
+          <option key={c._id} value={c._id}>{c.category_name}</option>
         ))}
       </select>
 
+      {/* LOCATION */}
       <input
         className="w-full p-2 border mb-3"
         placeholder="Location"
         value={formData.location}
-        onChange={e =>
-          setFormData({ ...formData, location: e.target.value })
-        }
+        onChange={e => setFormData({ ...formData, location: e.target.value })}
       />
 
+      {/* CALENDAR */}
       <DatePicker
         selected={selectedDate}
         onChange={setSelectedDate}
@@ -190,10 +194,7 @@ const CreateBooking = () => {
           <option value="half_day">Half Day</option>
         </select>
 
-        <button
-          onClick={addBookingDate}
-          className="bg-green-600 text-white px-4 py-2 rounded"
-        >
+        <button onClick={addBookingDate} className="bg-green-600 text-white px-4 py-2 rounded">
           Add Date
         </button>
       </div>
@@ -205,6 +206,7 @@ const CreateBooking = () => {
         </div>
       ))}
 
+      {/* PROVIDERS */}
       <select
         className="w-full p-2 border mt-3"
         value={formData.provider_id}
