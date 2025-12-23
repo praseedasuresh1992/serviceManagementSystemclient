@@ -20,23 +20,23 @@ function ProviderDashboard() {
       link: "/providerDashboard/viewprovider",
     },
     {
-      title: "Booking Details",
+      title: "Request Details",
       icon: <FaBell size={40} />,
       color: "#1cc88a",
-      link: "/provider/booking-notifications",
+      link: "/providerDashboard/viewAllRequests",
     },
-    {
-      title: "Complaints",
-      icon: <FaClipboardList size={40} />,
-      color: "#e74a3b",
-      link: "/provider/complaints",
-    },
-    {
-      title: "Create Availability",
-      icon: <FaCalendarCheck size={40} />,
-      color: "#f6c23e",
-      link: "/providerDashboard/create_availability",
-    },
+    // {
+    //   title: "Complaints",
+    //   icon: <FaClipboardList size={40} />,
+    //   color: "#e74a3b",
+    //   link: "/provider/complaints",
+    // },
+    // {
+    //   title: "Create Availability",
+    //   icon: <FaCalendarCheck size={40} />,
+    //   color: "#f6c23e",
+    //   link: "/providerDashboard/create_availability",
+    // },
   ];
 
   return (

@@ -26,6 +26,8 @@ import ViewAllServiceCategory from './pages/adminpages/ViewAllServiceCategory';
 import PaymentPage from './pages/PaymentPage';
 import BookingSuccess from './pages/BookingSuccess';
 import BookingCancel from './pages/BookingCancel';
+import ViewAllRequests from './pages/ProviderPages/ViewAllRequests';
+
 function App() {
 
   const router = createBrowserRouter([
@@ -73,6 +75,7 @@ function App() {
             { path: "updateprovider", element: <ProtectedRoute><UpdateProviderProfile /> </ProtectedRoute> }]
         },
         { path: "create_availability", element: <ProtectedRoute><CreateAvailability /> </ProtectedRoute> },
+        { path: "viewAllRequests", element: <ProtectedRoute><viewAllRequests /> </ProtectedRoute> }
 
 
       ]

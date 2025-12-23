@@ -36,7 +36,7 @@ const BookingSuccess = () => {
       });
   }, []);
 
-  return <h2>Processing your booking...</h2>;
+  return <h2>Your request submitted successfully.. Thank You</h2>;
 };
 
 export default BookingSuccess;
