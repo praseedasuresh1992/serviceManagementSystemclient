@@ -26,7 +26,7 @@ import ViewAllServiceCategory from './pages/adminpages/ViewAllServiceCategory';
 import PaymentPage from './pages/PaymentPage';
 import BookingSuccess from './pages/BookingSuccess';
 import BookingCancel from './pages/BookingCancel';
-import ViewAllRequests from './pages/ProviderPages/ViewAllRequests';
+import ViewAllRequest from './pages/ProviderPages/ViewAllRequest';
 
 function App() {
 
@@ -75,7 +75,7 @@ function App() {
             { path: "updateprovider", element: <ProtectedRoute><UpdateProviderProfile /> </ProtectedRoute> }]
         },
         { path: "create_availability", element: <ProtectedRoute><CreateAvailability /> </ProtectedRoute> },
-        { path: "viewAllRequests", element: <ProtectedRoute><viewAllRequests /> </ProtectedRoute> }
+        { path: "viewAllRequests", element: <ProtectedRoute><viewAllRequest /> </ProtectedRoute> }
 
 
       ]

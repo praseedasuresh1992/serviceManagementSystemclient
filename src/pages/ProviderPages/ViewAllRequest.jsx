@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../config/axiosinstance";
 import { format, differenceInDays } from "date-fns";
 
-const ViewAllRequests = () => {
+const ViewAllRequest = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -160,4 +160,4 @@ const ViewAllRequests = () => {
   );
 };
 
-export default ViewAllRequests;
+export default ViewAllRequest;
