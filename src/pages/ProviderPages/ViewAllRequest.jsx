@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../config/axiosinstance";
+import api from "../../config/axiosinstance"
 import { format, differenceInDays } from "date-fns";
 
 const ViewAllRequest = () => {
