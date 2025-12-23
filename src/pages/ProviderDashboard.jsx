@@ -23,7 +23,7 @@ function ProviderDashboard() {
       title: "Request Details",
       icon: <FaBell size={40} />,
       color: "#1cc88a",
-      link: "/providerDashboard/viewAllRequests",
+      link: "/providerDashboard/viewAllRequest",
     },
     // {
     //   title: "Complaints",
