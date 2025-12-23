@@ -75,7 +75,7 @@ function App() {
             { path: "updateprovider", element: <ProtectedRoute><UpdateProviderProfile /> </ProtectedRoute> }]
         },
         { path: "create_availability", element: <ProtectedRoute><CreateAvailability /> </ProtectedRoute> },
-        { path: "viewAllRequests", element: <ProtectedRoute><viewAllRequest /> </ProtectedRoute> }
+        { path: "viewAllRequest", element: <ProtectedRoute><ViewAllRequest /> </ProtectedRoute> }
 
 
       ]
