@@ -25,7 +25,7 @@ const ViewAllRequest = () => {
   /* ================= STATUS UPDATE ================= */
   const updateStatus = async (bookingId, status) => {
     try {
-      await api.put(`/updateBookingStatus/${bookingId}/status `);
+      await api.put(`/updateBookingStatus/${bookingId}/status`);
       fetchBookings();
     } catch (error) {
       console.error("Status update failed", error);
