@@ -31,12 +31,12 @@ function ProviderDashboard() {
     //   color: "#e74a3b",
     //   link: "/provider/complaints",
     // },
-    // {
-    //   title: "Create Availability",
-    //   icon: <FaCalendarCheck size={40} />,
-    //   color: "#f6c23e",
-    //   link: "/providerDashboard/create_availability",
-    // },
+    {
+      title: "Create Availability",
+      icon: <FaCalendarCheck size={40} />,
+      color: "#f6c23e",
+      link: "/providerDashboard/create_availability",
+    },
   ];
 
   return (

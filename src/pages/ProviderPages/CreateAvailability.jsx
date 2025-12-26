@@ -14,7 +14,7 @@ export default function CreateAvailability() {
   // Handle date click
   // ===============================
   const handleDateClick = (date) => {
-    const formatted = date.toISOString().split("T")[0];
+const formatted = date.toLocaleDateString("en-CA");
     setCurrentDate(formatted);
     setAvailabilityType("");
     setShowModal(true);
@@ -63,7 +63,7 @@ export default function CreateAvailability() {
   // Highlight selected dates
   // ===============================
   const tileClassName = ({ date }) => {
-    const formatted = date.toISOString().split("T")[0];
+const formatted = date.toLocaleDateString("en-CA");
     return availability.some((a) => a.date === formatted)
       ? "bg-success text-white rounded-circle"
       : "";
