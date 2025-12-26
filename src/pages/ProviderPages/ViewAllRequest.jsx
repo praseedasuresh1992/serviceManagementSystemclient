@@ -25,7 +25,10 @@ const ViewAllRequest = () => {
   /* ================= STATUS UPDATE ================= */
   const updateStatus = async (bookingId, status) => {
     try {
-      await api.put(`/updateBookingStatus/${bookingId}/status`);
+      await api.put(`/updateBookingStatus/${bookingId}/status`,
+         { status },                 // ✅ THIS FIXES IT
+      { withCredentials: true }
+      );
       fetchBookings();
     } catch (error) {
       console.error("Status update failed", error);
