@@ -1,11 +1,10 @@
 import React from "react";
-import backgroundImage from './assets/background.jpg'; 
 
 const Home= () => {
   return (
     <div
       className="w-full min-h-screen bg-cover bg-center flex items-center justify-center"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      style={{ backgroundImage: "url(/bgImage.svg)" }}
     >
       {/* Overlay */}
       <div className="absolute top-0 left-0 w-full h-full bg-black/60"></div>
