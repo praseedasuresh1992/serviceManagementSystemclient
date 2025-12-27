@@ -103,7 +103,10 @@ const CreateBooking = () => {
       const payload = {
         provider_id: formData.provider_id,
         category_id: formData.category_id,
-        booking_dates,
+        booking_dates:bookingDates.map(d => ({
+        date: d.date,
+        availability_type: d.availability_type ,
+      })),
         location: formData.location,
         total_amount: totalAmount,
       };
