@@ -1,10 +1,10 @@
 import React from "react";
 
-export default function ServiceFooter() {
+export default function Footer() {
   return (
     <footer className="bg-gray-800 text-white py-8 mt-12">
       <div className="container mx-auto text-center space-y-2">
-        <h2 className="text-xl font-bold">Contact Us</h2>
+        <h2 className="text-xl font-bold mt-3 pt-5">Contact Us</h2>
         <p>Email: support@servicelq.com</p>
         <p>Phone: +91 98765 43210</p>
         <p>Address: 123 Service Lane, Bangalore, India</p>

@@ -13,20 +13,16 @@ const ProviderRegistration = () => {
     available_location: "",
     username: "",
     password: "",
-    service_category: "",
+    service_category: "",  // ✅ Added
   });
 
   const [profileImage, setProfileImage] = useState(null);
   const [documents, setDocuments] = useState([]);
-  const [categories, setCategories] = useState([]);
+
+  const [categories, setCategories] = useState([]); //  store category list
   const [message, setMessage] = useState("");
 
-  // 🔴 validation errors
-  const [errors, setErrors] = useState({
-    contactno: "",
-    password: "",
-  });
-
+  // Fetch categories when page loads
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -36,41 +32,16 @@ const ProviderRegistration = () => {
         console.error("Failed to load categories:", error);
       }
     };
+
     fetchCategories();
   }, []);
 
-  const validateField = (name, value) => {
-    let error = "";
-
-    if (name === "contactno") {
-      if (!/^[0-9]{10}$/.test(value)) {
-        error = "Phone number must be exactly 10 digits.";
-      }
-    }
-
-    if (name === "password") {
-      if (
-        !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{6,}$/.test(value)
-      ) {
-        error =
-          "Password must be 6+ characters and include letter, number & symbol.";
-      }
-    }
-
-    setErrors((prev) => ({ ...prev, [name]: error }));
-  };
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
-
-    if (name === "contactno" || name === "password") {
-      validateField(name, value);
-    }
   };
 
   const handleDocumentChange = (e) => {
@@ -80,24 +51,15 @@ const ProviderRegistration = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ❌ stop submit if validation errors exist
-    if (errors.contactno || errors.password) {
-      setMessage("Please fix validation errors before submitting.");
-      return;
-    }
-
     const data = new FormData();
 
     for (let key in formData) {
-      if (key === "available_location") {
-        data.append(
-          "available_location",
-          JSON.stringify([formData.available_location])
-        );
-      } else {
-        data.append(key, formData[key]);
-      }
+    if (key === "available_location") {
+      data.append("available_location", JSON.stringify([formData.available_location]));
+    } else {
+      data.append(key, formData[key]);
     }
+  }
 
     if (profileImage) {
       data.append("profile_image", profileImage);
@@ -110,7 +72,9 @@ const ProviderRegistration = () => {
     }
 
     try {
-      await api.post("/registerprovider", data);
+      console.log("DATA SENDING:", formData);
+
+      const res = await api.post("/registerprovider", data);
       setMessage("Provider created successfully!");
     } catch (error) {
       console.error(error);
@@ -125,12 +89,88 @@ const ProviderRegistration = () => {
       </h2>
 
       {message && (
-        <p className="mb-3 text-center text-danger fw-semibold">
+        <p className="mb-3 text-center text-green-600 font-semibold">
           {message}
         </p>
       )}
 
       <Form onSubmit={handleSubmit}>
+
+        {/* Profile Image */}
+        <Form.Group className="mb-3">
+          <Form.Label>Profile Image</Form.Label>
+          <Form.Control
+            type="file"
+            accept="image/*"
+            onChange={(e) => setProfileImage(e.target.files[0])}
+            required
+          />
+        </Form.Group>
+
+       
+
+
+        {/* Name */}
+        <Form.Group className="mb-3">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+
+        {/* Email */}
+        <Form.Group className="mb-3">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+
+        {/* Is Group */}
+        <Form.Group className="mb-3 flex items-center gap-2">
+          <Form.Check
+            type="checkbox"
+            label="Is Group?"
+            name="is_group"
+            checked={formData.is_group}
+            onChange={handleChange}
+          />
+        </Form.Group>
+
+        {/* Members */}
+        {formData.is_group && (
+          <Form.Group className="mb-3">
+            <Form.Label>Members</Form.Label>
+            <Form.Control
+              type="number"
+              name="members"
+              value={formData.members}
+              onChange={handleChange}
+              min="1"
+            />
+          </Form.Group>
+        )}
+
+        {/* Address */}
+        <Form.Group className="mb-3">
+          <Form.Label>Address</Form.Label>
+          <Form.Control
+            as="textarea"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+
         {/* Contact Number */}
         <Form.Group className="mb-3">
           <Form.Label>Contact Number</Form.Label>
@@ -139,12 +179,60 @@ const ProviderRegistration = () => {
             name="contactno"
             value={formData.contactno}
             onChange={handleChange}
-            isInvalid={!!errors.contactno}
             required
           />
-          <Form.Control.Feedback type="invalid">
-            {errors.contactno}
-          </Form.Control.Feedback>
+        </Form.Group>
+
+        {/* Available Location */}
+        <Form.Group className="mb-3">
+          <Form.Label>Available Location</Form.Label>
+          <Form.Control
+            type="text"
+            name="available_location"
+            value={formData.available_location}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        
+        {/* Category Dropdown */}
+        <Form.Group className="mb-3">
+          <Form.Label>Service Category</Form.Label>
+          <Form.Select
+            name="service_category"
+            value={formData.service_category}
+            onChange={handleChange}
+            required
+          >
+            <option value="">-- Select a Category --</option>
+
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.category_name}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+ {/* Documents */}
+        <Form.Group className="mb-3">
+          <Form.Label>Upload Documents (Multiple)</Form.Label>
+          <Form.Control
+            type="file"
+            multiple
+            accept=".pdf,.jpg,.jpeg,.png"
+            onChange={handleDocumentChange}
+          />
+        </Form.Group>
+        {/* Username */}
+        <Form.Group className="mb-3">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
         </Form.Group>
 
         {/* Password */}
@@ -155,15 +243,9 @@ const ProviderRegistration = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            isInvalid={!!errors.password}
             required
           />
-          <Form.Control.Feedback type="invalid">
-            {errors.password}
-          </Form.Control.Feedback>
         </Form.Group>
-
-        {/* everything else remains unchanged */}
 
         <Button
           type="submit"

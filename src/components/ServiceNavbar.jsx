@@ -15,17 +15,16 @@ export default function ServiceNavbar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto text-lg">
             <Nav.Link href="#">Home</Nav.Link>
-            <Nav.Link href="#">Know About ServicelQ</Nav.Link>
+            <Nav.Link  as={Link} to="/aboutUs">Know About ServicelQ</Nav.Link>
             <Nav.Link as={Link} to="/providerRegistration">List Your Business</Nav.Link>
             <Nav.Link as={Link} to="/userRegistration">Enter as a User</Nav.Link>
             <Nav.Link as={Link} to="/login">Login</Nav.Link>
-            <Nav.Link href="#">Services</Nav.Link>
-            <Nav.Link href="#">Contact Us</Nav.Link>
+            <Nav.Link  as={Link} to="/contactUs">Contact Us</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
-    <Outlet/>
+    
     </>
   );
 }

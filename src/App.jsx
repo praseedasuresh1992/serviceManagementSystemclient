@@ -2,7 +2,8 @@ import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import ProtectedRoute from './ProtectedRoutes';
-import ServiceNavbar from './components/ServiceNavbar';
+import MainLayout from './components/MainLayout';
+
 import ProviderRegistration from './pages/ProviderRegistration';
 import UserRegistration from './pages/UserRegistration';
 import Login from './pages/Login';
@@ -27,62 +28,77 @@ import PaymentPage from './pages/PaymentPage';
 import BookingSuccess from './pages/BookingSuccess';
 import BookingCancel from './pages/BookingCancel';
 import ViewAllRequest from './pages/ProviderPages/ViewAllRequest';
+import AboutUs from './pages/AboutUs';
+import ContactUs from './pages/ContactUs';
 
 function App() {
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <ServiceNavbar />,   // navbar always visible
+      element: <MainLayout />,   // ✅ Navbar + Footer always visible
       children: [
-        { path: "/", element: <Home /> },
+        { index: true, element: <Home /> },
         { path: "providerRegistration", element: <ProviderRegistration /> },
         { path: "userregistration", element: <UserRegistration /> },
-        { path: "login", element: <Login /> }
-      ]
+        { path: "login", element: <Login /> },
+        { path: "/aboutUs", element: <AboutUs /> },
+        { path: "/contactUs", element: <ContactUs /> }
+      ],
     },
 
-    // dashboards without navbar
+    // dashboards without navbar & footer
     {
-      path: "/userDashboard", element: <ProtectedRoute><Userdashboard /></ProtectedRoute>,
+      path: "/userDashboard",
+      element: (
+        <ProtectedRoute>
+          <Userdashboard />
+        </ProtectedRoute>
+      ),
       children: [
-        { path: "createbooking", element: <ProtectedRoute><CreateBooking /> </ProtectedRoute> },
-        { path: "UpdateMyUserProfile", element: <ProtectedRoute><UpdateUserProfile /></ProtectedRoute> },
-        { path: "ViewMyBookings", element: <ProtectedRoute><ViewMyBookings /></ProtectedRoute> },
+        { path: "createbooking", element: <CreateBooking /> },
+        { path: "UpdateMyUserProfile", element: <UpdateUserProfile /> },
+        { path: "ViewMyBookings", element: <ViewMyBookings /> },
         { path: "payment", element: <PaymentPage /> },
-
-
-      ]
+      ],
     },
-    {
-      path: "/adminDashboard", element: <ProtectedRoute> <AdminDashboard /> </ProtectedRoute>, children: [
-        { path: "ViewAllUsers", element: <ProtectedRoute><ViewAllUsers /></ProtectedRoute> },
-        { path: "ViewAllProviders", element: <ProtectedRoute><ViewAllProvider /></ProtectedRoute> },
-        { path: "ViewAllComplaints", element: <ProtectedRoute><ViewAllComplaints /></ProtectedRoute> },
-        { path: "ViewComplaintsById/:id", element: <ProtectedRoute><ViewComplaintsById /></ProtectedRoute> },
-        { path: "CreateServiceCategory", element: <ProtectedRoute><CreateServiceCategory /></ProtectedRoute> },
-        { path: "ViewAllServiceCategory", element: <ProtectedRoute><ViewAllServiceCategory /></ProtectedRoute> }
 
-
-      ]
-    },
     {
-      path: "/providerDashboard", element: <ProtectedRoute><ProviderDashboard /></ProtectedRoute>,
+      path: "/adminDashboard",
+      element: (
+        <ProtectedRoute>
+          <AdminDashboard />
+        </ProtectedRoute>
+      ),
       children: [
-        {
-          path: "viewprovider", element: <ProtectedRoute><ViewProviderProfile /> </ProtectedRoute>,
-          children: [
-            { path: "updateprovider", element: <ProtectedRoute><UpdateProviderProfile /> </ProtectedRoute> }]
-        },
-        { path: "create_availability", element: <ProtectedRoute><CreateAvailability /> </ProtectedRoute> },
-        { path: "viewAllRequest", element: <ProtectedRoute><ViewAllRequest /> </ProtectedRoute> }
-
-
-      ]
+        { path: "ViewAllUsers", element: <ViewAllUsers /> },
+        { path: "ViewAllProviders", element: <ViewAllProvider /> },
+        { path: "ViewAllComplaints", element: <ViewAllComplaints /> },
+        { path: "ViewComplaintsById/:id", element: <ViewComplaintsById /> },
+        { path: "CreateServiceCategory", element: <CreateServiceCategory /> },
+        { path: "ViewAllServiceCategory", element: <ViewAllServiceCategory /> },
+      ],
     },
-    { path: "booking-success", element: <BookingSuccess /> },
-    { path: "booking-cancel", element: <BookingCancel /> },
+
+    {
+      path: "/providerDashboard",
+      element: (
+        <ProtectedRoute>
+          <ProviderDashboard />
+        </ProtectedRoute>
+      ),
+      children: [
+        { path: "viewprovider", element: <ViewProviderProfile /> },
+        { path: "updateprovider", element: <UpdateProviderProfile /> },
+        { path: "create_availability", element: <CreateAvailability /> },
+        { path: "viewAllRequest", element: <ViewAllRequest /> },
+      ],
+    },
+
+    { path: "/booking-success", element: <BookingSuccess /> },
+    { path: "/booking-cancel", element: <BookingCancel /> },
     { path: "/logout", element: <Logout /> }
+
 
   ]);
 
