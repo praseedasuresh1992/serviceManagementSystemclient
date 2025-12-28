@@ -152,12 +152,21 @@ const CreateBooking = () => {
       />
 
       {/* Selected Dates */}
-      {bookingDates.map((d, i) => (
-        <div key={i} className="flex justify-between border p-2 mb-2 rounded">
-          <span>{d.date} — {d.availability_type.replace("_", " ")}</span>
-          <button className="text-red-600" onClick={() => removeDate(i)}>Remove</button>
-        </div>
-      ))}
+     {bookingDates.map((d, i) => (
+  <div key={i} className="flex justify-between border p-2 mb-2 rounded">
+    <span>
+      {d?.date || "Unknown date"} —{" "}
+      {(d?.availability_type ?? "full_day").replace("_", " ")}
+    </span>
+    <button
+      className="text-red-600"
+      onClick={() => removeDate(i)}
+    >
+      Remove
+    </button>
+  </div>
+))}
+
 
       {/* Providers */}
       <select
