@@ -57,18 +57,31 @@ const CreateBooking = () => {
   };
 
   // When a date is clicked, prompt for availability type
-  const handleDateClick = (date) => {
-    const formattedDate = format(date, "yyyy-MM-dd");
-    const selectedType = prompt("Select availability type: full_day or half_day", "full_day");
-    if (!selectedType || !["full_day", "half_day"].includes(selectedType)) return;
+ const handleDateClick = (date) => {
+  const formattedDate = format(date, "yyyy-MM-dd");
 
-    const exists = bookingDates.some(d => d.date === formattedDate && d.availability_type === selectedType);
-    if (exists) return;
+  if (!["full_day", "half_day"].includes(availabilityType)) return;
 
-    const updated = [...bookingDates, { date: formattedDate, availability_type: selectedType }];
-    setBookingDates(updated);
-    fetchProviders(updated);
-  };
+  const exists = bookingDates.some(
+    d =>
+      d.date === formattedDate &&
+      d.availability_type === availabilityType
+  );
+
+  if (exists) return;
+
+  const updated = [
+    ...bookingDates,
+    {
+      date: formattedDate,
+      availability_type: availabilityType,
+    },
+  ];
+
+  setBookingDates(updated);
+  fetchProviders(updated);
+};
+
 
   // Disable dates already booked
   const isDateDisabled = (date) => {
