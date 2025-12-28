@@ -14,7 +14,7 @@ export default function ServiceNavbar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto text-lg">
-            <Nav.Link href="#">Home</Nav.Link>
+            <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link  as={Link} to="/aboutUs">Know About ServicelQ</Nav.Link>
             <Nav.Link as={Link} to="/providerRegistration">List Your Business</Nav.Link>
             <Nav.Link as={Link} to="/userRegistration">Enter as a User</Nav.Link>

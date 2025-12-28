@@ -109,7 +109,7 @@ const Login = () => {
 
         {/* Optional Links */}
         <div className="mt-4 text-center text-sm">
-          <a href="/register" className="text-blue-600 hover:underline">
+          <a href="/userregistration" className="text-blue-600 hover:underline">
             Create an account
           </a>
         </div>

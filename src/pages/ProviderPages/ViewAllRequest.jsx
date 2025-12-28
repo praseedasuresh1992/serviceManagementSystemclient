@@ -130,7 +130,7 @@ const ProviderBookingRequests = () => {
                     {booking.booking_dates.map((d, i) => (
                       <div key={i}>
                         {format(new Date(d.date), "dd MMM yyyy")} (
-                        {d.slot})
+                        {d.availability_type})
                       </div>
                     ))}
                     {remainingDays !== null && (
