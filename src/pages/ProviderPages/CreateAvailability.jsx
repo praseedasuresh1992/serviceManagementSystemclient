@@ -14,7 +14,7 @@ export default function CreateAvailability() {
   // Handle date click
   // ===============================
   const handleDateClick = (date) => {
-const formatted = date.toLocaleDateString("en-CA");
+    const formatted = date.toLocaleDateString("en-CA"); // YYYY-MM-DD
     setCurrentDate(formatted);
     setAvailabilityType("");
     setShowModal(true);
@@ -40,8 +40,8 @@ const formatted = date.toLocaleDateString("en-CA");
       return;
     }
 
-    setAvailability([
-      ...availability,
+    setAvailability((prev) => [
+      ...prev,
       {
         date: currentDate,
         availability_type: availabilityType,
@@ -56,14 +56,14 @@ const formatted = date.toLocaleDateString("en-CA");
   // Remove availability
   // ===============================
   const removeAvailability = (index) => {
-    setAvailability(availability.filter((_, i) => i !== index));
+    setAvailability((prev) => prev.filter((_, i) => i !== index));
   };
 
   // ===============================
   // Highlight selected dates
   // ===============================
   const tileClassName = ({ date }) => {
-const formatted = date.toLocaleDateString("en-CA");
+    const formatted = date.toLocaleDateString("en-CA");
     return availability.some((a) => a.date === formatted)
       ? "bg-success text-white rounded-circle"
       : "";
@@ -119,7 +119,8 @@ const formatted = date.toLocaleDateString("en-CA");
             >
               <span>
                 <strong>{item.date}</strong> —{" "}
-                {item.availability_type.replace("_", " ")}
+                {/* 🔒 SAFE FIX: NO MORE replace() ERROR */}
+                {String(item.availability_type ?? "full_day").replace("_", " ")}
               </span>
 
               <Button
