@@ -34,7 +34,7 @@ const ViewMyBookings = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      setBookings(res.data.data);
+      setBookings(res.data.data || []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -65,7 +65,7 @@ const ViewMyBookings = () => {
         "/createrating",
         {
           booking_id: booking._id,
-          provider_id: booking.provider_id._id,
+          provider_id: booking.provider_id?._id,
           rating: data.rating,
           feedback: data.feedback,
         },
@@ -78,7 +78,6 @@ const ViewMyBookings = () => {
 
       alert("⭐ Feedback submitted successfully");
 
-      // Mark as submitted
       setFeedbackState((prev) => ({
         ...prev,
         [booking._id]: { submitted: true },
@@ -104,28 +103,33 @@ const ViewMyBookings = () => {
           {bookings.map((booking) => (
             <div key={booking._id} className="card shadow-lg p-4 rounded">
               <h5 className="text-lg font-semibold mb-2">
-                {booking.category_id?.category_name}
+                {booking.category_id?.category_name || "N/A"}
               </h5>
 
               <p>
-                <strong>Provider:</strong> {booking.provider_id?.name} (
-                {booking.provider_id?.available_location})
+                <strong>Provider:</strong>{" "}
+                {booking.provider_id?.name || "N/A"} (
+                {booking.provider_id?.available_location || "N/A"})
               </p>
 
               <div>
                 <strong>Date(s):</strong>
                 <ul className="list-disc list-inside ml-4">
-                  {booking.booking_dates.map((d, idx) => (
+                  {(booking.booking_dates || []).map((d, idx) => (
                     <li key={idx}>
-                      {new Date(d.date).toLocaleDateString()} —{" "}
-                      {d.slot.replace("_", " ")}
+                      {d?.date
+                        ? new Date(d.date).toLocaleDateString()
+                        : "Unknown date"}{" "}
+                      —{" "}
+                      {/* 🔒 SAFE FIX FOR replace() */}
+                      {String(d?.slot ?? "full_day").replace("_", " ")}
                     </li>
                   ))}
                 </ul>
               </div>
 
               <p>
-                <strong>Amount:</strong> ₹{booking.total_amount}
+                <strong>Amount:</strong> ₹{booking.total_amount || 0}
               </p>
 
               <span
