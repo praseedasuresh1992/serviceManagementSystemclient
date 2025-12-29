@@ -20,8 +20,6 @@ const ProviderBookingRequests = () => {
 
   useEffect(() => {
     fetchBookings();
-
-    // auto refresh every 1 min (recommended)
     const interval = setInterval(fetchBookings, 60000);
     return () => clearInterval(interval);
   }, []);
@@ -34,13 +32,13 @@ const ProviderBookingRequests = () => {
 
   /* ================= STATUS CHANGE ================= */
   const handleStatusChange = async (booking, newStatus) => {
-    if (newStatus === "rejected") {
-      const remainingDays = getRemainingDays(booking.booking_dates);
+    const remainingDays = getRemainingDays(booking.booking_dates);
 
-      // < 7 days → penalty rule
+    // ❌ Reject rules
+    if (newStatus === "rejected") {
       if (remainingDays < 7) {
         alert(
-          "You can’t reject this booking because only 7 days remain.\nPlease contact the customer through chat.\nPenalty fees may apply."
+          "You can’t reject this booking because only 7 days remain.\nPlease contact the customer.\nPenalty may apply."
         );
         return;
       }
@@ -63,6 +61,7 @@ const ProviderBookingRequests = () => {
       }
     }
 
+    // ✅ Accept
     if (newStatus === "accepted") {
       try {
         await api.put(
@@ -75,11 +74,29 @@ const ProviderBookingRequests = () => {
         console.error("Accept failed", err);
       }
     }
+
+    // ✅ COMPLETE (NEW)
+    if (newStatus === "completed") {
+      const confirm = window.confirm(
+        "Mark this booking as COMPLETED?\nThis action cannot be undone."
+      );
+      if (!confirm) return;
+
+      try {
+        await api.put(
+          `/updateBookingStatus/${booking._id}/status`,
+          { status: "completed" },
+          { withCredentials: true }
+        );
+        fetchBookings();
+      } catch (err) {
+        console.error("Complete failed", err);
+      }
+    }
   };
 
   /* ================= CHAT HANDLER ================= */
   const openChat = (booking) => {
-    // Example route — adjust to your chat implementation
     window.location.href = `/provider/chat/${booking.user_id._id}`;
   };
 
@@ -114,10 +131,7 @@ const ProviderBookingRequests = () => {
               );
 
               return (
-                <tr
-                  key={booking._id}
-                  className="border-b hover:bg-gray-50"
-                >
+                <tr key={booking._id} className="border-b hover:bg-gray-50">
                   <td className="px-4 py-3">
                     {booking.user_id?.username || "N/A"}
                   </td>
@@ -165,15 +179,12 @@ const ProviderBookingRequests = () => {
 
                   {/* ================= ACTIONS ================= */}
                   <td className="px-4 py-3 space-y-2">
-                    {/* Dropdown */}
+                    {/* Pending */}
                     {booking.status === "pending" && (
                       <select
                         defaultValue=""
                         onChange={(e) =>
-                          handleStatusChange(
-                            booking,
-                            e.target.value
-                          )
+                          handleStatusChange(booking, e.target.value)
                         }
                         className="border rounded px-2 py-1 text-sm w-full"
                       >
@@ -185,25 +196,24 @@ const ProviderBookingRequests = () => {
                       </select>
                     )}
 
+                    {/* Accepted → Completed or Rejected */}
                     {booking.status === "accepted" && (
                       <select
                         defaultValue=""
                         onChange={(e) =>
-                          handleStatusChange(
-                            booking,
-                            e.target.value
-                          )
+                          handleStatusChange(booking, e.target.value)
                         }
                         className="border rounded px-2 py-1 text-sm w-full"
                       >
                         <option value="" disabled>
                           Select Action
                         </option>
+                        <option value="completed">Mark as Completed</option>
                         <option value="rejected">Reject</option>
                       </select>
                     )}
 
-                    {/* Chat Button auto-enabled < 7 days */}
+                    {/* Chat if < 7 days */}
                     {remainingDays < 7 && (
                       <button
                         onClick={() => openChat(booking)}
@@ -227,10 +237,7 @@ const ProviderBookingRequests = () => {
 
             {bookings.length === 0 && (
               <tr>
-                <td
-                  colSpan="7"
-                  className="text-center py-6 text-gray-500"
-                >
+                <td colSpan="7" className="text-center py-6 text-gray-500">
                   No booking requests found
                 </td>
               </tr>
