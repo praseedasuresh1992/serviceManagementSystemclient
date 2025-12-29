@@ -133,18 +133,26 @@ const ViewMyBookings = () => {
               </p>
 
               <span
-                className={`inline-block px-2 py-1 rounded text-white ${
-                  booking.status === "completed"
+                className={`inline-block px-2 py-1 rounded text-white ${booking.status === "completed"
                     ? "bg-green-600"
                     : booking.status === "accepted"
-                    ? "bg-blue-600"
-                    : booking.status === "pending"
-                    ? "bg-yellow-500"
-                    : "bg-gray-500"
-                }`}
+                      ? "bg-blue-600"
+                      : booking.status === "pending"
+                        ? "bg-yellow-500"
+                        : "bg-gray-500"
+                  }`}
               >
                 {booking.status}
               </span>
+              {/* ❌ Rejection Reason */}
+              {booking.status === "rejected" && booking.rejection_reason && (
+                <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded">
+                  <p className="text-sm text-red-700">
+                    <strong>Reason:</strong> {booking.rejection_reason}
+                  </p>
+                </div>
+              )}
+
 
               {/* ⭐ Rating & Feedback */}
               {booking.status === "completed" &&
