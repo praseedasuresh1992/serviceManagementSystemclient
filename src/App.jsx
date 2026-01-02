@@ -88,8 +88,9 @@ function App() {
         </ProtectedRoute>
       ),
       children: [
-        { path: "viewprovider", element: <ViewProviderProfile /> },
-        { path: "updateprovider", element: <UpdateProviderProfile /> },
+        { path: "viewprovider", element: <ViewProviderProfile />,
+          children:[
+        { path: "updateprovider", element: <UpdateProviderProfile /> }]},
         { path: "create_availability", element: <CreateAvailability /> },
         { path: "viewAllRequest", element: <ViewAllRequest /> },
       ],
