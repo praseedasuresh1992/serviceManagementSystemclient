@@ -4,12 +4,15 @@ import api from "../../config/axiosinstance";
 /* ⭐ Star Rating Component */
 const StarRating = ({ rating, onChange }) => {
   return (
-    <div className="flex gap-1 text-xl cursor-pointer">
+    <div style={{ display: "flex", gap: "6px", fontSize: "24px" }}>
       {[1, 2, 3, 4, 5].map((star) => (
         <span
           key={star}
-          className={star <= rating ? "text-yellow-400" : "text-gray-300"}
           onClick={() => onChange(star)}
+          style={{
+            cursor: "pointer",
+            color: star <= rating ? "#facc15" : "#d1d5db",
+          }}
         >
           ★
         </span>
@@ -17,6 +20,7 @@ const StarRating = ({ rating, onChange }) => {
     </div>
   );
 };
+
 
 const ViewMyBookings = () => {
   const [bookings, setBookings] = useState([]);
