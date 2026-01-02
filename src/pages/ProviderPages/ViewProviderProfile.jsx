@@ -83,7 +83,7 @@ function ViewProviderProfile() {
 
                 <p>
                   <strong>Service Category:</strong>{" "}
-                  {provider.service_category?.name || "Not assigned"}
+                  {provider.service_category?.category_name  || "Not assigned"}
                 </p>
 
                 <p><strong>Group:</strong> {provider.is_group ? "Yes" : "No"}</p>
