@@ -64,10 +64,13 @@ const ViewMyBookings = () => {
       await api.post(
         "/createrating",
         {
-          booking_id: booking._id,
-          provider_id: booking.provider_id?._id,
-          rating: data.rating,
-          feedback: data.feedback,
+    
+            booking_id: booking._id,
+    provider_id: booking.provider_id?._id,
+    category_id: booking.category_id?._id,
+    rating: data.rating,
+    feedback: data.feedback,
+          
         },
         {
           headers: {
