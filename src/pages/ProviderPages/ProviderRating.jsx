@@ -13,7 +13,7 @@ const ProviderRating = ({ providerId }) => {
 
   const fetchRatings = async () => {
     try {
-      const res = await api.get(`/rating/provider/${providerId}`);
+      const res = await api.get(`/provider/${providerId}`);
       setRatings(res.data.data || []);
       setAvgRating(res.data.averageRating || 0);
       setTotalReviews(res.data.totalReviews || 0);
