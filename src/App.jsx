@@ -30,6 +30,7 @@ import BookingCancel from './pages/BookingCancel';
 import ViewAllRequest from './pages/ProviderPages/ViewAllRequest';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
+import ProviderRating from './pages/ProviderPages/ProviderRating';
 
 function App() {
 
@@ -93,6 +94,7 @@ function App() {
         { path: "updateprovider", element: <UpdateProviderProfile /> }]},
         { path: "create_availability", element: <CreateAvailability /> },
         { path: "viewAllRequest", element: <ViewAllRequest /> },
+        { path: "viewAllReview", element: <ProviderRating /> }
       ],
     },
 

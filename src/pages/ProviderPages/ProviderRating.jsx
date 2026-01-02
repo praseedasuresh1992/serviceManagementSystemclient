@@ -1,0 +1,76 @@
+import React, { useEffect, useState } from "react";
+import api from "../../config/axiosinstance";
+
+const ProviderRating = ({ providerId }) => {
+  const [ratings, setRatings] = useState([]);
+  const [avgRating, setAvgRating] = useState(0);
+  const [totalReviews, setTotalReviews] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchRatings();
+  }, [providerId]);
+
+  const fetchRatings = async () => {
+    try {
+      const res = await api.get(`/rating/provider/${providerId}`);
+      setRatings(res.data.data || []);
+      setAvgRating(res.data.averageRating || 0);
+      setTotalReviews(res.data.totalReviews || 0);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <p className="text-center mt-4">Loading ratings...</p>;
+  }
+
+  return (
+    <div className="container mt-4">
+      <h3 className="text-xl font-bold mb-2">Customer Reviews</h3>
+
+      <div className="mb-4">
+        <span className="text-lg font-semibold">
+          ⭐ {avgRating} / 5
+        </span>
+        <span className="ml-2 text-gray-500">
+          ({totalReviews} reviews)
+        </span>
+      </div>
+
+      {ratings.length === 0 ? (
+        <p className="text-gray-500">No reviews yet</p>
+      ) : (
+        ratings.map((r) => (
+          <div
+            key={r._id}
+            className="border rounded p-3 mb-3 shadow-sm"
+          >
+            <div className="flex justify-between">
+              <strong>{r.user_id?.name || "Anonymous"}</strong>
+              <span className="text-sm text-gray-500">
+                {new Date(r.createdAt).toLocaleDateString()}
+              </span>
+            </div>
+
+            <p className="text-sm text-gray-600">
+              Category: {r.category_id?.category_name}
+            </p>
+
+            <div className="text-yellow-500 text-lg">
+              {"★".repeat(r.rating)}
+              {"☆".repeat(5 - r.rating)}
+            </div>
+
+            <p className="mt-2">{r.feedback}</p>
+          </div>
+        ))
+      )}
+    </div>
+  );
+};
+
+export default ProviderRating;

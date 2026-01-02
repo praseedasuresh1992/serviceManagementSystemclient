@@ -25,12 +25,12 @@ function ProviderDashboard() {
       color: "#1cc88a",
       link: "/providerDashboard/viewAllRequest",
     },
-    // {
-    //   title: "Complaints",
-    //   icon: <FaClipboardList size={40} />,
-    //   color: "#e74a3b",
-    //   link: "/provider/complaints",
-    // },
+    {
+      title: "All Reviews",
+      icon: <FaClipboardList size={40} />,
+      color: "#e74a3b",
+      link: "/providerDashboard/viewAllReview",
+    },
     {
       title: "Create Availability",
       icon: <FaCalendarCheck size={40} />,
