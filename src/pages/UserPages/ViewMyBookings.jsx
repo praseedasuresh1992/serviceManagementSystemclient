@@ -4,7 +4,15 @@ import api from "../../config/axiosinstance";
 /* ⭐ Star Rating Component */
 const StarRating = ({ rating, onChange }) => {
   return (
-    <div style={{ display: "flex", gap: "6px", fontSize: "24px" }}>
+    <div
+      style={{
+        display: "flex",
+        gap: "6px",
+        fontSize: "24px",
+        position: "relative",
+        zIndex: 1000,        // 🔥 KEY FIX
+      }}
+    >
       {[1, 2, 3, 4, 5].map((star) => (
         <span
           key={star}
@@ -20,6 +28,7 @@ const StarRating = ({ rating, onChange }) => {
     </div>
   );
 };
+
 
 
 const ViewMyBookings = () => {
