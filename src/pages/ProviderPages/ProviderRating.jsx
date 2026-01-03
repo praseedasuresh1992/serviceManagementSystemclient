@@ -56,7 +56,7 @@ setAvgRating(Number(res.data.averageRating) || 0);
             className="border rounded p-3 mb-3 shadow-sm"
           >
             <div className="flex justify-between">
-              <strong>{r.user_id?.name || "Anonymous"}</strong>
+              <strong>{r.user_id?.name || "Anonymous"}<br/></strong>
               <span className="text-sm text-gray-500">
                 {new Date(r.createdAt).toLocaleDateString()}
               </span>
