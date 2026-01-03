@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../config/axiosinstance";
 
-const ProviderRating = ({ providerId }) => {
+const ProviderRating = () => {
   const [ratings, setRatings] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
   const [totalReviews, setTotalReviews] = useState(0);
@@ -9,12 +9,11 @@ const ProviderRating = ({ providerId }) => {
 
   useEffect(() => {
     fetchRatings();
-  }, [providerId]);
+  }, []);
 
   const fetchRatings = async () => {
     try {
-      console.log("pid:",providerId)
-      const res = await api.get(`/providerrating/${providerId}`);
+      const res = await api.get(`/providerrating`);
       console.log("FULL RESPONSE 👉", res.data);
     console.log("FIRST RATING 👉", res.data.data?.[0])
       setRatings(res.data.data || []);
@@ -68,9 +67,9 @@ setAvgRating(Number(res.data.averageRating) || 0);
             </p>
 
             <div className="text-yellow-500 text-lg">
-              {"★".repeat(r.rating)}
-              {"☆".repeat(5 - r.rating)}rating displays
-            </div>
+  {"★".repeat(Number(r.rating || 0))}
+  {"☆".repeat(5 - Number(r.rating || 0))}
+</div>
             <p>DEBUG RATING: {JSON.stringify(r.rating)}</p>
 
             <p className="mt-2">{r.feedback}</p>
