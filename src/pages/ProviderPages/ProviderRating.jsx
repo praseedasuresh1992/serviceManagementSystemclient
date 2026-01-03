@@ -19,6 +19,9 @@ const ProviderRating = ({ providerId }) => {
       setRatings(res.data.data || []);
       setAvgRating(parseFloat(res.data.averageRating) || 0);
       setTotalReviews(res.data.totalReviews || 0);
+      console.log("..",totalReviews)
+            console.log(avgRating)
+
     } catch (err) {
       console.error(err);
     } finally {
