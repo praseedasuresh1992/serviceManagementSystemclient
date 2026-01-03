@@ -20,18 +20,14 @@ const ProviderRegistration = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
 
   /* ================= FETCH CATEGORIES ================= */
   useEffect(() => {
     const fetchCategories = async () => {
-      try {
-        const res = await api.get("/service-category");
-        setCategories(res.data.data);
-      } catch (error) {
-        console.error("Failed to load categories:", error);
-      }
+      const res = await api.get("/service-category");
+      setCategories(res.data.data);
     };
     fetchCategories();
   }, []);
@@ -49,10 +45,7 @@ const ProviderRegistration = () => {
   const handleProfileImage = (e) => {
     const file = e.target.files[0];
     setProfileImage(file);
-
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-    }
+    if (file) setImagePreview(URL.createObjectURL(file));
   };
 
   /* ================= DOCUMENTS ================= */
@@ -62,30 +55,35 @@ const ProviderRegistration = () => {
 
   /* ================= VALIDATION ================= */
   const validate = () => {
-    const newErrors = {};
+    const err = {};
 
-    // Email
+    if (!profileImage) err.profileImage = "Profile image is required";
+    if (!formData.name) err.name = "Name is required";
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Enter a valid email address";
-    }
+    if (!emailRegex.test(formData.email))
+      err.email = "Enter a valid email";
 
-    // Contact number (10 digits)
-    const phoneRegex = /^[0-9]{10}$/;
-    if (!phoneRegex.test(formData.contactno)) {
-      newErrors.contactno = "Contact number must be 10 digits";
-    }
+    if (!/^[0-9]{10}$/.test(formData.contactno))
+      err.contactno = "Contact number must be 10 digits";
 
-    // Password
+    if (!formData.available_location)
+      err.available_location = "Location is required";
+
+    if (!formData.service_category)
+      err.service_category = "Select a category";
+
+    if (!formData.username)
+      err.username = "Username is required";
+
     const passwordRegex =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
-    if (!passwordRegex.test(formData.password)) {
-      newErrors.password =
-        "Password must include a letter, a number & a special character";
-    }
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{6,}$/;
+    if (!passwordRegex.test(formData.password))
+      err.password =
+        "Password must include letter, number & special character";
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors(err);
+    return Object.keys(err).length === 0;
   };
 
   /* ================= SUBMIT ================= */
@@ -108,9 +106,7 @@ const ProviderRegistration = () => {
       }
     }
 
-    if (profileImage) {
-      data.append("profile_image", profileImage);
-    }
+    data.append("profile_image", profileImage);
 
     for (let i = 0; i < documents.length; i++) {
       data.append("verification_document", documents[i]);
@@ -120,8 +116,11 @@ const ProviderRegistration = () => {
       await api.post("/registerprovider", data);
       setMessage("Provider created successfully!");
     } catch (error) {
-      console.error(error);
-      setMessage("Error creating provider.");
+      if (error.response?.status === 409) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("Error creating provider");
+      }
     }
   };
 
@@ -132,61 +131,56 @@ const ProviderRegistration = () => {
       </h2>
 
       {message && (
-        <p className="mb-3 text-center text-green-600 font-semibold">
-          {message}
-        </p>
+        <p className="text-center text-red-600 mb-3">{message}</p>
       )}
 
       <Form onSubmit={handleSubmit}>
+        {/* ================= PROFILE IMAGE ================= */}
+        <div
+          className="border-2 border-dashed rounded-xl p-4 text-center cursor-pointer mb-2"
+          onClick={() => document.getElementById("profileUpload").click()}
+        >
+          {imagePreview ? (
+            <img
+              src={imagePreview}
+              className="h-28 w-28 rounded-full mx-auto object-cover"
+              alt="preview"
+            />
+          ) : (
+            <p className="text-gray-500">Click to upload profile photo</p>
+          )}
+        </div>
 
-        {/* ================= PROFILE IMAGE (MODERN UI) ================= */}
-        <Form.Group className="mb-4 text-center">
-          <div
-            className="border-2 border-dashed rounded-xl p-4 cursor-pointer hover:bg-gray-50"
-            onClick={() => document.getElementById("profileUpload").click()}
-          >
-            {imagePreview ? (
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="mx-auto h-32 w-32 rounded-full object-cover"
-              />
-            ) : (
-              <p className="text-gray-500">
-                Click to upload profile photo
-              </p>
-            )}
-          </div>
-          <Form.Control
-            id="profileUpload"
-            type="file"
-            accept="image/*"
-            onChange={handleProfileImage}
-            hidden
-            required
-          />
-        </Form.Group>
+        <Form.Control
+          id="profileUpload"
+          type="file"
+          accept="image/*"
+          hidden
+          onChange={handleProfileImage}
+        />
+        {errors.profileImage && (
+          <small className="text-danger">{errors.profileImage}</small>
+        )}
 
         {/* ================= NAME ================= */}
         <Form.Group className="mb-3">
           <Form.Label>Name</Form.Label>
-          <Form.Control name="name" onChange={handleChange} required />
+          <Form.Control name="name" onChange={handleChange} />
+          {errors.name && <small className="text-danger">{errors.name}</small>}
         </Form.Group>
 
         {/* ================= EMAIL ================= */}
         <Form.Group className="mb-3">
           <Form.Label>Email</Form.Label>
-          <Form.Control name="email" onChange={handleChange} required />
-          {errors.email && (
-            <small className="text-danger">{errors.email}</small>
-          )}
+          <Form.Control name="email" onChange={handleChange} />
+          {errors.email && <small className="text-danger">{errors.email}</small>}
         </Form.Group>
 
         {/* ================= GROUP ================= */}
         <Form.Check
           className="mb-3"
-          type="checkbox"
           label="Is Group?"
+          type="checkbox"
           name="is_group"
           onChange={handleChange}
         />
@@ -225,12 +219,17 @@ const ProviderRegistration = () => {
             name="available_location"
             onChange={handleChange}
           />
+          {errors.available_location && (
+            <small className="text-danger">
+              {errors.available_location}
+            </small>
+          )}
         </Form.Group>
 
         {/* ================= CATEGORY ================= */}
         <Form.Group className="mb-3">
           <Form.Label>Service Category</Form.Label>
-          <Form.Select name="service_category" onChange={handleChange} required>
+          <Form.Select name="service_category" onChange={handleChange}>
             <option value="">-- Select Category --</option>
             {categories.map((cat) => (
               <option key={cat._id} value={cat._id}>
@@ -238,6 +237,11 @@ const ProviderRegistration = () => {
               </option>
             ))}
           </Form.Select>
+          {errors.service_category && (
+            <small className="text-danger">
+              {errors.service_category}
+            </small>
+          )}
         </Form.Group>
 
         {/* ================= DOCUMENTS (MULTIPLE) ================= */}
@@ -255,6 +259,9 @@ const ProviderRegistration = () => {
         <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>
           <Form.Control name="username" onChange={handleChange} />
+          {errors.username && (
+            <small className="text-danger">{errors.username}</small>
+          )}
         </Form.Group>
 
         {/* ================= PASSWORD ================= */}
@@ -270,7 +277,7 @@ const ProviderRegistration = () => {
           )}
         </Form.Group>
 
-        <Button className="w-full bg-blue-600 hover:bg-blue-700" type="submit">
+        <Button type="submit" className="w-full bg-blue-600">
           Submit
         </Button>
       </Form>
