@@ -17,8 +17,8 @@ const ProviderRating = ({ providerId }) => {
       console.log("FULL RESPONSE 👉", res.data);
     console.log("FIRST RATING 👉", res.data.data?.[0])
       setRatings(res.data.data || []);
-      setAvgRating(parseFloat(res.data.averageRating) || 0);
-      setTotalReviews(res.data.totalReviews || 0);
+      setAvgRating(parseFloat(res.data.averageRating));
+      setTotalReviews(res.data.totalReviews);
       console.log("..",totalReviews)
             console.log(avgRating)
 
