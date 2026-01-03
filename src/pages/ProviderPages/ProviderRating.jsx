@@ -15,7 +15,7 @@ const ProviderRating = ({ providerId }) => {
     try {
       const res = await api.get(`/provider/${providerId}`);
       setRatings(res.data.data || []);
-      setAvgRating(res.data.averageRating || 0);
+      setAvgRating(Number(res.data.averageRating) || 0);
       setTotalReviews(res.data.totalReviews || 0);
     } catch (err) {
       console.error(err);
