@@ -57,9 +57,9 @@ setAvgRating(Number(res.data.averageRating) || 0);
           >
             <div className="flex justify-between">
               <strong>{r.user_id?.name || "Anonymous"}<br/></strong>
-              <span className="text-sm text-gray-500">
+              </div>
+              <div className="text-sm text-gray-500">
                 {new Date(r.createdAt).toLocaleDateString()}
-              </span>
             </div>
 
             <p className="text-sm text-gray-600">
@@ -70,7 +70,6 @@ setAvgRating(Number(res.data.averageRating) || 0);
   {"★".repeat(Number(r.rating || 0))}
   {"☆".repeat(5 - Number(r.rating || 0))}
 </div>
-            <p>DEBUG RATING: {JSON.stringify(r.rating)}</p>
 
             <p className="mt-2">{r.feedback}</p>
           </div>
