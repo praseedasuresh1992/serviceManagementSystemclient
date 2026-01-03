@@ -17,7 +17,7 @@ const ProviderRating = ({ providerId }) => {
       console.log("FULL RESPONSE 👉", res.data);
     console.log("FIRST RATING 👉", res.data.data?.[0])
       setRatings(res.data.data || []);
-      setAvgRating(parseFloat(res.data.averageRating));
+setAvgRating(Number(res.data.averageRating) || 0);
       setTotalReviews(res.data.totalReviews);
       console.log("..",totalReviews)
             console.log(avgRating)
@@ -39,7 +39,8 @@ const ProviderRating = ({ providerId }) => {
 
       <div className="mb-4">
         <span className="text-lg font-semibold">
-          ⭐ {avgRating} / 5
+         ⭐ {avgRating.toFixed(1)} / 5
+
         </span>
         <span className="ml-2 text-gray-500">
           ({totalReviews} reviews)
