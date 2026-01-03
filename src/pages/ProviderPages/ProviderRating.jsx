@@ -14,13 +14,11 @@ const ProviderRating = () => {
   const fetchRatings = async () => {
     try {
       const res = await api.get(`/providerrating`);
-      console.log("FULL RESPONSE 👉", res.data);
-    console.log("FIRST RATING 👉", res.data.data?.[0])
+
       setRatings(res.data.data || []);
-setAvgRating(Number(res.data.averageRating) || 0);
+      setAvgRating(Number(res.data.averageRating) || 0);
       setTotalReviews(res.data.totalReviews);
-      console.log("..",totalReviews)
-            console.log(avgRating)
+
 
     } catch (err) {
       console.error(err);
@@ -39,7 +37,7 @@ setAvgRating(Number(res.data.averageRating) || 0);
 
       <div className="mb-4">
         <span className="text-lg font-semibold">
-         ⭐ {avgRating.toFixed(1)} / 5
+          ⭐ {avgRating.toFixed(1)} / 5
 
         </span>
         <span className="ml-2 text-gray-500">
@@ -56,10 +54,10 @@ setAvgRating(Number(res.data.averageRating) || 0);
             className="border rounded p-3 mb-3 shadow-sm"
           >
             <div className="flex justify-between">
-              <strong>{r.user_id?.name || "Anonymous"}<br/></strong>
-              </div>
-              <div className="text-sm text-gray-500">
-                {new Date(r.createdAt).toLocaleDateString()}
+              <strong>{r.user_id?.name || "Anonymous"}<br /></strong>
+            </div>
+            <div className="text-sm text-gray-500">
+              {new Date(r.createdAt).toLocaleDateString()}
             </div>
 
             <p className="text-sm text-gray-600">
@@ -67,9 +65,9 @@ setAvgRating(Number(res.data.averageRating) || 0);
             </p>
 
             <div className="text-yellow-500 text-lg">
-  {"★".repeat(Number(r.rating || 0))}
-  {"☆".repeat(5 - Number(r.rating || 0))}
-</div>
+              {"★".repeat(Number(r.rating || 0))}
+              {"☆".repeat(5 - Number(r.rating || 0))}
+            </div>
 
             <p className="mt-2">{r.feedback}</p>
           </div>
