@@ -68,8 +68,9 @@ setAvgRating(Number(res.data.averageRating) || 0);
 
             <div className="text-yellow-500 text-lg">
               {"★".repeat(r.rating)}
-              {"☆".repeat(5 - r.rating)}
+              {"☆".repeat(5 - r.rating)}rating displays
             </div>
+            <p>DEBUG RATING: {JSON.stringify(r.rating)}</p>
 
             <p className="mt-2">{r.feedback}</p>
           </div>
