@@ -135,7 +135,7 @@ const CreateBooking = () => {
         category_id: formData.category_id,
         booking_dates: bookingDates,
         location: formData.location,
-        total_amount: totalAmount
+        totalAmount: totalAmount
       };
 
       localStorage.setItem("booking_payload", JSON.stringify(payload));
