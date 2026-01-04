@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import api from "../config/axiosinstance";
 import { Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const ProviderRegistration = () => {
+  const navigate=useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -115,6 +117,7 @@ const ProviderRegistration = () => {
     try {
       await api.post("/registerprovider", data);
       setMessage("Provider created successfully!");
+      navigate("/login")
     } catch (error) {
       if (error.response?.status === 409) {
         setMessage(error.response.data.message);
