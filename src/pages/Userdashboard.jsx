@@ -1,76 +1,100 @@
-
 import React from "react";
 import { Button, Card, Container, Row, Col } from "react-bootstrap";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-
 
 function Userdashboard() {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+
   return (
     <>
-    <Container className="mt-5">
-      <h2 className="text-center mb-4">User Dashboard</h2>
-         <Button
-                            variant="danger"
-                            onClick={() => navigate("/logout")}
-                            style={{ display: "flex", alignItems: "center", gap: "8px" }}
-                          >
-                            <FaSignOutAlt /> Logout
-                          </Button>
-      <Row className="g-4">
-        <Col md={4}>
-          <Card className="p-3 shadow-sm text-center">
-            <h5>Need Service?</h5>
-            <Button variant="primary" className="mt-2" href="/userDashboard/createbooking">
-              Request Service
-            </Button>
-          </Card>
-        </Col>
+      <Container className="mt-5">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2 className="fw-bold">User Dashboard</h2>
 
-        <Col md={4}>
-          <Card className="p-3 shadow-sm text-center">
-            <h5>Update Your Profile</h5>
-            <Button variant="success" className="mt-2" href="/userDashboard/UpdateMyUserProfile">
-             Update
-            </Button>
-          </Card>
-        </Col>
+          {/* Small Logout Button */}
+          <Button
+            variant="danger"
+            size="sm"
+            className="d-flex align-items-center gap-2 px-3"
+            onClick={() => navigate("/logout")}
+          >
+            <FaSignOutAlt size={14} /> Logout
+          </Button>
+        </div>
 
-        <Col md={4}>
-          <Card className="p-3 shadow-sm text-center">
-       
-            <Button variant="info" className="mt-2" href="/userDashboard/ViewMyBookings">
-              View All Requests
-            </Button>
-          </Card>
-        </Col>
+        <Row className="g-3 justify-content-center">
+          {/* Card 1 */}
+          <Col xs={6} md={4} lg={3}>
+            <Card className="dashboard-tile text-center p-3">
+              <h6 className="mb-2">Need Service?</h6>
+              <Button size="sm" variant="primary" href="/userDashboard/createbooking">
+                Request
+              </Button>
+            </Card>
+          </Col>
 
-        <Col md={4}>
-          <Card className="p-3 shadow-sm text-center">
-            <Button variant="secondary" className="mt-2" href="/profile">
-             Add Complaints
-            </Button>
-          </Card>
-        </Col>
+          {/* Card 2 */}
+          <Col xs={6} md={4} lg={3}>
+            <Card className="dashboard-tile text-center p-3">
+              <h6 className="mb-2">My Profile</h6>
+              <Button size="sm" variant="success" href="/userDashboard/UpdateMyUserProfile">
+                Update
+              </Button>
+            </Card>
+          </Col>
 
+          {/* Card 3 */}
+          <Col xs={6} md={4} lg={3}>
+            <Card className="dashboard-tile text-center p-3">
+              <h6 className="mb-2">My Requests</h6>
+              <Button size="sm" variant="info" href="/userDashboard/ViewMyBookings">
+                View
+              </Button>
+            </Card>
+          </Col>
 
+          {/* Card 4 */}
+          <Col xs={6} md={4} lg={3}>
+            <Card className="dashboard-tile text-center p-3">
+              <h6 className="mb-2">Complaints</h6>
+              <Button size="sm" variant="secondary" href="/profile">
+                Add
+              </Button>
+            </Card>
+          </Col>
 
-        <Col md={4}>
-          <Card className="p-3 shadow-sm text-center">
-            <h5>My Complaints</h5>
-            <Button variant="dark" className="mt-2" href="/my-complaints">
-              View All Complaints
-            </Button>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
-    <Outlet/>
+          {/* Card 5 */}
+          <Col xs={6} md={4} lg={3}>
+            <Card className="dashboard-tile text-center p-3">
+              <h6 className="mb-2">My Complaints</h6>
+              <Button size="sm" variant="dark" href="/my-complaints">
+                View
+              </Button>
+            </Card>
+          </Col>
+        </Row>
+
+        {/* Hover + button-style effect */}
+        <style>
+          {`
+            .dashboard-tile {
+              border-radius: 14px;
+              box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+              transition: all 0.25s ease;
+            }
+
+            .dashboard-tile:hover {
+              transform: translateY(-4px);
+              box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+            }
+          `}
+        </style>
+      </Container>
+
+      <Outlet />
     </>
   );
-  
 }
 
 export default Userdashboard;
