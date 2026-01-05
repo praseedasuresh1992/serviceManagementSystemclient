@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Container, Badge } from "react-bootstrap";
-import api from "../config/axiosinstance";
-
+import api from "../../config/axiosinstance";
 const ViewAllComplaints = () => {
   const [complaints, setComplaints] = useState([]);
 
