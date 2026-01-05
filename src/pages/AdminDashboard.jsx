@@ -25,7 +25,7 @@ export default function AdminDashboard() {
                       <FaSignOutAlt /> Logout
                     </Button>
           {/* Search Section */}
-          <div className="flex items-center gap-3 mb-6">
+          {/* <div className="flex items-center gap-3 mb-6">
 
             <input
               value={providerId}
@@ -40,7 +40,7 @@ export default function AdminDashboard() {
             >
               Find Complaints
             </Button>
-          </div>
+          </div> */}
 
           {/* Buttons Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -58,12 +58,12 @@ export default function AdminDashboard() {
               View All Providers
             </Button>
 
-            <Button
+            {/* <Button
               onClick={() => navigate("/adminDashboard/ViewAllComplaints")}
               className="p-4 rounded-2xl text-lg bg-gray-200"
             >
               View All Complaints
-            </Button>
+            </Button> */}
             <Button
               onClick={() => navigate("/adminDashboard/CreateServiceCategory")}
               className="p-4 rounded-2xl text-lg bg-gray-200"
