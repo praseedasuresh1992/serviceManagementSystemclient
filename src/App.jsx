@@ -18,7 +18,7 @@ import CreateAvailability from './pages/ProviderPages/CreateAvailability';
 import Logout from './components/Logout';
 import ViewAllUsers from './pages/ViewAllUser';
 import ViewAllProvider from './pages/ViewAllProvider';
-import ViewAllComplaints from './pages/viewAllComplaints';
+// import ViewAllComplaints from './pages/viewAllComplaints';
 import ViewComplaintsById from './pages/ViewComplaintsById';
 import UpdateUserProfile from './pages/UserPages/UpdateUserProfile';
 import ViewMyBookings from './pages/UserPages/ViewMyBookings';
@@ -78,7 +78,7 @@ function App() {
       children: [
         { path: "ViewAllUsers", element: <ViewAllUsers /> },
         { path: "ViewAllProviders", element: <ViewAllProvider /> },
-        { path: "ViewAllComplaints", element: <ViewAllComplaints /> },
+        // { path: "ViewAllComplaints", element: <ViewAllComplaints /> },
         { path: "ViewComplaintsById/:id", element: <ViewComplaintsById /> },
         { path: "CreateServiceCategory", element: <CreateServiceCategory /> },
         { path: "ViewAllServiceCategory", element: <ViewAllServiceCategory /> },
