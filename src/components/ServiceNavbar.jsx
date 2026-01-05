@@ -19,6 +19,7 @@ export default function ServiceNavbar() {
             <Nav.Link as={Link} to="/providerRegistration">List Your Business</Nav.Link>
             <Nav.Link as={Link} to="/userRegistration">Enter as a User</Nav.Link>
             <Nav.Link as={Link} to="/login">Login</Nav.Link>
+            <Nav.Link as={Link} to="/addComplaint">RegisterComplaint</Nav.Link>
             <Nav.Link  as={Link} to="/contactUs">Contact Us</Nav.Link>
           </Nav>
         </Navbar.Collapse>

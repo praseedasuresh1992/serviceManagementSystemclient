@@ -55,24 +55,24 @@ function Userdashboard() {
           </Col>
 
           {/* Card 4 */}
-          <Col xs={6} md={4} lg={3}>
+          {/* <Col xs={6} md={4} lg={3}>
             <Card className="dashboard-tile text-center p-3">
               <h6 className="mb-2">Complaints</h6>
               <Button size="sm" variant="secondary" href="/profile">
                 Add
               </Button>
             </Card>
-          </Col>
+          </Col> */}
 
           {/* Card 5 */}
-          <Col xs={6} md={4} lg={3}>
+          {/* <Col xs={6} md={4} lg={3}>
             <Card className="dashboard-tile text-center p-3">
               <h6 className="mb-2">My Complaints</h6>
               <Button size="sm" variant="dark" href="/my-complaints">
                 View
               </Button>
             </Card>
-          </Col>
+          </Col> */}
         </Row>
 
         {/* Hover + button-style effect */}

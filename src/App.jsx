@@ -31,6 +31,8 @@ import ViewAllRequest from './pages/ProviderPages/ViewAllRequest';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import ProviderRating from './pages/ProviderPages/ProviderRating';
+import AddComplaint from './pages/AddComplaint';
+import ViewAllComplaints from './pages/adminpages/ViewAllComplaints';
 
 function App() {
 
@@ -44,7 +46,9 @@ function App() {
         { path: "userregistration", element: <UserRegistration /> },
         { path: "login", element: <Login /> },
         { path: "/aboutUs", element: <AboutUs /> },
-        { path: "/contactUs", element: <ContactUs /> }
+        { path: "/contactUs", element: <ContactUs /> },
+        { path: "/addComplaint", element: <AddComplaint /> }
+
       ],
     },
 
@@ -78,6 +82,8 @@ function App() {
         { path: "ViewComplaintsById/:id", element: <ViewComplaintsById /> },
         { path: "CreateServiceCategory", element: <CreateServiceCategory /> },
         { path: "ViewAllServiceCategory", element: <ViewAllServiceCategory /> },
+        { path: "ViewAllComplaints", element: <ViewAllComplaints /> }
+
       ],
     },
 
