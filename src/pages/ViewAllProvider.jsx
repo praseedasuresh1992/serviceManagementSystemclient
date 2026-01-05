@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import api from "../config/axiosinstance";
 import { BadgeCheck, CircleX } from "lucide-react";
+import api from "../config/axiosinstance";
 
 export default function ViewAllProvider() {
   const [providers, setProviders] = useState([]);
