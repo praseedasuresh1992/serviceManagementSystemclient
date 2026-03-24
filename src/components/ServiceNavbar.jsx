@@ -1,31 +1,37 @@
 import React from "react";
-import { Navbar, Nav, Container } from "react-bootstrap";
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function ServiceNavbar() {
   return (
     <>
-  
-    <Navbar bg="light" expand="lg" className="shadow-md py-3" sticky="top">
-      <Container>
-        <Navbar.Brand href="#" className="font-bold text-2xl">
-          ServicelQ
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto text-lg">
-            <Nav.Link as={Link} to="/">Home</Nav.Link>
-            <Nav.Link  as={Link} to="/aboutUs">Know About ServicelQ</Nav.Link>
-            <Nav.Link as={Link} to="/providerRegistration">List Your Business</Nav.Link>
-            <Nav.Link as={Link} to="/userRegistration">Enter as a User</Nav.Link>
-            <Nav.Link as={Link} to="/login">Login</Nav.Link>
-            {/* <Nav.Link as={Link} to="/addComplaint">RegisterComplaint</Nav.Link> */}
-            <Nav.Link  as={Link} to="/contactUs">Contact Us</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-    
+      <nav className="bg-white shadow-md py-2 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
+          
+          {/* Brand */}
+          <div className="text-2xl font-bold text-blue-600">
+            ServicelQ
+          </div>
+
+          {/* Menu */}
+          <div className="hidden lg:flex space-x-6 text-gray-700 font-medium">
+            <Link to="/" className="hover:text-blue-600">Home</Link>
+            <Link to="/aboutUs" className="hover:text-blue-600">Know About ServicelQ</Link>
+            <Link to="/providerRegistration" className="hover:text-blue-600">List Your Business</Link>
+            <Link to="/userRegistration" className="hover:text-blue-600">Enter as a User</Link>
+            <Link to="/login" className="hover:text-blue-600">Login</Link>
+            {/* <Link to="/addComplaint">RegisterComplaint</Link> */}
+            <Link to="/contactUs" className="hover:text-blue-600">Contact Us</Link>
+          </div>
+
+          {/* Mobile Menu Button (optional placeholder) */}
+          <div className="lg:hidden">
+            <button className="text-gray-700 focus:outline-none">
+              ☰
+            </button>
+          </div>
+
+        </div>
+      </nav>
     </>
   );
 }

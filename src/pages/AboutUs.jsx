@@ -5,10 +5,10 @@ const AboutUs = () => {
     <div className="w-full">
 
       {/* ===== HERO ===== */}
-      <section className="bg-dark text-white py-20 text-center">
+      <section className="bg-  py-20 text-center">
         <div className="container">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            About <span className="text-green-400">ServicelQ</span>
+            About Us
           </h1>
           <p className="text-lg text-gray-300 max-w-3xl mx-auto">
             A modern platform designed to simplify service management,
