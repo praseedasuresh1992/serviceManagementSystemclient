@@ -5,8 +5,8 @@ const ContactUs = () => {
     <div className="w-full">
 
       {/* ===== HERO ===== */}
-      <section className="bg-dark text-white py-20 text-center">
-        <div className="container">
+      <section className="bg-gray-900 text-white py-20 text-center">
+        <div className="max-w-6xl mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Contact <span className="text-green-400">Us</span>
           </h1>
@@ -18,21 +18,21 @@ const ContactUs = () => {
 
       {/* ===== CONTACT CONTENT ===== */}
       <section className="py-16 bg-gray-100">
-        <div className="container">
-          <div className="row g-5">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid md:grid-cols-12 gap-8">
 
             {/* Contact Info */}
-            <div className="col-md-5">
-              <div className="bg-white p-5 rounded-lg shadow-sm h-100">
-                <h4 className="fw-bold mb-4">Get in Touch</h4>
+            <div className="md:col-span-5">
+              <div className="bg-white p-6 rounded-xl shadow-sm h-full">
+                <h4 className="font-bold text-lg mb-4">Get in Touch</h4>
 
-                <p className="text-muted mb-3">
+                <p className="text-gray-600 mb-3">
                   <strong>Email:</strong> support@servicelq.com
                 </p>
-                <p className="text-muted mb-3">
+                <p className="text-gray-600 mb-3">
                   <strong>Phone:</strong> +91 98765 43210
                 </p>
-                <p className="text-muted">
+                <p className="text-gray-600">
                   <strong>Address:</strong><br />
                   ServicelQ Technologies<br />
                   India
@@ -41,44 +41,54 @@ const ContactUs = () => {
             </div>
 
             {/* Contact Form */}
-            <div className="col-md-7">
-              <div className="bg-white p-5 rounded-lg shadow-sm">
-                <h4 className="fw-bold mb-4">Send us a Message</h4>
+            <div className="md:col-span-7">
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <h4 className="font-bold text-lg mb-4">
+                  Send us a Message
+                </h4>
 
-                <form>
-                  <div className="mb-3">
-                    <label className="form-label">Name</label>
+                <form className="space-y-4">
+                  
+                  <div>
+                    <label className="block mb-1 font-medium">
+                      Name
+                    </label>
                     <input
                       type="text"
-                      className="form-control"
                       placeholder="Your Name"
+                      className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
-                  <div className="mb-3">
-                    <label className="form-label">Email</label>
+                  <div>
+                    <label className="block mb-1 font-medium">
+                      Email
+                    </label>
                     <input
                       type="email"
-                      className="form-control"
                       placeholder="Your Email"
+                      className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
 
-                  <div className="mb-3">
-                    <label className="form-label">Message</label>
+                  <div>
+                    <label className="block mb-1 font-medium">
+                      Message
+                    </label>
                     <textarea
-                      className="form-control"
                       rows="4"
                       placeholder="Your Message"
+                      className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                     ></textarea>
                   </div>
 
                   <button
                     type="submit"
-                    className="btn btn-success px-4 rounded-pill"
+                    className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-full transition"
                   >
                     Send Message
                   </button>
+
                 </form>
               </div>
             </div>

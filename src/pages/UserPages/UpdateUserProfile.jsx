@@ -14,7 +14,6 @@ const UpdateUserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // ================= FETCH PROFILE =================
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -30,39 +29,34 @@ const UpdateUserProfile = () => {
     }
   };
 
-  // ================= HANDLE INPUT =================
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
-  // ================= UPDATE PROFILE =================
- 
   const handleUpdate = async () => {
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const updateData = {
-      name: profile.name,
-      email: profile.email,
-      address: profile.address,
-      contactno: profile.contactno,
-      username: profile.username
-    };
+      const updateData = {
+        name: profile.name,
+        email: profile.email,
+        address: profile.address,
+        contactno: profile.contactno,
+        username: profile.username
+      };
 
-    await api.put("/updateMyUserProfile", updateData);
+      await api.put("/updateMyUserProfile", updateData);
 
-    alert("Profile updated successfully");
-    setIsEditing(false);
-    fetchProfile();
-  } catch (error) {
-    alert(error.response?.data?.message || "Update failed");
-  } finally {
-    setLoading(false);
-  }
-};
+      alert("Profile updated successfully");
+      setIsEditing(false);
+      fetchProfile();
+    } catch (error) {
+      alert(error.response?.data?.message || "Update failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-
-  // ================= CANCEL EDIT =================
   const handleCancel = () => {
     setProfile(originalProfile);
     setIsEditing(false);
@@ -70,19 +64,19 @@ const UpdateUserProfile = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <div className="bg-white shadow-xl rounded-xl w-full max-w-3xl p-8">
+      <div className="bg-white shadow-xl rounded-2xl w-full max-w-3xl p-8">
 
         {/* HEADER */}
         <div className="flex items-center justify-between border-b pb-4 mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">
-            <i className="bi bi-person-circle mr-2"></i>
+          <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <i className="bi bi-person-circle"></i>
             User Profile
           </h2>
 
           {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
-              className="btn btn-primary flex items-center gap-2"
+              className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
             >
               <i className="bi bi-pencil-square"></i>
               Edit Profile
@@ -104,7 +98,7 @@ const UpdateUserProfile = () => {
               value={profile.name}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`mt-1 w-full rounded-lg border px-3 py-2 
+              className={`mt-1 w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500
               ${isEditing ? "bg-white" : "bg-gray-100 cursor-not-allowed"}`}
             />
           </div>
@@ -120,7 +114,7 @@ const UpdateUserProfile = () => {
               value={profile.email}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`mt-1 w-full rounded-lg border px-3 py-2 
+              className={`mt-1 w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500
               ${isEditing ? "bg-white" : "bg-gray-100 cursor-not-allowed"}`}
             />
           </div>
@@ -136,7 +130,7 @@ const UpdateUserProfile = () => {
               value={profile.username}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`mt-1 w-full rounded-lg border px-3 py-2 
+              className={`mt-1 w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500
               ${isEditing ? "bg-white" : "bg-gray-100 cursor-not-allowed"}`}
             />
           </div>
@@ -152,7 +146,7 @@ const UpdateUserProfile = () => {
               value={profile.contactno}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`mt-1 w-full rounded-lg border px-3 py-2 
+              className={`mt-1 w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500
               ${isEditing ? "bg-white" : "bg-gray-100 cursor-not-allowed"}`}
             />
           </div>
@@ -168,7 +162,7 @@ const UpdateUserProfile = () => {
               value={profile.address}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`mt-1 w-full rounded-lg border px-3 py-2 
+              className={`mt-1 w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500
               ${isEditing ? "bg-white" : "bg-gray-100 cursor-not-allowed"}`}
             />
           </div>
@@ -179,7 +173,7 @@ const UpdateUserProfile = () => {
           <div className="flex justify-end gap-4 mt-8">
             <button
               onClick={handleCancel}
-              className="btn btn-outline-secondary flex items-center gap-2"
+              className="flex items-center gap-2 border border-gray-400 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 transition"
             >
               <i className="bi bi-x-circle"></i>
               Cancel
@@ -188,7 +182,7 @@ const UpdateUserProfile = () => {
             <button
               onClick={handleUpdate}
               disabled={loading}
-              className="btn btn-success flex items-center gap-2"
+              className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-50"
             >
               <i className="bi bi-check-circle"></i>
               {loading ? "Saving..." : "Save Changes"}

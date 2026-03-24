@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import api from "../../config/axiosinstance";
-import { Card, Button, Alert, Container, Row, Col } from "react-bootstrap";
 import { Outlet, useNavigate, useMatch } from "react-router-dom";
 
 function ViewProviderProfile() {
   const navigate = useNavigate();
 
-  // 👇 Detect if update route is active
   const isUpdatePage = useMatch(
     "/providerDashboard/viewprovider/updateprovider"
   );
@@ -29,116 +27,141 @@ function ViewProviderProfile() {
     fetchProvider();
   }, []);
 
-  if (loading) return <p className="text-center mt-5">Loading...</p>;
-  if (!provider) return <p className="text-center mt-5">No profile found</p>;
+  if (loading)
+    return (
+      <p className="text-center mt-10 text-gray-600">Loading...</p>
+    );
+
+  if (!provider)
+    return (
+      <p className="text-center mt-10 text-gray-600">
+        No profile found
+      </p>
+    );
 
   return (
     <>
-      {/* ================= VIEW PROFILE (ONLY WHEN NOT UPDATING) ================= */}
+      {/* ================= VIEW PROFILE ================= */}
       {!isUpdatePage && (
-        <Container className="mt-5">
-          <h2 className="fw-bold text-center mb-4">My Profile</h2>
+        <div className="mt-10 px-4">
+          <h2 className="text-2xl font-bold text-center mb-6">
+            My Profile
+          </h2>
 
+          {/* Blocked Alert */}
           {provider.status === "blocked" && (
-            <Alert variant="danger" className="text-center fw-semibold">
+            <div className="max-w-2xl mx-auto mb-4 bg-red-100 text-red-700 px-4 py-3 rounded-lg text-center font-semibold">
               🚫 Your account is currently <strong>Blocked</strong> <br />
               Please wait for authorization from admin.
-            </Alert>
+            </div>
           )}
 
-          <Card
-            className="p-4 shadow"
-            style={{ borderRadius: "20px", maxWidth: "750px", margin: "0 auto" }}
-          >
-            <Row>
-              <Col md={4} className="text-center">
+          {/* Card */}
+          <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-2xl p-6">
+            <div className="flex flex-col md:flex-row gap-6">
+              {/* Profile Image */}
+              <div className="flex justify-center md:w-1/3">
                 <img
                   src={
                     provider.profile_image?.url ||
                     "https://via.placeholder.com/150"
                   }
                   alt="Profile"
-                  style={{
-                    width: "150px",
-                    height: "150px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    border: "4px solid #4e73df",
-                  }}
+                  className="w-36 h-36 rounded-full object-cover border-4 border-indigo-500"
                 />
-              </Col>
+              </div>
 
-              <Col md={8}>
-                <h4 className="fw-bold">{provider.name}</h4>
+              {/* Details */}
+              <div className="md:w-2/3">
+                <h4 className="text-xl font-bold mb-2">
+                  {provider.name}
+                </h4>
 
-                <p><strong>Email:</strong> {provider.email}</p>
-                <p><strong>Username:</strong> {provider.username}</p>
-                <p><strong>Contact No:</strong> {provider.contactno}</p>
-                <p><strong>Address:</strong> {provider.address}</p>
+                <p><span className="font-semibold">Email:</span> {provider.email}</p>
+                <p><span className="font-semibold">Username:</span> {provider.username}</p>
+                <p><span className="font-semibold">Contact No:</span> {provider.contactno}</p>
+                <p><span className="font-semibold">Address:</span> {provider.address}</p>
 
                 <p>
-                  <strong>Available Locations:</strong>{" "}
+                  <span className="font-semibold">Available Locations:</span>{" "}
                   {provider.available_location?.join(", ") || "Not specified"}
                 </p>
 
                 <p>
-                  <strong>Service Category:</strong>{" "}
-                  {provider.service_category?.category_name  || "Not assigned"}
+                  <span className="font-semibold">Service Category:</span>{" "}
+                  {provider.service_category?.category_name || "Not assigned"}
                 </p>
 
-                <p><strong>Group:</strong> {provider.is_group ? "Yes" : "No"}</p>
+                <p>
+                  <span className="font-semibold">Group:</span>{" "}
+                  {provider.is_group ? "Yes" : "No"}
+                </p>
 
                 {provider.is_group && (
-                  <p><strong>Members:</strong> {provider.members}</p>
+                  <p>
+                    <span className="font-semibold">Members:</span>{" "}
+                    {provider.members}
+                  </p>
                 )}
 
                 <p>
-                  <strong>Status:</strong>{" "}
+                  <span className="font-semibold">Status:</span>{" "}
                   <span
-                    style={{
-                      color:
-                        provider.status === "active"
-                          ? "green"
-                          : provider.status === "blocked"
-                          ? "red"
-                          : "orange",
-                      fontWeight: "bold",
-                    }}
+                    className={`font-bold ${
+                      provider.status === "active"
+                        ? "text-green-600"
+                        : provider.status === "blocked"
+                        ? "text-red-600"
+                        : "text-yellow-600"
+                    }`}
                   >
                     {provider.status?.toUpperCase()}
                   </span>
                 </p>
 
+                {/* Documents */}
                 <div className="mt-3">
-                  <strong>Verification Documents:</strong>
+                  <span className="font-semibold">
+                    Verification Documents:
+                  </span>
+
                   {provider.verification_document?.length > 0 ? (
                     provider.verification_document.map((doc, index) => (
                       <div key={index}>
-                        <a href={doc.url} target="_blank" rel="noreferrer">
+                        <a
+                          href={doc.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-indigo-600 hover:underline"
+                        >
                           Document {index + 1}
                         </a>
                       </div>
                     ))
                   ) : (
-                    <p className="text-muted">No documents uploaded</p>
+                    <p className="text-gray-500">
+                      No documents uploaded
+                    </p>
                   )}
                 </div>
 
-                <div className="mt-4">
-                  <Button
+                {/* Button */}
+                <div className="mt-5">
+                  <button
                     onClick={() =>
                       navigate(
                         "/providerDashboard/viewprovider/updateprovider"
                       )
                     }
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
                   >
                     Update Profile
-                  </Button>
+                  </button>
                 </div>
-              </Col>
-            </Row>
-          </Card>
-        </Container>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* ================= UPDATE FORM ================= */}

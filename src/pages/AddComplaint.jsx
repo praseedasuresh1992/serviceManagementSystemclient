@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Form, Button, Container, Alert } from "react-bootstrap";
 import api from "../config/axiosinstance";
 
 const AddComplaint = () => {
@@ -19,7 +18,6 @@ const AddComplaint = () => {
         complaints_text: complaintText
       };
 
-      // only send provider_id if complaint is about provider
       if (complaintType === "provider") {
         payload.provider_id = providerId;
       }
@@ -37,54 +35,82 @@ const AddComplaint = () => {
   };
 
   return (
-    <Container className="mt-4">
-      <h3>Add Complaint</h3>
+    <div className="max-w-2xl mx-auto mt-10 px-4">
+      <h3 className="text-2xl font-bold mb-4">Add Complaint</h3>
 
-      {success && <Alert variant="success">{success}</Alert>}
-      {error && <Alert variant="danger">{error}</Alert>}
+      {/* SUCCESS */}
+      {success && (
+        <div className="mb-4 p-3 rounded-lg bg-green-100 text-green-700">
+          {success}
+        </div>
+      )}
 
-      <Form onSubmit={handleSubmit}>
+      {/* ERROR */}
+      {error && (
+        <div className="mb-4 p-3 rounded-lg bg-red-100 text-red-700">
+          {error}
+        </div>
+      )}
+
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-md rounded-xl p-6 space-y-4"
+      >
 
         {/* Complaint Type */}
-        <Form.Group className="mb-3">
-          <Form.Label>Complaint Type</Form.Label>
-          <Form.Select
+        <div>
+          <label className="block mb-1 font-medium">
+            Complaint Type
+          </label>
+          <select
             value={complaintType}
             onChange={(e) => setComplaintType(e.target.value)}
+            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="system">System / App Issue</option>
             <option value="provider">Service Provider</option>
-          </Form.Select>
-        </Form.Group>
+          </select>
+        </div>
 
-        {/* Provider ID – only show if provider complaint */}
+        {/* Provider ID */}
         {complaintType === "provider" && (
-          <Form.Group className="mb-3">
-            <Form.Label>Provider ID</Form.Label>
-            <Form.Control
+          <div>
+            <label className="block mb-1 font-medium">
+              Provider ID
+            </label>
+            <input
               type="text"
               value={providerId}
               onChange={(e) => setProviderId(e.target.value)}
               required
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-          </Form.Group>
+          </div>
         )}
 
         {/* Complaint Text */}
-        <Form.Group className="mb-3">
-          <Form.Label>Complaint</Form.Label>
-          <Form.Control
-            as="textarea"
+        <div>
+          <label className="block mb-1 font-medium">
+            Complaint
+          </label>
+          <textarea
             rows={4}
             value={complaintText}
             onChange={(e) => setComplaintText(e.target.value)}
             required
+            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
-        </Form.Group>
+        </div>
 
-        <Button type="submit">Submit Complaint</Button>
-      </Form>
-    </Container>
+        {/* Button */}
+        <button
+          type="submit"
+          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
+        >
+          Submit Complaint
+        </button>
+      </form>
+    </div>
   );
 };
 

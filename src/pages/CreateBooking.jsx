@@ -3,7 +3,6 @@ import api from "../config/axiosinstance";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format, isSameDay } from "date-fns";
-import { Modal, Button, Form } from "react-bootstrap";
 import InstructionModal from "./InstructionModal";
 
 const CreateBooking = () => {
@@ -26,14 +25,12 @@ const CreateBooking = () => {
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState("");
 
-  /* ================= LOAD CATEGORIES ================= */
   useEffect(() => {
     api.get("/service-category")
       .then(res => setCategories(res.data.data))
       .catch(() => setError("Failed to load categories"));
   }, []);
 
-  /* ================= FILTER PROVIDERS ================= */
   const fetchProviders = async (dates) => {
     if (!formData.category_id || !formData.location || !dates.length) return;
     try {
@@ -48,7 +45,6 @@ const CreateBooking = () => {
     }
   };
 
-  /* ================= PROVIDER BOOKINGS ================= */
   const fetchProviderBookings = async (providerId) => {
     if (!providerId) return;
     try {
@@ -65,23 +61,19 @@ const CreateBooking = () => {
     }
   };
 
-  /* ================= DATE CLICK ================= */
   const handleDateClick = (date) => {
     setSelectedDate(date);
     setAvailabilityType("");
     setShowAvailabilityModal(true);
   };
 
-  /* ================= SAVE DATE ================= */
   const saveDate = () => {
     if (!availabilityType || !selectedDate) return;
 
     const formattedDate = format(selectedDate, "yyyy-MM-dd");
 
     const exists = bookingDates.some(
-      d =>
-        d.date === formattedDate &&
-        d.availability_type === availabilityType
+      d => d.date === formattedDate && d.availability_type === availabilityType
     );
 
     if (exists) {
@@ -99,7 +91,6 @@ const CreateBooking = () => {
     setShowAvailabilityModal(false);
   };
 
-  /* ================= DISABLE BOOKED DATES ================= */
   const isDateDisabled = (date) => {
     return bookedDates.some(b =>
       isSameDay(new Date(b.date), date) &&
@@ -108,12 +99,10 @@ const CreateBooking = () => {
     );
   };
 
-  /* ================= REMOVE DATE ================= */
   const removeDate = (index) => {
     setBookingDates(prev => prev.filter((_, i) => i !== index));
   };
 
-  /* ================= PREVIEW AMOUNT ================= */
   const previewAmount = async () => {
     try {
       const res = await api.post("/calculateBookingAmount", {
@@ -127,7 +116,6 @@ const CreateBooking = () => {
     }
   };
 
-  /* ================= STRIPE ================= */
   const goToStripeCheckout = async () => {
     try {
       const payload = {
@@ -148,20 +136,21 @@ const CreateBooking = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-5">
-      <div className="bg-white shadow-lg rounded-xl p-6">
+    <div className="max-w-2xl mx-auto mt-10 px-4">
+      <div className="bg-white shadow-xl rounded-2xl p-6">
         <h2 className="text-2xl font-semibold mb-4 text-center">
           Create Booking
         </h2>
 
         {/* CATEGORY */}
-        <Form.Group className="mb-3">
-          <Form.Label>Service Category</Form.Label>
-          <Form.Select
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Service Category</label>
+          <select
             value={formData.category_id}
             onChange={e =>
               setFormData({ ...formData, category_id: e.target.value })
             }
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">Select Category</option>
             {categories.map(c => (
@@ -169,23 +158,24 @@ const CreateBooking = () => {
                 {c.category_name}
               </option>
             ))}
-          </Form.Select>
-        </Form.Group>
+          </select>
+        </div>
 
         {/* LOCATION */}
-        <Form.Group className="mb-3">
-          <Form.Label>Location</Form.Label>
-          <Form.Control
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Location</label>
+          <input
             placeholder="Enter location"
             value={formData.location}
             onChange={e =>
               setFormData({ ...formData, location: e.target.value })
             }
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
           />
-        </Form.Group>
+        </div>
 
         {/* DATE PICKER */}
-        <div className="border rounded p-3 mb-3">
+        <div className="border rounded-lg p-3 mb-4">
           <DatePicker
             inline
             minDate={new Date()}
@@ -198,27 +188,31 @@ const CreateBooking = () => {
         {bookingDates.map((d, i) => (
           <div
             key={i}
-            className="d-flex justify-content-between align-items-center border rounded p-2 mb-2"
+            className="flex justify-between items-center border rounded-lg p-2 mb-2"
           >
             <span>
               <strong>{d.date}</strong> —{" "}
               {String(d.availability_type).replace("_", " ")}
             </span>
-            <Button size="sm" variant="outline-danger" onClick={() => removeDate(i)}>
+            <button
+              onClick={() => removeDate(i)}
+              className="text-red-500 border border-red-300 px-2 py-1 rounded hover:bg-red-50"
+            >
               Remove
-            </Button>
+            </button>
           </div>
         ))}
 
         {/* PROVIDERS */}
-        <Form.Group className="mb-3 mt-3">
-          <Form.Label>Available Providers</Form.Label>
-          <Form.Select
+        <div className="mb-4 mt-4">
+          <label className="block mb-1 font-medium">Available Providers</label>
+          <select
             value={formData.provider_id}
             onChange={e => {
               setFormData({ ...formData, provider_id: e.target.value });
               fetchProviderBookings(e.target.value);
             }}
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">Select Provider</option>
             {providers.map(p => (
@@ -226,58 +220,68 @@ const CreateBooking = () => {
                 {p.name} ({p.available_location.join(", ")})
               </option>
             ))}
-          </Form.Select>
-        </Form.Group>
+          </select>
+        </div>
 
-        <Button
-          className="w-100"
-          variant="primary"
+        <button
           disabled={!formData.provider_id || !bookingDates.length}
           onClick={previewAmount}
+          className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50"
         >
           Preview Amount
-        </Button>
+        </button>
 
-        {error && <p className="text-danger mt-2">{error}</p>}
+        {error && (
+          <p className="text-red-500 mt-2 text-sm">{error}</p>
+        )}
       </div>
 
       {/* AVAILABILITY MODAL */}
-      <Modal show={showAvailabilityModal} centered>
-        <Modal.Header>
-          <Modal.Title>
-            Select Availability —{" "}
-            {selectedDate && format(selectedDate, "yyyy-MM-dd")}
-          </Modal.Title>
-        </Modal.Header>
+      {showAvailabilityModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <h3 className="text-lg font-semibold mb-4">
+              Select Availability —{" "}
+              {selectedDate && format(selectedDate, "yyyy-MM-dd")}
+            </h3>
 
-        <Modal.Body>
-          <Form>
-            <Form.Check
-              type="radio"
-              label="Full Day"
-              name="availability"
-              checked={availabilityType === "full_day"}
-              onChange={() => setAvailabilityType("full_day")}
-            />
-            <Form.Check
-              type="radio"
-              label="Half Day"
-              name="availability"
-              checked={availabilityType === "half_day"}
-              onChange={() => setAvailabilityType("half_day")}
-            />
-          </Form>
-        </Modal.Body>
+            <div className="space-y-2">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  checked={availabilityType === "full_day"}
+                  onChange={() => setAvailabilityType("full_day")}
+                />
+                Full Day
+              </label>
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowAvailabilityModal(false)}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={saveDate}>
-            Save
-          </Button>
-        </Modal.Footer>
-      </Modal>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  checked={availabilityType === "half_day"}
+                  onChange={() => setAvailabilityType("half_day")}
+                />
+                Half Day
+              </label>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setShowAvailabilityModal(false)}
+                className="px-4 py-2 border rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveDate}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* AMOUNT MODAL */}
       <InstructionModal

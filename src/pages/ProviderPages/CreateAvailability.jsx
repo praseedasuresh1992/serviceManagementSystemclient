@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { Modal, Button, Form } from "react-bootstrap";
 import api from "../../config/axiosinstance";
 
 export default function CreateAvailability() {
@@ -10,19 +9,13 @@ export default function CreateAvailability() {
   const [currentDate, setCurrentDate] = useState("");
   const [availabilityType, setAvailabilityType] = useState("");
 
-  // ===============================
-  // Handle date click
-  // ===============================
   const handleDateClick = (date) => {
-    const formatted = date.toLocaleDateString("en-CA"); // YYYY-MM-DD
+    const formatted = date.toLocaleDateString("en-CA");
     setCurrentDate(formatted);
     setAvailabilityType("");
     setShowModal(true);
   };
 
-  // ===============================
-  // Save availability for date
-  // ===============================
   const saveAvailability = () => {
     if (!availabilityType) {
       alert("Please select availability type");
@@ -52,26 +45,17 @@ export default function CreateAvailability() {
     setShowModal(false);
   };
 
-  // ===============================
-  // Remove availability
-  // ===============================
   const removeAvailability = (index) => {
     setAvailability((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // ===============================
-  // Highlight selected dates
-  // ===============================
   const tileClassName = ({ date }) => {
     const formatted = date.toLocaleDateString("en-CA");
     return availability.some((a) => a.date === formatted)
-      ? "bg-success text-white rounded-circle"
+      ? "bg-green-500 text-white rounded-full"
       : "";
   };
 
-  // ===============================
-  // Submit to backend
-  // ===============================
   const submitHandler = async () => {
     if (availability.length === 0) {
       alert("Please select at least one availability");
@@ -95,9 +79,11 @@ export default function CreateAvailability() {
   };
 
   return (
-    <div className="container mt-4">
-      <div className="card shadow p-4">
-        <h3 className="text-center mb-3">Provider Availability</h3>
+    <div className="max-w-2xl mx-auto mt-6 px-4">
+      <div className="bg-white shadow-lg p-6 rounded-xl">
+        <h3 className="text-xl font-semibold text-center mb-4">
+          Provider Availability
+        </h3>
 
         <Calendar
           onClickDay={handleDateClick}
@@ -106,80 +92,89 @@ export default function CreateAvailability() {
         />
 
         <div className="mt-4">
-          <h5>Selected Availability</h5>
+          <h5 className="font-medium mb-2">Selected Availability</h5>
 
           {availability.length === 0 && (
-            <p className="text-muted">No availability added</p>
+            <p className="text-gray-500">No availability added</p>
           )}
 
           {availability.map((item, index) => (
             <div
               key={index}
-              className="d-flex justify-content-between align-items-center border rounded p-2 mb-2"
+              className="flex justify-between items-center border rounded-lg p-2 mb-2"
             >
               <span>
                 <strong>{item.date}</strong> —{" "}
-                {/* 🔒 SAFE FIX: NO MORE replace() ERROR */}
                 {String(item.availability_type ?? "full_day").replace("_", " ")}
               </span>
 
-              <Button
-                size="sm"
-                variant="danger"
+              <button
                 onClick={() => removeAvailability(index)}
+                className="bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-1 rounded"
               >
                 Remove
-              </Button>
+              </button>
             </div>
           ))}
         </div>
 
-        <Button
-          variant="success"
-          className="w-100 mt-3"
+        <button
           onClick={submitHandler}
+          className="w-full mt-3 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold"
         >
           Submit Availability
-        </Button>
+        </button>
       </div>
 
       {/* Modal */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            Select Availability for {currentDate}
-          </Modal.Title>
-        </Modal.Header>
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+            
+            <h3 className="text-lg font-semibold mb-4">
+              Select Availability for {currentDate}
+            </h3>
 
-        <Modal.Body>
-          <Form>
-            <Form.Check
-              type="radio"
-              label="Full Day"
-              name="availability"
-              checked={availabilityType === "full_day"}
-              onChange={() => setAvailabilityType("full_day")}
-            />
+            <div className="space-y-2">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="availability"
+                  checked={availabilityType === "full_day"}
+                  onChange={() => setAvailabilityType("full_day")}
+                />
+                Full Day
+              </label>
 
-            <Form.Check
-              type="radio"
-              label="Half Day"
-              name="availability"
-              checked={availabilityType === "half_day"}
-              onChange={() => setAvailabilityType("half_day")}
-            />
-          </Form>
-        </Modal.Body>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="availability"
+                  checked={availabilityType === "half_day"}
+                  onChange={() => setAvailabilityType("half_day")}
+                />
+                Half Day
+              </label>
+            </div>
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={saveAvailability}>
-            Save
-          </Button>
-        </Modal.Footer>
-      </Modal>
+            <div className="flex justify-end gap-2 mt-6">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={saveAvailability}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

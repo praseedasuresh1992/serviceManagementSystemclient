@@ -38,7 +38,7 @@ const CreateServiceCategory = () => {
   };
 
   return (
-    <div className="container mt-5 max-w-xl bg-white shadow-lg p-6 rounded">
+    <div className="max-w-xl mx-auto mt-10 bg-white shadow-lg p-6 rounded-xl">
       <h2 className="text-2xl font-bold mb-4 text-center">
         Create Service Category
       </h2>
@@ -48,42 +48,45 @@ const CreateServiceCategory = () => {
           type="text"
           name="category_name"
           placeholder="Category Name"
-          className="form-control"
           value={formData.category_name}
           onChange={handleChange}
           required
+          className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <textarea
           name="description"
           placeholder="Description"
-          className="form-control"
           value={formData.description}
           onChange={handleChange}
           required
+          className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <input
           type="number"
           name="full_day"
           placeholder="Full Day Amount"
-          className="form-control"
           value={formData.full_day}
           onChange={handleChange}
           required
+          className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <input
           type="number"
           name="half_day"
           placeholder="Half Day Amount"
-          className="form-control"
           value={formData.half_day}
           onChange={handleChange}
           required
+          className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
-        <button className="btn btn-primary w-full mt-3">
+        <button
+          type="submit"
+          className="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition"
+        >
           Create
         </button>
       </form>

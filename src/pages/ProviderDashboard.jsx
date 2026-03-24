@@ -1,5 +1,4 @@
 import React from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import {
   FaUserCircle,
   FaBell,
@@ -41,62 +40,44 @@ function ProviderDashboard() {
 
   return (
     <>
-      <Container className="mt-5">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2 className="fw-bold">Provider Dashboard</h2>
-          <Button
-            variant="danger"
+      <div className="max-w-7xl mx-auto mt-10 px-4">
+
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">Provider Dashboard</h2>
+
+          <button
             onClick={() => navigate("/logout")}
-            style={{ display: "flex", alignItems: "center", gap: "8px" }}
+            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
           >
             <FaSignOutAlt /> Logout
-          </Button>
+          </button>
         </div>
 
-        <Row className="g-4">
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {cards.map((card, index) => (
-            <Col md={3} sm={6} key={index}>
-              <Card
-                style={{
-                  borderRadius: "20px",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                  cursor: "pointer",
-                  transition: "0.3s",
-                }}
-                className="p-4 text-center dashboard-card"
-                onClick={() => navigate(card.link)}
+            <div
+              key={index}
+              onClick={() => navigate(card.link)}
+              className="bg-white rounded-2xl shadow-md p-6 text-center cursor-pointer transform transition duration-300 hover:-translate-y-1.5 hover:shadow-xl"
+            >
+              {/* Icon Circle */}
+              <div
+                className="w-20 h-20 mx-auto rounded-full flex items-center justify-center text-white"
+                style={{ backgroundColor: card.color }}
               >
-                <div
-                  style={{
-                    background: card.color,
-                    color: "white",
-                    width: "80px",
-                    height: "80px",
-                    borderRadius: "50%",
-                    margin: "0 auto",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {card.icon}
-                </div>
+                {card.icon}
+              </div>
 
-                <h5 className="mt-3 fw-semibold">{card.title}</h5>
-              </Card>
-            </Col>
+              <h5 className="mt-4 font-semibold text-lg">
+                {card.title}
+              </h5>
+            </div>
           ))}
-        </Row>
+        </div>
+      </div>
 
-        <style>
-          {`
-          .dashboard-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-          }
-        `}
-        </style>
-      </Container>
       <Outlet />
     </>
   );

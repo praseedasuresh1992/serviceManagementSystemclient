@@ -18,7 +18,6 @@ export default function ViewAllProvider() {
     }
   };
 
-  // ✅ Verify / Unverify
   const toggleVerifyProvider = async (provider) => {
     try {
       await api.put(`/verifyprovider/${provider._id}`, {
@@ -30,7 +29,6 @@ export default function ViewAllProvider() {
     }
   };
 
-  // ✅ Block / Activate
   const toggleProviderStatus = async (provider) => {
     try {
       await api.put(`/verifyprovider/${provider._id}`, {
@@ -43,114 +41,120 @@ export default function ViewAllProvider() {
   };
 
   return (
-    <div className="container py-4">
-      <div className="row g-4">
+    <div className="max-w-7xl mx-auto py-6 px-4">
+      <div className="grid md:grid-cols-2 gap-6">
         {providers.map((p) => (
-          <div className="col-md-6" key={p._id}>
-            <div className="card shadow rounded-3 p-4">
-
-              {/* Profile Image */}
-              <div className="d-flex align-items-center gap-3 mb-3">
-                <img
-                  src={p.profile_image?.url || "/default-avatar.png"}
-                  alt="provider"
-                  className="rounded-circle"
-                  width="70"
-                  height="70"
-                />
-                <div>
-                  <h5 className="fw-bold mb-0">{p.name}</h5>
-                  <small className="text-muted d-block">{p.email}</small>
-                  <small className="text-secondary">
-                    <strong>ID:</strong> {p._id}
-                  </small>
-                </div>
-
+          <div
+            key={p._id}
+            className="bg-white shadow-lg rounded-2xl p-5 border"
+          >
+            {/* Profile */}
+            <div className="flex items-center gap-4 mb-4">
+              <img
+                src={p.profile_image?.url || "/default-avatar.png"}
+                alt="provider"
+                className="w-16 h-16 rounded-full object-cover"
+              />
+              <div>
+                <h5 className="font-bold text-lg">{p.name}</h5>
+                <p className="text-gray-500 text-sm">{p.email}</p>
+                <p className="text-gray-400 text-xs">
+                  <span className="font-semibold">ID:</span> {p._id}
+                </p>
               </div>
+            </div>
 
-              <p><strong>Contact:</strong> {p.contactno}</p>
-              <p><strong>Address:</strong> {p.address}</p>
+            <p className="text-sm">
+              <span className="font-semibold">Contact:</span> {p.contactno}
+            </p>
 
-              <p>
-                <strong>Service Category:</strong>{" "}
-                {p.service_category?.name || "Not Assigned"}
-              </p>
+            <p className="text-sm">
+              <span className="font-semibold">Address:</span> {p.address}
+            </p>
 
-              <p>
-                <strong>Locations:</strong>{" "}
-                {p.available_location?.join(", ")}
-              </p>
+            <p className="text-sm">
+              <span className="font-semibold">Service Category:</span>{" "}
+              {p.service_category?.name || "Not Assigned"}
+            </p>
 
-              <p>
-                <strong>Group:</strong>{" "}
-                {p.is_group ? "Yes" : "No"} |{" "}
-                <strong>Members:</strong> {p.members}
-              </p>
+            <p className="text-sm">
+              <span className="font-semibold">Locations:</span>{" "}
+              {p.available_location?.join(", ")}
+            </p>
 
-              <p>
-                <strong>Status:</strong>{" "}
-                <span
-                  className={`fw-bold ${p.status === "active"
-                      ? "text-success"
-                      : p.status === "blocked"
-                        ? "text-danger"
-                        : "text-warning"
-                    }`}
-                >
-                  {p.status}
-                </span>
-              </p>
+            <p className="text-sm">
+              <span className="font-semibold">Group:</span>{" "}
+              {p.is_group ? "Yes" : "No"} |{" "}
+              <span className="font-semibold">Members:</span> {p.members}
+            </p>
 
-              <p>
-                <strong>Verified:</strong>{" "}
-                {p.verified ? "Yes" : "No"}
-              </p>
+            <p className="text-sm">
+              <span className="font-semibold">Status:</span>{" "}
+              <span
+                className={`font-bold ${
+                  p.status === "active"
+                    ? "text-green-600"
+                    : p.status === "blocked"
+                    ? "text-red-600"
+                    : "text-yellow-500"
+                }`}
+              >
+                {p.status}
+              </span>
+            </p>
 
-              {/* Verification Documents */}
-              {p.verification_document?.length > 0 && (
-                <div className="mb-2">
-                  <strong>Verification Docs:</strong>
-                  <div className="d-flex gap-2 flex-wrap mt-1">
-                    {p.verification_document.map((doc, i) => (
-                      <a
-                        key={i}
-                        href={doc.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="badge bg-secondary text-decoration-none"
-                      >
-                        View Doc {i + 1}
-                      </a>
-                    ))}
-                  </div>
+            <p className="text-sm">
+              <span className="font-semibold">Verified:</span>{" "}
+              {p.verified ? "Yes" : "No"}
+            </p>
+
+            {/* Docs */}
+            {p.verification_document?.length > 0 && (
+              <div className="mt-2">
+                <p className="font-semibold text-sm">Verification Docs:</p>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {p.verification_document.map((doc, i) => (
+                    <a
+                      key={i}
+                      href={doc.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-gray-500 text-white text-xs px-3 py-1 rounded-full hover:bg-gray-600 transition"
+                    >
+                      View Doc {i + 1}
+                    </a>
+                  ))}
                 </div>
-              )}
-
-              {/* Buttons */}
-              <div className="d-flex gap-3 mt-3">
-                <button
-                  onClick={() => toggleVerifyProvider(p)}
-                  className="btn btn-primary rounded-pill d-flex align-items-center gap-2"
-                >
-                  {p.verified ? (
-                    <>
-                      <CircleX size={18} /> Unverify
-                    </>
-                  ) : (
-                    <>
-                      <BadgeCheck size={18} /> Verify
-                    </>
-                  )}
-                </button>
-
-                <button
-                  onClick={() => toggleProviderStatus(p)}
-                  className={`btn rounded-pill ${p.status === "active" ? "btn-warning" : "btn-success"
-                    }`}
-                >
-                  {p.status === "active" ? "Block" : "Activate"}
-                </button>
               </div>
+            )}
+
+            {/* Buttons */}
+            <div className="flex gap-3 mt-4">
+              <button
+                onClick={() => toggleVerifyProvider(p)}
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm transition"
+              >
+                {p.verified ? (
+                  <>
+                    <CircleX size={18} /> Unverify
+                  </>
+                ) : (
+                  <>
+                    <BadgeCheck size={18} /> Verify
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={() => toggleProviderStatus(p)}
+                className={`px-4 py-2 rounded-full text-sm text-white transition ${
+                  p.status === "active"
+                    ? "bg-yellow-500 hover:bg-yellow-600"
+                    : "bg-green-600 hover:bg-green-700"
+                }`}
+              >
+                {p.status === "active" ? "Block" : "Activate"}
+              </button>
             </div>
           </div>
         ))}

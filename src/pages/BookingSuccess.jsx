@@ -26,7 +26,6 @@ const BookingSuccess = () => {
       },
     })
       .then(() => {
-        // ✅ CLEANUP
         localStorage.removeItem("booking_payload");
         navigate("/userDashboard/ViewMyBookings");
       })
@@ -36,7 +35,23 @@ const BookingSuccess = () => {
       });
   }, []);
 
-  return <h2>Your request submitted successfully.. Thank You</h2>;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="bg-white shadow-xl rounded-2xl p-8 max-w-md w-full text-center">
+        
+        <h2 className="text-2xl font-bold text-green-600 mb-3">
+          Booking Successful 🎉
+        </h2>
+
+        <p className="text-gray-600 leading-relaxed">
+          Your request has been submitted successfully.
+          <br />
+          Redirecting to your bookings...
+        </p>
+
+      </div>
+    </div>
+  );
 };
 
 export default BookingSuccess;

@@ -1,5 +1,4 @@
 import React from "react";
-import { Button, Card, Container, Row, Col } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
 
@@ -8,89 +7,58 @@ function Userdashboard() {
 
   return (
     <>
-      <Container className="mt-5">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2 className="fw-bold">User Dashboard</h2>
+      <div className="max-w-6xl mx-auto mt-10 px-4">
 
-          {/* Small Logout Button */}
-          <Button
-            variant="danger"
-            size="sm"
-            className="d-flex align-items-center gap-2 px-3"
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">User Dashboard</h2>
+
+          <button
             onClick={() => navigate("/logout")}
+            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 text-sm rounded-lg transition"
           >
             <FaSignOutAlt size={14} /> Logout
-          </Button>
+          </button>
         </div>
 
-        <Row className="g-3 justify-content-center">
+        {/* Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-center">
+
           {/* Card 1 */}
-          <Col xs={6} md={4} lg={3}>
-            <Card className="dashboard-tile text-center p-3">
-              <h6 className="mb-2">Need Service?</h6>
-              <Button size="sm" variant="primary" href="/userDashboard/createbooking">
-                Request
-              </Button>
-            </Card>
-          </Col>
+          <div className="bg-white text-center p-4 rounded-xl shadow-md transition hover:-translate-y-1 hover:shadow-xl">
+            <h6 className="mb-2 font-medium">Need Service?</h6>
+            <a
+              href="/userDashboard/createbooking"
+              className="inline-block mt-2 px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+            >
+              Request
+            </a>
+          </div>
 
           {/* Card 2 */}
-          <Col xs={6} md={4} lg={3}>
-            <Card className="dashboard-tile text-center p-3">
-              <h6 className="mb-2">My Profile</h6>
-              <Button size="sm" variant="success" href="/userDashboard/UpdateMyUserProfile">
-                Update
-              </Button>
-            </Card>
-          </Col>
+          <div className="bg-white text-center p-4 rounded-xl shadow-md transition hover:-translate-y-1 hover:shadow-xl">
+            <h6 className="mb-2 font-medium">My Profile</h6>
+            <a
+              href="/userDashboard/UpdateMyUserProfile"
+              className="inline-block mt-2 px-3 py-1.5 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition"
+            >
+              Update
+            </a>
+          </div>
 
           {/* Card 3 */}
-          <Col xs={6} md={4} lg={3}>
-            <Card className="dashboard-tile text-center p-3">
-              <h6 className="mb-2">My Requests</h6>
-              <Button size="sm" variant="info" href="/userDashboard/ViewMyBookings">
-                View
-              </Button>
-            </Card>
-          </Col>
+          <div className="bg-white text-center p-4 rounded-xl shadow-md transition hover:-translate-y-1 hover:shadow-xl">
+            <h6 className="mb-2 font-medium">My Requests</h6>
+            <a
+              href="/userDashboard/ViewMyBookings"
+              className="inline-block mt-2 px-3 py-1.5 text-sm bg-cyan-600 text-white rounded hover:bg-cyan-700 transition"
+            >
+              View
+            </a>
+          </div>
 
-          {/* Card 4 */}
-          {/* <Col xs={6} md={4} lg={3}>
-            <Card className="dashboard-tile text-center p-3">
-              <h6 className="mb-2">Complaints</h6>
-              <Button size="sm" variant="secondary" href="/profile">
-                Add
-              </Button>
-            </Card>
-          </Col> */}
-
-          {/* Card 5 */}
-          {/* <Col xs={6} md={4} lg={3}>
-            <Card className="dashboard-tile text-center p-3">
-              <h6 className="mb-2">My Complaints</h6>
-              <Button size="sm" variant="dark" href="/my-complaints">
-                View
-              </Button>
-            </Card>
-          </Col> */}
-        </Row>
-
-        {/* Hover + button-style effect */}
-        <style>
-          {`
-            .dashboard-tile {
-              border-radius: 14px;
-              box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-              transition: all 0.25s ease;
-            }
-
-            .dashboard-tile:hover {
-              transform: translateY(-4px);
-              box-shadow: 0 8px 18px rgba(0,0,0,0.15);
-            }
-          `}
-        </style>
-      </Container>
+        </div>
+      </div>
 
       <Outlet />
     </>

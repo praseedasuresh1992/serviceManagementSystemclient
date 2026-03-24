@@ -19,7 +19,6 @@ const CheckoutForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Create PaymentIntent
   useEffect(() => {
     if (!totalAmount) return;
 
@@ -69,17 +68,21 @@ const CheckoutForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-md w-full mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg"
+      className="max-w-md w-full mx-auto p-6 bg-gray-900 text-white rounded-2xl shadow-xl border border-gray-800"
     >
-      <h2 className="text-xl font-bold mb-4 text-center">
+      <h2 className="text-xl font-semibold mb-4 text-center">
         Pay Advance (8%)
       </h2>
 
-      <p className="text-center mb-4 text-gray-300">
-        Advance Amount: <span className="font-semibold">₹{advanceAmount}</span>
+      <p className="text-center mb-5 text-gray-300">
+        Advance Amount:{" "}
+        <span className="font-semibold text-green-400">
+          ₹{advanceAmount}
+        </span>
       </p>
 
-      <div className="p-3 border rounded mb-4">
+      {/* Card Input */}
+      <div className="p-3 border border-gray-700 rounded-lg mb-4 bg-gray-800 focus-within:ring-2 focus-within:ring-blue-500">
         <CardElement
           options={{
             style: {
@@ -94,17 +97,21 @@ const CheckoutForm = () => {
         />
       </div>
 
-      {error && <p className="text-red-500 mb-3">{error}</p>}
+      {error && (
+        <p className="text-red-500 mb-3 text-sm text-center">
+          {error}
+        </p>
+      )}
 
       <button
         type="submit"
         disabled={!stripe || loading}
-        className="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded font-semibold"
+        className="w-full bg-blue-600 hover:bg-blue-700 transition p-3 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? "Processing..." : `Pay ₹${advanceAmount}`}
       </button>
 
-      <p className="text-xs text-gray-400 text-center mt-3">
+      <p className="text-xs text-gray-400 text-center mt-4">
         Test Card: 4242 4242 4242 4242 | Any future date | Any CVV
       </p>
     </form>
@@ -112,9 +119,11 @@ const CheckoutForm = () => {
 };
 
 const PaymentPage = () => (
-  <Elements stripe={stripePromise}>
-    <CheckoutForm />
-  </Elements>
+  <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <Elements stripe={stripePromise}>
+      <CheckoutForm />
+    </Elements>
+  </div>
 );
 
 export default PaymentPage;

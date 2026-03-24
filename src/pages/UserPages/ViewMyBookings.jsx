@@ -4,23 +4,14 @@ import api from "../../config/axiosinstance";
 /* ⭐ Star Rating Component */
 const StarRating = ({ rating, onChange }) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        gap: "6px",
-        fontSize: "24px",
-        position: "relative",
-        zIndex: 1000,        // 🔥 KEY FIX
-      }}
-    >
+    <div className="flex gap-2 text-2xl relative z-50">
       {[1, 2, 3, 4, 5].map((star) => (
         <span
           key={star}
           onClick={() => onChange(star)}
-          style={{
-            cursor: "pointer",
-            color: star <= rating ? "#facc15" : "#d1d5db",
-          }}
+          className={`cursor-pointer ${
+            star <= rating ? "text-yellow-400" : "text-gray-300"
+          }`}
         >
           ★
         </span>
@@ -28,8 +19,6 @@ const StarRating = ({ rating, onChange }) => {
     </div>
   );
 };
-
-
 
 const ViewMyBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -77,13 +66,11 @@ const ViewMyBookings = () => {
       await api.post(
         "/createrating",
         {
-    
-            booking_id: booking._id,
-    provider_id: booking.provider_id?._id,
-    category_id: booking.category_id?._id,
-    rating: data.rating,
-    feedback: data.feedback,
-          
+          booking_id: booking._id,
+          provider_id: booking.provider_id?._id,
+          category_id: booking.category_id?._id,
+          rating: data.rating,
+          feedback: data.feedback,
         },
         {
           headers: {
@@ -105,76 +92,93 @@ const ViewMyBookings = () => {
   };
 
   if (loading) {
-    return <div className="text-center mt-10">Loading bookings...</div>;
+    return (
+      <div className="flex justify-center items-center mt-16">
+        <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto mt-10 px-4">
-      <h2 className="text-2xl font-bold text-center mb-6">My Bookings</h2>
+    <div className="max-w-7xl mx-auto mt-10 px-4">
+      <h2 className="text-2xl font-bold text-center mb-8">
+        My Bookings
+      </h2>
 
       {bookings.length === 0 ? (
-        <p className="text-center text-gray-500">No bookings found</p>
+        <p className="text-center text-gray-500">
+          No bookings found
+        </p>
       ) : (
         <div className="grid md:grid-cols-2 gap-6">
           {bookings.map((booking) => (
-            <div key={booking._id} className="card shadow-lg p-4 rounded">
+            <div
+              key={booking._id}
+              className="bg-white shadow-lg rounded-2xl p-5 border"
+            >
               <h5 className="text-lg font-semibold mb-2">
                 {booking.category_id?.category_name || "N/A"}
               </h5>
 
-              <p>
-                <strong>Provider:</strong>{" "}
+              <p className="text-sm text-gray-700">
+                <span className="font-semibold">Provider:</span>{" "}
                 {booking.provider_id?.name || "N/A"} (
                 {booking.provider_id?.available_location || "N/A"})
               </p>
 
-              <div>
-                <strong>Date(s):</strong>
+              <div className="mt-2 text-sm text-gray-700">
+                <span className="font-semibold">Date(s):</span>
                 <ul className="list-disc list-inside ml-4">
                   {(booking.booking_dates || []).map((d, idx) => (
                     <li key={idx}>
                       {d?.date
                         ? new Date(d.date).toLocaleDateString()
                         : "Unknown date"}{" "}
-                      —{" "}
-                      {/* 🔒 SAFE FIX FOR replace() */}
-                      {String(d?.slot ?? "full_day").replace("_", " ")}
+                      — {String(d?.slot ?? "full_day").replace("_", " ")}
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <p>
-                <strong>Amount:</strong> ₹{booking.total_amount || 0}
+              <p className="mt-2 text-sm">
+                <span className="font-semibold">Amount:</span> ₹
+                {booking.total_amount || 0}
               </p>
 
+              {/* STATUS */}
               <span
-                className={`inline-block px-2 py-1 rounded text-white ${booking.status === "completed"
+                className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold text-white
+                ${
+                  booking.status === "completed"
                     ? "bg-green-600"
                     : booking.status === "accepted"
-                      ? "bg-blue-600"
-                      : booking.status === "pending"
-                        ? "bg-yellow-500"
-                        : "bg-gray-500"
-                  }`}
+                    ? "bg-blue-600"
+                    : booking.status === "pending"
+                    ? "bg-yellow-500"
+                    : "bg-gray-500"
+                }`}
               >
                 {booking.status}
               </span>
-              {/* ❌ Rejection Reason */}
-              {booking.status === "rejected" && booking.rejection_reason && (
-                <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded">
-                  <p className="text-sm text-red-700">
-                    <strong>Reason:</strong> {booking.rejection_reason}
-                  </p>
-                </div>
-              )}
 
+              {/* ❌ Rejection Reason */}
+              {booking.status === "rejected" &&
+                booking.rejection_reason && (
+                  <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm text-red-700">
+                      <span className="font-semibold">Reason:</span>{" "}
+                      {booking.rejection_reason}
+                    </p>
+                  </div>
+                )}
 
               {/* ⭐ Rating & Feedback */}
               {booking.status === "completed" &&
                 !feedbackState[booking._id]?.submitted && (
-                  <div className="mt-4 border-t pt-3">
-                    <h6 className="font-semibold mb-2">Rate this service</h6>
+                  <div className="mt-4 border-t pt-4">
+                    <h6 className="font-semibold mb-2">
+                      Rate this service
+                    </h6>
 
                     <StarRating
                       rating={feedbackState[booking._id]?.rating || 0}
@@ -184,7 +188,7 @@ const ViewMyBookings = () => {
                     />
 
                     <textarea
-                      className="w-full border rounded mt-2 p-2"
+                      className="w-full border rounded-lg mt-3 p-2 text-sm focus:ring-2 focus:ring-blue-500"
                       rows="3"
                       placeholder="Write your feedback..."
                       onChange={(e) =>
@@ -197,7 +201,7 @@ const ViewMyBookings = () => {
                     />
 
                     <button
-                      className="w-full bg-blue-600 text-white py-2 mt-2 rounded"
+                      className="w-full bg-blue-600 text-white py-2 mt-3 rounded-lg hover:bg-blue-700 transition"
                       onClick={() => submitFeedback(booking)}
                     >
                       Submit Feedback
@@ -206,7 +210,7 @@ const ViewMyBookings = () => {
                 )}
 
               {feedbackState[booking._id]?.submitted && (
-                <p className="text-green-600 mt-2 font-semibold">
+                <p className="text-green-600 mt-3 font-semibold text-sm">
                   ✔ Feedback submitted
                 </p>
               )}

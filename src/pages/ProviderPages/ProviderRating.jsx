@@ -18,8 +18,6 @@ const ProviderRating = () => {
       setRatings(res.data.data || []);
       setAvgRating(Number(res.data.averageRating) || 0);
       setTotalReviews(res.data.totalReviews);
-
-
     } catch (err) {
       console.error(err);
     } finally {
@@ -28,17 +26,22 @@ const ProviderRating = () => {
   };
 
   if (loading) {
-    return <p className="text-center mt-4">Loading ratings...</p>;
+    return (
+      <p className="text-center mt-6 text-gray-600">
+        Loading ratings...
+      </p>
+    );
   }
 
   return (
-    <div className="container mt-4">
-      <h3 className="text-xl font-bold mb-2">Customer Reviews</h3>
+    <div className="max-w-3xl mx-auto mt-6 px-4">
+      <h3 className="text-2xl font-bold mb-3">
+        Customer Reviews
+      </h3>
 
       <div className="mb-4">
         <span className="text-lg font-semibold">
           ⭐ {avgRating.toFixed(1)} / 5
-
         </span>
         <span className="ml-2 text-gray-500">
           ({totalReviews} reviews)
@@ -51,25 +54,30 @@ const ProviderRating = () => {
         ratings.map((r) => (
           <div
             key={r._id}
-            className="border rounded p-3 mb-3 shadow-sm"
+            className="border border-gray-200 rounded-xl p-4 mb-3 shadow-sm bg-white"
           >
-            <div className="flex justify-between">
-              <strong>{r.user_id?.name || "Anonymous"}<br /></strong>
+            <div className="flex justify-between items-start">
+              <strong className="text-gray-800">
+                {r.user_id?.name || "Anonymous"}
+              </strong>
             </div>
-            <div className="text-sm text-gray-500">
+
+            <div className="text-xs text-gray-500 mt-1">
               {new Date(r.createdAt).toLocaleDateString()}
             </div>
 
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 mt-1">
               Category: {r.category_id?.category_name}
             </p>
 
-            <div className="text-yellow-500 text-lg">
+            <div className="text-yellow-500 text-lg mt-1">
               {"★".repeat(Number(r.rating || 0))}
               {"☆".repeat(5 - Number(r.rating || 0))}
             </div>
 
-            <p className="mt-2">{r.feedback}</p>
+            <p className="mt-2 text-gray-700">
+              {r.feedback}
+            </p>
           </div>
         ))
       )}
