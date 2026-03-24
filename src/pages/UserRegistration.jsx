@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Button } from "react-bootstrap";
 import api from "../config/axiosinstance";
 
 const UserRegistration = () => {
@@ -18,35 +17,29 @@ const UserRegistration = () => {
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
 
-  // 👉 refs for cursor focus
   const emailRef = useRef(null);
   const phoneRef = useRef(null);
   const passwordRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData({ ...formData, [name]: value });
-    setErrors({ ...errors, [name]: "" }); // clear error while typing
+    setErrors({ ...errors, [name]: "" });
   };
 
-  /* ================= VALIDATION ================= */
   const validate = () => {
     let newErrors = {};
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       newErrors.email = "Enter a valid email address";
     }
 
-    // Phone validation (10 digits)
     const phoneRegex = /^[0-9]{10}$/;
     if (!phoneRegex.test(formData.contactno)) {
       newErrors.contactno = "Phone number must be 10 digits";
     }
 
-    // Password validation
     const passwordRegex =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{6,}$/;
     if (!passwordRegex.test(formData.password)) {
@@ -56,7 +49,6 @@ const UserRegistration = () => {
 
     setErrors(newErrors);
 
-    // 👉 Focus on first error
     if (newErrors.email) {
       emailRef.current.focus();
       return false;
@@ -73,7 +65,6 @@ const UserRegistration = () => {
     return true;
   };
 
-  /* ================= SUBMIT ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -113,94 +104,102 @@ const UserRegistration = () => {
           </p>
         )}
 
-        <Form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
 
           {/* Name */}
-          <Form.Group className="mb-3">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
+          <div className="mb-3">
+            <label className="block mb-1 font-medium">Name</label>
+            <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               required
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </Form.Group>
+          </div>
 
           {/* Email */}
-          <Form.Group className="mb-3">
-            <Form.Label>Email</Form.Label>
-            <Form.Control
+          <div className="mb-3">
+            <label className="block mb-1 font-medium">Email</label>
+            <input
               ref={emailRef}
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.email && (
-              <small className="text-danger">{errors.email}</small>
+              <small className="text-red-500">{errors.email}</small>
             )}
-          </Form.Group>
+          </div>
 
           {/* Address */}
-          <Form.Group className="mb-3">
-            <Form.Label>Address</Form.Label>
-            <Form.Control
-              as="textarea"
+          <div className="mb-3">
+            <label className="block mb-1 font-medium">Address</label>
+            <textarea
               rows={3}
               name="address"
               value={formData.address}
               onChange={handleChange}
               required
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </Form.Group>
+          </div>
 
           {/* Contact Number */}
-          <Form.Group className="mb-3">
-            <Form.Label>Contact Number</Form.Label>
-            <Form.Control
+          <div className="mb-3">
+            <label className="block mb-1 font-medium">Contact Number</label>
+            <input
               ref={phoneRef}
               type="text"
               name="contactno"
               value={formData.contactno}
               onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.contactno && (
-              <small className="text-danger">{errors.contactno}</small>
+              <small className="text-red-500">{errors.contactno}</small>
             )}
-          </Form.Group>
+          </div>
 
           {/* Username */}
-          <Form.Group className="mb-3">
-            <Form.Label>Username</Form.Label>
-            <Form.Control
+          <div className="mb-3">
+            <label className="block mb-1 font-medium">Username</label>
+            <input
               type="text"
               name="username"
               value={formData.username}
               onChange={handleChange}
               required
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </Form.Group>
+          </div>
 
           {/* Password */}
-          <Form.Group className="mb-4">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
+          <div className="mb-4">
+            <label className="block mb-1 font-medium">Password</label>
+            <input
               ref={passwordRef}
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.password && (
-              <small className="text-danger">{errors.password}</small>
+              <small className="text-red-500">{errors.password}</small>
             )}
-          </Form.Group>
+          </div>
 
-          <Button type="submit" className="w-full">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition"
+          >
             Register
-          </Button>
-        </Form>
+          </button>
+        </form>
       </div>
     </div>
   );

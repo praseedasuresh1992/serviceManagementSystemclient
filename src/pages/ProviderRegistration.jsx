@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import api from "../config/axiosinstance";
-import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const ProviderRegistration = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,7 +25,6 @@ const ProviderRegistration = () => {
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
 
-  /* ================= FETCH CATEGORIES ================= */
   useEffect(() => {
     const fetchCategories = async () => {
       const res = await api.get("/service-category");
@@ -34,7 +33,6 @@ const ProviderRegistration = () => {
     fetchCategories();
   }, []);
 
-  /* ================= HANDLE CHANGE ================= */
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -43,19 +41,16 @@ const ProviderRegistration = () => {
     });
   };
 
-  /* ================= PROFILE IMAGE ================= */
   const handleProfileImage = (e) => {
     const file = e.target.files[0];
     setProfileImage(file);
     if (file) setImagePreview(URL.createObjectURL(file));
   };
 
-  /* ================= DOCUMENTS ================= */
   const handleDocumentChange = (e) => {
     setDocuments(e.target.files);
   };
 
-  /* ================= VALIDATION ================= */
   const validate = () => {
     const err = {};
 
@@ -88,7 +83,6 @@ const ProviderRegistration = () => {
     return Object.keys(err).length === 0;
   };
 
-  /* ================= SUBMIT ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -117,7 +111,7 @@ const ProviderRegistration = () => {
     try {
       await api.post("/registerprovider", data);
       setMessage("Provider created successfully!");
-      navigate("/login")
+      navigate("/login");
     } catch (error) {
       if (error.response?.status === 409) {
         setMessage(error.response.data.message);
@@ -128,7 +122,7 @@ const ProviderRegistration = () => {
   };
 
   return (
-    <div className="container mx-auto max-w-xl mt-10 p-6 bg-white shadow-lg rounded-xl">
+    <div className="max-w-xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-xl">
       <h2 className="text-2xl font-semibold mb-4 text-center">
         Create Provider
       </h2>
@@ -137,8 +131,8 @@ const ProviderRegistration = () => {
         <p className="text-center text-red-600 mb-3">{message}</p>
       )}
 
-      <Form onSubmit={handleSubmit}>
-        {/* ================= PROFILE IMAGE ================= */}
+      <form onSubmit={handleSubmit}>
+        {/* PROFILE IMAGE */}
         <div
           className="border-2 border-dashed rounded-xl p-4 text-center cursor-pointer mb-2"
           onClick={() => document.getElementById("profileUpload").click()}
@@ -154,7 +148,7 @@ const ProviderRegistration = () => {
           )}
         </div>
 
-        <Form.Control
+        <input
           id="profileUpload"
           type="file"
           accept="image/*"
@@ -162,128 +156,166 @@ const ProviderRegistration = () => {
           onChange={handleProfileImage}
         />
         {errors.profileImage && (
-          <small className="text-danger">{errors.profileImage}</small>
+          <small className="text-red-500">{errors.profileImage}</small>
         )}
 
-        {/* ================= NAME ================= */}
-        <Form.Group className="mb-3">
-          <Form.Label>Name</Form.Label>
-          <Form.Control name="name" onChange={handleChange} />
-          {errors.name && <small className="text-danger">{errors.name}</small>}
-        </Form.Group>
+        {/* NAME */}
+        <div className="mb-3">
+          <label className="block mb-1 font-medium">Name</label>
+          <input
+            name="name"
+            onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+          {errors.name && (
+            <small className="text-red-500">{errors.name}</small>
+          )}
+        </div>
 
-        {/* ================= EMAIL ================= */}
-        <Form.Group className="mb-3">
-          <Form.Label>Email</Form.Label>
-          <Form.Control name="email" onChange={handleChange} />
-          {errors.email && <small className="text-danger">{errors.email}</small>}
-        </Form.Group>
+        {/* EMAIL */}
+        <div className="mb-3">
+          <label className="block mb-1 font-medium">Email</label>
+          <input
+            name="email"
+            onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+          {errors.email && (
+            <small className="text-red-500">{errors.email}</small>
+          )}
+        </div>
 
-        {/* ================= GROUP ================= */}
-        <Form.Check
-          className="mb-3"
-          label="Is Group?"
-          type="checkbox"
-          name="is_group"
-          onChange={handleChange}
-        />
+        {/* GROUP */}
+        <div className="mb-3 flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="is_group"
+            onChange={handleChange}
+          />
+          <label>Is Group?</label>
+        </div>
 
         {formData.is_group && (
-          <Form.Group className="mb-3">
-            <Form.Label>Members</Form.Label>
-            <Form.Control
+          <div className="mb-3">
+            <label className="block mb-1 font-medium">Members</label>
+            <input
               type="number"
               name="members"
               min="1"
               onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
-          </Form.Group>
+          </div>
         )}
 
-        {/* ================= ADDRESS ================= */}
-        <Form.Group className="mb-3">
-          <Form.Label>Address</Form.Label>
-          <Form.Control as="textarea" name="address" onChange={handleChange} />
-        </Form.Group>
+        {/* ADDRESS */}
+        <div className="mb-3">
+          <label className="block mb-1 font-medium">Address</label>
+          <textarea
+            name="address"
+            onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+        </div>
 
-        {/* ================= CONTACT ================= */}
-        <Form.Group className="mb-3">
-          <Form.Label>Contact Number</Form.Label>
-          <Form.Control name="contactno" onChange={handleChange} />
+        {/* CONTACT */}
+        <div className="mb-3">
+          <label className="block mb-1 font-medium">Contact Number</label>
+          <input
+            name="contactno"
+            onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+          />
           {errors.contactno && (
-            <small className="text-danger">{errors.contactno}</small>
+            <small className="text-red-500">{errors.contactno}</small>
           )}
-        </Form.Group>
+        </div>
 
-        {/* ================= LOCATION ================= */}
-        <Form.Group className="mb-3">
-          <Form.Label>Available Location</Form.Label>
-          <Form.Control
+        {/* LOCATION */}
+        <div className="mb-3">
+          <label className="block mb-1 font-medium">Available Location</label>
+          <input
             name="available_location"
             onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
           />
           {errors.available_location && (
-            <small className="text-danger">
+            <small className="text-red-500">
               {errors.available_location}
             </small>
           )}
-        </Form.Group>
+        </div>
 
-        {/* ================= CATEGORY ================= */}
-        <Form.Group className="mb-3">
-          <Form.Label>Service Category</Form.Label>
-          <Form.Select name="service_category" onChange={handleChange}>
+        {/* CATEGORY */}
+        <div className="mb-3">
+          <label className="block mb-1 font-medium">Service Category</label>
+          <select
+            name="service_category"
+            onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+          >
             <option value="">-- Select Category --</option>
             {categories.map((cat) => (
               <option key={cat._id} value={cat._id}>
                 {cat.category_name}
               </option>
             ))}
-          </Form.Select>
+          </select>
           {errors.service_category && (
-            <small className="text-danger">
+            <small className="text-red-500">
               {errors.service_category}
             </small>
           )}
-        </Form.Group>
+        </div>
 
-        {/* ================= DOCUMENTS (MULTIPLE) ================= */}
-        <Form.Group className="mb-3">
-          <Form.Label>Verification Documents</Form.Label>
-          <Form.Control
+        {/* DOCUMENTS */}
+        <div className="mb-3">
+          <label className="block mb-1 font-medium">
+            Verification Documents
+          </label>
+          <input
             type="file"
             multiple
             accept=".pdf,.jpg,.jpeg,.png"
             onChange={handleDocumentChange}
+            className="w-full"
           />
-        </Form.Group>
+        </div>
 
-        {/* ================= USERNAME ================= */}
-        <Form.Group className="mb-3">
-          <Form.Label>Username</Form.Label>
-          <Form.Control name="username" onChange={handleChange} />
+        {/* USERNAME */}
+        <div className="mb-3">
+          <label className="block mb-1 font-medium">Username</label>
+          <input
+            name="username"
+            onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+          />
           {errors.username && (
-            <small className="text-danger">{errors.username}</small>
+            <small className="text-red-500">{errors.username}</small>
           )}
-        </Form.Group>
+        </div>
 
-        {/* ================= PASSWORD ================= */}
-        <Form.Group className="mb-4">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
+        {/* PASSWORD */}
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Password</label>
+          <input
             type="password"
             name="password"
             onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
           />
           {errors.password && (
-            <small className="text-danger">{errors.password}</small>
+            <small className="text-red-500">{errors.password}</small>
           )}
-        </Form.Group>
+        </div>
 
-        <Button type="submit" className="w-full bg-blue-600">
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition"
+        >
           Submit
-        </Button>
-      </Form>
+        </button>
+      </form>
     </div>
   );
 };
