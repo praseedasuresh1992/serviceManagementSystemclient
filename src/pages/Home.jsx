@@ -52,7 +52,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-<h1 className="text-white bg-red-500">TEST TEXT</h1>
       {/* ================= FEATURES ================= */}
       <section className="py-16 bg-gray-100">
         <div className="max-w-6xl mx-auto px-4">
