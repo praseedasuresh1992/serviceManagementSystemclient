@@ -29,7 +29,7 @@ const Home = () => {
               Welcome to <span className="text-green-400">ServicelQ</span>
             </h1>
 
-            <p className="text-lg md:text-xl mb-8 text-red-600">
+            <p className="text-lg md:text-xl mb-8 text-green-600">
               A modern service management system to handle bookings,
               providers, and services efficiently.
             </p>
@@ -53,10 +53,10 @@ const Home = () => {
         </div>
       </section>
       {/* ================= FEATURES ================= */}
-      <section className="py-16 bg-gray-100">
+      <section className="py-16 bg-lime-300">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-center text-3xl font-bold mb-12">
-            Why Choose <span className="text-green-500">ServicelQ</span>?
+            Why Choose <span className="text-green-900">ServicelQ</span>?
           </h2>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -87,7 +87,7 @@ const Home = () => {
       </section>
 
       {/* ================= FAQ ================= */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-lime-300">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-center text-3xl font-bold mb-10">
             Frequently Asked Questions
@@ -96,7 +96,7 @@ const Home = () => {
           <div className="space-y-4">
 
             {/* FAQ 1 */}
-            <div className="border rounded-lg">
+            <div className="border rounded-lg bg-green-100">
               <button
                 onClick={() => toggle(1)}
                 className="w-full text-left px-4 py-3 font-medium flex justify-between"
@@ -113,7 +113,7 @@ const Home = () => {
             </div>
 
             {/* FAQ 2 */}
-            <div className="border rounded-lg">
+            <div className="border rounded-lg bg-green-100">
               <button
                 onClick={() => toggle(2)}
                 className="w-full text-left px-4 py-3 font-medium flex justify-between"
@@ -129,7 +129,7 @@ const Home = () => {
             </div>
 
             {/* FAQ 3 */}
-            <div className="border rounded-lg">
+            <div className="border rounded-lg bg-green-100">
               <button
                 onClick={() => toggle(3)}
                 className="w-full text-left px-4 py-3 font-medium flex justify-between"

@@ -18,7 +18,7 @@ const AboutUs = () => {
       </section>
 
       {/* ===== CONTENT ===== */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-lime-300">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-10 items-center">
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../config/axiosinstance";
 import { useNavigate } from "react-router-dom";
+import { Camera } from "lucide-react";
 
 const ProviderRegistration = () => {
   const navigate = useNavigate();
@@ -122,9 +123,10 @@ const ProviderRegistration = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-xl">
-      <h2 className="text-2xl font-semibold mb-4 text-center">
-        Create Provider
+    <div className="bg-lime-300">
+    <div className="max-w-xl mx-auto mt-10 p-6 bg-lime-200 shadow-lg rounded-xl">
+      <h2 className="text-2xl font-semibold mb-4 text-center text-green-900">
+        What is your Business?
       </h2>
 
       {message && (
@@ -134,20 +136,22 @@ const ProviderRegistration = () => {
       <form onSubmit={handleSubmit}>
         {/* PROFILE IMAGE */}
         <div
-          className="border-2 border-dashed rounded-xl p-4 text-center cursor-pointer mb-2"
-          onClick={() => document.getElementById("profileUpload").click()}
-        >
-          {imagePreview ? (
-            <img
-              src={imagePreview}
-              className="h-28 w-28 rounded-full mx-auto object-cover"
-              alt="preview"
-            />
-          ) : (
-            <p className="text-gray-500">Click to upload profile photo</p>
-          )}
-        </div>
-
+  className=" p-6 text-center cursor-pointer mb-2 "
+  onClick={() => document.getElementById("profileUpload").click()}
+>
+  {imagePreview ? (
+    <img
+      src={imagePreview}
+      className="h-28 w-28 rounded-full mx-auto object-cover"
+      alt="preview"
+    />
+  ) : (
+    <div className="flex flex-col items-center justify-center gap-2 text-gray-600">
+      <Camera size={40} className="text-green-700" />
+      <p className="text-sm"> profile photo</p>
+    </div>
+  )}
+</div>
         <input
           id="profileUpload"
           type="file"
@@ -311,11 +315,12 @@ const ProviderRegistration = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition"
+          className="w-full bg-green-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition"
         >
           Submit
         </button>
       </form>
+    </div>
     </div>
   );
 };

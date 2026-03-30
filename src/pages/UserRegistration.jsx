@@ -91,11 +91,11 @@ const UserRegistration = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
-      <div className="w-full max-w-lg bg-white shadow-xl rounded-2xl p-6 border">
+    <div className="flex justify-center items-center min-h-screen bg-lime-300 px-4">
+      <div className="w-full max-w-lg bg-lime-600 shadow-xl rounded-2xl p-6 border">
 
-        <h2 className="text-3xl font-bold text-center mb-5 text-blue-700">
-          Create User
+        <h2 className="text-3xl font-bold text-center mb-5 text-green-900">
+          Enter Your Details
         </h2>
 
         {message && (
@@ -195,7 +195,7 @@ const UserRegistration = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition"
+            className="w-full bg-green-900 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition"
           >
             Register
           </button>

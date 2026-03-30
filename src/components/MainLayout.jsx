@@ -6,9 +6,13 @@ import Footer from "./Footer";
 const MainLayout = () => {
   return (
     <>
+        <div className="min-h-screen bg-lime-300">
       <ServiceNavbar />
+      <main className="px-4 py-4">
       <Outlet />
+      </main>
       <Footer />
+      </div>
     </>
   );
 };

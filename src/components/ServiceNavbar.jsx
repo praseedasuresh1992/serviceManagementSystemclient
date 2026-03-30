@@ -1,36 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function ServiceNavbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <nav className="bg-white shadow-md py-2 sticky top-0 z-50">
-      
+    <nav className="bg-lime-900 shadow-md py-2 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
 
         {/* Brand */}
-        <div className="text-2xl font-bold text-blue-600">
+        <div className="text-2xl font-bold text-lime-400">
           ServicelQ
         </div>
 
-        {/* Menu */}
-        <div className="flex space-x-6 text-gray-800 font-medium">
-          <Link to="/" className="hover:text-blue-600">Home</Link>
-          <Link to="/aboutUs" className="hover:text-blue-600">Know About ServicelQ</Link>
-          <Link to="/providerRegistration" className="hover:text-blue-600">List Your Business</Link>
-          <Link to="/userRegistration" className="hover:text-blue-600">Enter as a User</Link>
-          <Link to="/login" className="hover:text-blue-600">Login</Link>
-          <Link to="/contactUs" className="hover:text-blue-600">Contact Us</Link>
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-6 text-white font-medium">
+          <Link to="/" className="hover:text-blue-400">Home</Link>
+          <Link to="/aboutUs" className="hover:text-blue-400">Know About ServicelQ</Link>
+          <Link to="/providerRegistration" className="hover:text-blue-400">List Your Business</Link>
+          <Link to="/userregistration" className="hover:text-blue-400">Enter as a User</Link>
+          <Link to="/login" className="hover:text-blue-400">Login</Link>
+          <Link to="/contactUs" className="hover:text-blue-400">Contact Us</Link>
         </div>
 
-        {/* Mobile Menu Button */}
-        <div className="lg:hidden">
-          <button className="text-gray-700 focus:outline-none">
+        {/* Mobile Button */}
+        <div className="md:hidden">
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-white text-2xl"
+          >
             ☰
           </button>
         </div>
-
       </div>
 
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="md:hidden bg-lime-800 px-4 py-3 space-y-3 text-white font-medium">
+          <Link to="/" className="block">Home</Link>
+          <Link to="/aboutUs" className="block">Know About ServicelQ</Link>
+          <Link to="/providerRegistration" className="block">List Your Business</Link>
+          <Link to="/userregistration" className="block">Enter as a User</Link>
+          <Link to="/login" className="block">Login</Link>
+          <Link to="/contactUs" className="block">Contact Us</Link>
+        </div>
+      )}
     </nav>
   );
 }

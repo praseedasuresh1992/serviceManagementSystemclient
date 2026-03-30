@@ -51,10 +51,10 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+    <div className="flex justify-center items-center min-h-screen bg-lime-300 p-4">
       <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-6 border">
 
-        <h2 className="text-3xl font-bold text-center mb-6 text-blue-600">
+        <h2 className="text-3xl font-bold text-center mb-6 text-green-900">
           Login
         </h2>
 
@@ -96,7 +96,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-green-900 text-white py-2 rounded-lg hover:bg-blue-700 transition"
           >
             Login
           </button>
@@ -105,7 +105,7 @@ const Login = () => {
 
         {/* Optional Links */}
         <div className="mt-4 text-center text-sm">
-          <a href="/userregistration" className="text-blue-600 hover:underline">
+          <a href="/userregistration" className="text-green-900 hover:underline">
             Create an account
           </a>
         </div>
