@@ -29,7 +29,7 @@ const Home = () => {
               Welcome to <span className="text-green-400">ServicelQ</span>
             </h1>
 
-            <p className="text-lg md:text-xl mb-8 text-gray-200">
+            <p className="text-lg md:text-xl mb-8 text-red-600">
               A modern service management system to handle bookings,
               providers, and services efficiently.
             </p>
@@ -52,7 +52,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-
+<h1 className="text-white bg-red-500">TEST TEXT</h1>
       {/* ================= FEATURES ================= */}
       <section className="py-16 bg-gray-100">
         <div className="max-w-6xl mx-auto px-4">
